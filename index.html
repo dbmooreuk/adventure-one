@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Adventure Game">
+    <meta name="theme-color" content="#000000">
+    <meta name="application-name" content="Adventure Game">
+
+    <title>Adventure Game</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Adventure Game">
+    <meta property="og:description" content="A modern interactive adventure game">
+
+    <!-- PWA -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+    <div id="app"></div>
+    <!-- Loading Screen -->
+    <div class="loader-body" id="loader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container">
+        <!-- Menu -->
+        <div id="menu-container">
+            <div id="menu-toggle" class="menu-toggle">
+                <div class="burger-line one"></div>
+                <div class="burger-line two"></div>
+                <div class="burger-line three"></div>
+            </div>
+            <div id="menu" class="menu">
+                <button class="btn btn-menu btn-save">Save</button>
+                <button class="btn btn-menu btn-reset">Reset</button>
+                <button class="btn btn-menu btn-load">Load</button>
+                <button class="btn btn-menu btn-mute active">Mute</button>
+            </div>
+        </div>
+
+        <!-- Game Scene -->
+        <div class="scene-container">
+            <!-- Scene Items Overlay -->
+            <div class="scene-items-overlay"></div>
+            
+            <!-- Scene Content -->
+            <div class="scene-content">
+                <h1 class="scene-title"></h1>
+                <p class="scene-text"></p>
+                <div class="score-box">0%</div>
+                <div class="panel-text"></div>
+                
+                <!-- Inventory -->
+                <div class="scene-inventory-overlay"></div>
+                
+                <!-- Action Buttons -->
+                <div class="btn-actions-container">
+                    <button class="btn btn-action btn-examine">Examine</button>
+                    <button class="btn btn-action btn-get">Get</button>
+                    <button class="btn btn-action btn-use">Use</button>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="nav-directions">
+                <button class="btn btn-nav btn-back">Back</button>
+                <button class="btn btn-nav btn-next">Next</button>
+            </nav>
+            
+            <!-- Stage Info -->
+            <h2 class="stage-title"></h2>
+            <div class="pips-container">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages"></div>
+
+    <!-- Audio Elements -->
+    <audio id="silence" preload="auto" loop>
+        <source src="/assets/audio/silence.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient1" preload="auto" loop>
+        <source src="/assets/audio/ambient1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient2" preload="auto" loop>
+        <source src="/assets/audio/ambient2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient3" preload="auto" loop>
+        <source src="/assets/audio/ambient3.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient4" preload="auto" loop>
+        <source src="/assets/audio/ambient4.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient5" preload="auto" loop>
+        <source src="/assets/audio/ambient5.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient6" preload="auto" loop>
+        <source src="/assets/audio/ambient6.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient7" preload="auto" loop>
+        <source src="/assets/audio/ambient7.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient8" preload="auto" loop>
+        <source src="/assets/audio/ambient8.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient9" preload="auto" loop>
+        <source src="/assets/audio/ambient9.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient10" preload="auto" loop>
+        <source src="/assets/audio/ambient10.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient11" preload="auto" loop>
+        <source src="/assets/audio/ambient11.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ambient12" preload="auto" loop>
+        <source src="/assets/audio/ambient12.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="victory" preload="auto">
+        <source src="/assets/audio/victory.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="addToInventory" preload="auto">
+        <source src="/assets/audio/pickup.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="useItem" preload="auto">
+        <source src="/assets/audio/use.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sceneChange" preload="auto">
+        <source src="/assets/audio/transition.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="error" preload="auto">
+        <source src="/assets/audio/error.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="success" preload="auto">
+        <source src="/assets/audio/success.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Main Application -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
