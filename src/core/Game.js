@@ -30,7 +30,8 @@ export class Game extends EventEmitter {
         this.currentScene = null
         this.score = 0
         this.stages = 13
-        
+        this.achievements = new Set() // Track completed achievements to prevent duplicate scoring
+
         // Bind methods
         this.handleSceneChange = this.handleSceneChange.bind(this)
         this.handleInventoryChange = this.handleInventoryChange.bind(this)
@@ -120,15 +121,16 @@ export class Game extends EventEmitter {
      */
     async startNewGame() {
         console.log('🆕 Starting new game...')
-        
+
         // Reset all state
         this.score = 0
+        this.achievements.clear() // Clear all achievements
         this.inventoryManager.clear()
         this.stateManager.reset()
-        
+
         // Start with splash scene
         await this.sceneManager.changeScene('splash')
-        
+
         this.emit('gameStarted')
     }
 
@@ -203,9 +205,22 @@ export class Game extends EventEmitter {
     }
 
     /**
-     * Add points to the score
+     * Add points to the score for a specific achievement
+     * @param {number} points - Points to add
+     * @param {string} achievementId - Unique identifier for this achievement
      */
-    addScore(points) {
+    addScore(points, achievementId = null) {
+        // If an achievement ID is provided, check if it's already been earned
+        if (achievementId) {
+            if (this.achievements.has(achievementId)) {
+                console.log(`🏆 Achievement already earned: ${achievementId}`)
+                return // Don't add points again
+            }
+            // Mark this achievement as earned
+            this.achievements.add(achievementId)
+            console.log(`🏆 New achievement earned: ${achievementId} (+${points} points)`)
+        }
+
         const newScore = this.score + points
         this.emit('scoreChanged', newScore)
     }
@@ -217,6 +232,7 @@ export class Game extends EventEmitter {
         return {
             currentScene: this.currentScene?.sceneName || 'splash',
             score: this.score,
+            achievements: Array.from(this.achievements), // Convert Set to Array for JSON serialization
             inventory: this.inventoryManager.getItems(),
             sceneStates: this.sceneManager.getSceneStates(),
             customState: this.stateManager.getState('customState') || {},
@@ -230,23 +246,26 @@ export class Game extends EventEmitter {
     async restoreGameState(saveData) {
         try {
             this.score = saveData.score || 0
-            
+
+            // Restore achievements
+            this.achievements = new Set(saveData.achievements || [])
+
             // Restore inventory
             this.inventoryManager.setItems(saveData.inventory || [])
-            
+
             // Restore scene states
             if (saveData.sceneStates) {
                 this.sceneManager.setSceneStates(saveData.sceneStates)
             }
-            
+
             // Restore custom state
             if (saveData.customState) {
                 this.stateManager.setState('customState', saveData.customState)
             }
-            
+
             // Change to saved scene
             await this.sceneManager.changeScene(saveData.currentScene || 'splash')
-            
+
             console.log('✅ Game state restored successfully')
             
         } catch (error) {

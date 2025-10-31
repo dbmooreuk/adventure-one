@@ -160,10 +160,21 @@ export class UIManager extends EventEmitter {
     handleSceneItemClick(e) {
         const item = e.target.closest('.scene-item, .scene-target, .scene-link')
         if (!item) return
-        
+
         const itemName = this.getItemNameFromElement(item)
         const itemType = this.getItemTypeFromElement(item)
-        
+
+        // Special handling for links with linkToScene - they navigate when clicked
+        if (itemType === 'link') {
+            const itemData = this.game.inventoryManager?.getItemData(itemName)
+
+            // If it's a navigation link, activate it (unless using "use" action)
+            if (itemData?.linkToScene && this.currentAction !== 'use') {
+                this.activateSceneLink(itemName)
+                return
+            }
+        }
+
         switch (this.currentAction) {
             case 'examine':
                 this.examineSceneItem(itemName, itemType)
@@ -174,6 +185,54 @@ export class UIManager extends EventEmitter {
             case 'use':
                 this.useOnSceneItem(itemName, itemType)
                 break
+            default:
+                // No action selected - for links, try to activate them
+                if (itemType === 'link') {
+                    this.activateSceneLink(itemName)
+                } else {
+                    this.showMessage("Choose an action first (Examine, Get, or Use).")
+                }
+                break
+        }
+    }
+
+    /**
+     * Activate a scene link (navigate to linked scene)
+     * @param {string} itemName - Link item name
+     */
+    activateSceneLink(itemName) {
+        const itemData = this.game.inventoryManager?.getItemData(itemName)
+
+        if (!itemData) {
+            this.showMessage("This doesn't seem to lead anywhere.")
+            return
+        }
+
+        // Check if this link has a target scene
+        if (itemData.linkToScene) {
+            // Check if target scene is locked
+            const targetSceneState = this.game.sceneManager?.getSceneState(itemData.linkToScene)
+
+            if (targetSceneState?.locked) {
+                const message = itemData.lockedMessage || "The way is blocked."
+                this.showMessage(message)
+                return
+            }
+
+            // Navigate to the linked scene
+            const message = itemData.useMessage || `You proceed through the ${itemData.longName || itemName}.`
+            this.showMessage(message)
+
+            // Add points if specified
+            if (itemData.points) {
+                const achievementId = `navigate_${itemName}_to_${itemData.linkToScene}`
+                this.game.addScore(itemData.points, achievementId)
+            }
+
+            // Change to the linked scene
+            this.game.sceneManager?.changeScene(itemData.linkToScene)
+        } else {
+            this.showMessage("This doesn't seem to lead anywhere.")
         }
     }
 
@@ -196,13 +255,16 @@ export class UIManager extends EventEmitter {
      */
     examineSceneItem(itemName, itemType) {
         const itemData = this.game.inventoryManager?.getItemData(itemName)
-        
+
         if (itemData) {
             const message = itemData.lookAt || `You examine the ${itemData.longName || itemName}.`
             this.showMessage(message)
         } else {
             this.showMessage(`You examine the ${itemName}.`)
         }
+
+        // Clear the action after examining
+        this.setAction(null)
     }
 
     /**
@@ -215,19 +277,22 @@ export class UIManager extends EventEmitter {
             this.showMessage("You can't get this.")
             return
         }
-        
+
         // Try to add to inventory
         const success = this.game.inventoryManager?.addItem(itemName)
-        
+
         if (success) {
             // Remove from scene
             this.game.sceneManager?.removeItemFromScene(itemName)
             this.removeSceneItemElement(itemName)
-            
+
             // Show pickup message
             const itemData = this.game.inventoryManager?.getItemData(itemName)
             const message = itemData?.pickUpMessage || `You pick up the ${itemData?.longName || itemName}.`
             this.showMessage(message)
+
+            // Clear the action after getting the item
+            this.setAction(null)
         }
     }
 
@@ -238,15 +303,17 @@ export class UIManager extends EventEmitter {
      */
     useOnSceneItem(itemName, itemType) {
         const selectedItems = this.game.inventoryManager?.getSelectedItems() || []
-        
+
         if (selectedItems.length === 0) {
             this.showMessage("Select an item to use first.")
             return
         }
-        
+
         if (selectedItems.length === 1) {
             // Use selected item on this target
             this.game.inventoryManager?.useItemOnTarget(selectedItems[0], itemName)
+            // Clear the action after using the item
+            this.setAction(null)
         } else {
             this.showMessage("You can only use one item at a time on targets.")
         }
@@ -377,15 +444,19 @@ export class UIManager extends EventEmitter {
      * Update scene items display
      */
     updateSceneItems() {
+        console.log('🎨 updateSceneItems called')
         if (!this.elements.sceneItemsOverlay) return
-        
+
         this.elements.sceneItemsOverlay.innerHTML = ''
-        
+
         const sceneItems = this.game.sceneManager?.getCurrentSceneItems() || []
         const gameData = this.game.gameData
-        
+
+        console.log('🎨 Scene items to render:', sceneItems)
+
         sceneItems.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
+            console.log('🎨 Item data for', itemName, ':', itemData)
             if (itemData) {
                 this.createSceneItemElement(itemData)
             }
@@ -397,20 +468,24 @@ export class UIManager extends EventEmitter {
      * @param {Object} itemData - Item data
      */
     createSceneItemElement(itemData) {
+        console.log('🎨 Creating scene item element for:', itemData.name, 'type:', itemData.type)
         const element = document.createElement('button')
         element.className = `${itemData.name} icon-font icon-${itemData.name} scene-${itemData.type} prop`
-        
+
         if (itemData.type === 'link') {
             element.style.position = 'absolute'
             element.style.left = `${itemData.position[0]}px`
             element.style.top = `${itemData.position[1]}px`
             element.style.width = `${itemData.size[0]}px`
             element.style.height = `${itemData.size[1]}px`
+            console.log('🎨 Link positioned at:', itemData.position, 'size:', itemData.size)
         }
-        
+
         element.textContent = itemData.longName || itemData.name
-        
+
+        console.log('🎨 Appending element to overlay. Overlay exists?', !!this.elements.sceneItemsOverlay)
         this.elements.sceneItemsOverlay?.appendChild(element)
+        console.log('🎨 Element appended. Total children:', this.elements.sceneItemsOverlay?.children.length)
     }
 
     /**

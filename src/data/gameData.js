@@ -32,24 +32,26 @@ export const gameData = {
             items: ["torch", "rope"]
         },
         {
-            sceneName: "scene2", 
+            sceneName: "scene2",
             title: "Inside the Cave",
-            textOne: "The cave is dark and damp. You can hear water dripping somewhere in the distance.",
+            textOne: "The cave is dark and damp. You can hear water dripping somewhere in the distance. You see a boat by the water's edge.",
             stage: "Stage 2",
             stageNumber: 2,
             sceneType: "indoor",
             sceneMusic: "ambient2",
-            items: ["key", "map"]
+            items: ["key", "map", "boat", "oar"]  // Boat and oar are HERE so you can use them to unlock scene3
         },
         {
             sceneName: "scene3",
             title: "The Underground Lake",
             textOne: "You emerge into a vast underground cavern with a crystal-clear lake in the center.",
-            stage: "Stage 3", 
+            stage: "Stage 3",
             stageNumber: 3,
             sceneType: "underground",
             sceneMusic: "ambient3",
-            items: ["boat", "oar"]
+            items: [],  // Empty - you unlock this by using oar on boat in scene2
+            locked: true,  // This scene is locked initially - need to use oar on boat to unlock
+            unlockedBy: "crossing"  // Unlocked when "crossing" item is created
         },
         {
             sceneName: "scene4",
@@ -222,9 +224,10 @@ export const gameData = {
             type: "target",
             lookAt: "A small wooden boat that looks seaworthy enough for the lake.",
             useWith: "oar",
-            useMessage: "You use the oar to paddle across the lake safely.",
+            useMessage: "You use the oar to paddle across the lake safely. The boat takes you to the other side!",
             useResult: "crossing",
             outcome: "scene",
+            nextScene: "scene3",  // Unlocks scene3 when used
             points: 30,
             position: [180, 250],
             size: [120, 80]
@@ -244,6 +247,22 @@ export const gameData = {
             points: 15,
             position: [300, 200],
             size: [100, 30]
+        },
+        {
+            name: "crossing",
+            longName: "Lake Crossing",
+            type: "link",
+            lookAt: "The boat is ready to take you across the lake to the other side.",
+            pickUpMessage: null,
+            useWith: null,
+            useMessage: "You board the boat and cross the lake to the other side.",
+            useResult: null,
+            outcome: "scene",
+            linkToScene: "scene3",  // ← Clicking this link takes you to scene3!
+            lockedMessage: "The boat isn't ready yet.",  // Message if scene3 is still locked
+            points: 20,  // Points for using the crossing
+            position: [200, 220],
+            size: [150, 100]
         },
         
         // Additional items for other scenes...

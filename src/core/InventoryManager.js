@@ -306,9 +306,10 @@ export class InventoryManager extends EventEmitter {
         const message = combination.useMessage || `You combine the items and create ${resultItem}.`
         this.game.uiManager?.showMessage(message)
 
-        // Add score if specified
+        // Add score if specified (use combination as achievement ID)
         if (combination.points) {
-            this.game.addScore(combination.points)
+            const achievementId = `combine_${item1}_${item2}`
+            this.game.addScore(combination.points, achievementId)
         }
 
         // Clear selection
@@ -324,7 +325,8 @@ export class InventoryManager extends EventEmitter {
      */
     useItemOnTarget(itemName, targetName) {
         const itemData = this.getItemData(itemName)
-        
+        const targetData = this.getItemData(targetName)
+
         if (!itemData) {
             this.game.uiManager?.showMessage("You can't use that.")
             return
@@ -332,7 +334,9 @@ export class InventoryManager extends EventEmitter {
 
         // Check if this item can be used on this target
         if (itemData.useWith === targetName) {
-            this.performItemUse(itemData, targetName)
+            // Use the TARGET's data for the result, not the item's data
+            // This allows targets to define what happens when items are used on them
+            this.performItemUse(itemData, targetData || itemData, targetName)
         } else {
             this.game.uiManager?.showMessage("That doesn't work.")
         }
@@ -340,35 +344,53 @@ export class InventoryManager extends EventEmitter {
 
     /**
      * Perform item use action
-     * @param {Object} itemData - Item data
+     * @param {Object} itemData - Item being used (from inventory)
+     * @param {Object} targetData - Target data (what the item is being used on)
      * @param {string} targetName - Target name
      */
-    performItemUse(itemData, targetName) {
-        const resultItem = itemData.useResult
-        const outcome = itemData.outcome
+    performItemUse(itemData, targetData, targetName) {
+        console.log('🎯 performItemUse called:', { itemData, targetData, targetName })
 
-        // Remove item if specified
+        // Use target's data for result/outcome if it's a target, otherwise use item's data
+        const resultData = targetData.type === 'target' ? targetData : itemData
+        const resultItem = resultData.useResult
+        const outcome = resultData.outcome
+
+        console.log('🎯 Result data:', { resultItem, outcome, type: resultData.type })
+
+        // Remove item from inventory if specified
         if (outcome === 'remove') {
             this.removeItem(itemData.name)
         }
 
         // Add result item if specified
         if (resultItem) {
-            if (itemData.type === 'item') {
-                this.addItem(resultItem)
-            } else {
-                // Add to scene or perform other actions
+            console.log('🎯 Adding result item:', resultItem, 'outcome:', outcome, 'type:', resultData.type)
+            if (outcome === 'scene' || resultData.type === 'target') {
+                // Add to scene (for targets or scene outcomes)
+                console.log('🎯 Adding to scene:', resultItem)
                 this.game.sceneManager?.addItemToScene(resultItem)
+                this.game.uiManager?.updateSceneItems()
+            } else {
+                // Add to inventory (for regular items)
+                console.log('🎯 Adding to inventory:', resultItem)
+                this.addItem(resultItem)
             }
         }
 
-        // Show message
-        const message = itemData.useMessage || `You use the ${itemData.longName || itemData.name}.`
+        // Show message (prefer target's message if available)
+        const message = resultData.useMessage || `You use the ${itemData.longName || itemData.name}.`
         this.game.uiManager?.showMessage(message)
 
-        // Add score if specified
-        if (itemData.points) {
-            this.game.addScore(itemData.points)
+        // Add score if specified (prefer target's points)
+        if (resultData.points) {
+            const achievementId = `use_${itemData.name}_on_${targetName}`
+            this.game.addScore(resultData.points, achievementId)
+        }
+
+        // Check if this unlocks a scene transition
+        if (resultData.nextScene) {
+            this.game.sceneManager?.unlockScene(resultData.nextScene)
         }
 
         this.emit('itemUsed', { item: itemData.name, target: targetName, result: resultItem })

@@ -40,7 +40,9 @@ export class SceneManager extends EventEmitter {
                 this.sceneStates.set(scene.sceneName, {
                     visited: false,
                     items: [...(scene.items || [])], // Clone items array
-                    customState: {}
+                    customState: {},
+                    locked: scene.locked || false, // Track if scene is locked
+                    unlockedBy: scene.unlockedBy || null // What unlocks this scene
                 })
             }
         })
@@ -95,6 +97,14 @@ export class SceneManager extends EventEmitter {
     async nextScene() {
         if (this.currentSceneIndex < this.scenes.length - 1) {
             const nextScene = this.scenes[this.currentSceneIndex + 1]
+            const nextSceneState = this.getSceneState(nextScene.sceneName)
+
+            // Check if next scene is locked
+            if (nextSceneState.locked) {
+                this.game.uiManager?.showMessage("You can't go there yet. Something is blocking the way.")
+                return
+            }
+
             await this.changeScene(nextScene.sceneName)
         } else {
             console.log('📍 Already at the last scene')
@@ -132,7 +142,9 @@ export class SceneManager extends EventEmitter {
             this.sceneStates.set(sceneName, {
                 visited: false,
                 items: [],
-                customState: {}
+                customState: {},
+                locked: false,
+                unlockedBy: null
             })
         }
         return this.sceneStates.get(sceneName)
@@ -193,14 +205,47 @@ export class SceneManager extends EventEmitter {
      * @param {string} itemName - Item name to add
      */
     addItemToScene(itemName) {
-        if (!this.currentScene) return
+        console.log('🎬 addItemToScene called with:', itemName)
+        if (!this.currentScene) {
+            console.log('🎬 No current scene!')
+            return
+        }
 
         const sceneState = this.getSceneState(this.currentScene.sceneName)
-        
+        console.log('🎬 Current scene state items:', sceneState.items)
+
         if (!sceneState.items.includes(itemName)) {
             sceneState.items.push(itemName)
+            console.log('🎬 Item added! New items:', sceneState.items)
             this.emit('sceneItemAdded', { sceneName: this.currentScene.sceneName, itemName })
+        } else {
+            console.log('🎬 Item already in scene')
         }
+    }
+
+    /**
+     * Unlock a scene (allows navigation to it)
+     * @param {string} sceneName - Scene name to unlock
+     */
+    unlockScene(sceneName) {
+        const sceneState = this.getSceneState(sceneName)
+        if (sceneState.locked) {
+            sceneState.locked = false
+            console.log(`🔓 Scene unlocked: ${sceneName}`)
+            this.emit('sceneUnlocked', sceneName)
+            this.game.uiManager?.showMessage("That works!")
+        }
+    }
+
+    /**
+     * Lock a scene (prevents navigation to it)
+     * @param {string} sceneName - Scene name to lock
+     */
+    lockScene(sceneName) {
+        const sceneState = this.getSceneState(sceneName)
+        sceneState.locked = true
+        console.log(`🔒 Scene locked: ${sceneName}`)
+        this.emit('sceneLocked', sceneName)
     }
 
     /**
@@ -245,10 +290,18 @@ export class SceneManager extends EventEmitter {
 
     /**
      * Check if we can navigate to next scene
-     * @returns {boolean} True if next scene is available
+     * @returns {boolean} True if next scene is available and unlocked
      */
     canGoNext() {
-        return this.currentSceneIndex < this.scenes.length - 1
+        if (this.currentSceneIndex >= this.scenes.length - 1) {
+            return false
+        }
+
+        const nextScene = this.scenes[this.currentSceneIndex + 1]
+        const nextSceneState = this.getSceneState(nextScene.sceneName)
+
+        // Can go next if scene is not locked
+        return !nextSceneState.locked
     }
 
     /**
