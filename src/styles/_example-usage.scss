@@ -1,0 +1,224 @@
+// Example Usage of SASS Variables
+// This file demonstrates how to use the variables defined in _variables.scss
+// You can copy these examples into your main.scss file
+
+// Import variables (use this at the top of any SCSS file that needs variables)
+@use 'variables' as *;
+
+/* ============================================
+   EXAMPLE 1: Using Color Variables
+   ============================================ */
+
+// Simple color usage
+.example-button {
+  background-color: $main-pink;
+  color: $light-yellow;
+  border: 2px solid $dark-pink;
+  
+  &:hover {
+    background-color: $light-pink;
+  }
+}
+
+// Using colors in gradients
+.example-gradient {
+  background: linear-gradient(135deg, $main-marine 0%, $dark-marine 100%);
+}
+
+// Using colors with transparency
+.example-overlay {
+  background-color: rgba($dark-blue, 0.8); // 80% opacity
+}
+
+/* ============================================
+   EXAMPLE 2: Using Spacing Variables
+   ============================================ */
+
+.example-card {
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  gap: $spacing-sm;
+}
+
+/* ============================================
+   EXAMPLE 3: Using Font Size Variables
+   ============================================ */
+
+.example-heading {
+  font-size: $font-size-3xl;
+}
+
+.example-text {
+  font-size: $font-size-base;
+}
+
+/* ============================================
+   EXAMPLE 4: Using Border Radius Variables
+   ============================================ */
+
+.example-rounded {
+  border-radius: $border-radius-lg;
+}
+
+.example-pill {
+  border-radius: $border-radius-full;
+}
+
+/* ============================================
+   EXAMPLE 5: Using Transition Variables
+   ============================================ */
+
+.example-animated {
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* ============================================
+   EXAMPLE 6: Combining Multiple Variables
+   ============================================ */
+
+.example-dialog {
+  background-color: $dark-blue;
+  color: $light-yellow;
+  padding: $spacing-xl;
+  border-radius: $border-radius-lg;
+  border: 3px solid $primary-dialog-highlight;
+  transition: all $transition-base;
+  
+  &:hover {
+    border-color: $main-yellow;
+    box-shadow: 0 0 20px rgba($primary-dialog-highlight, 0.5);
+  }
+}
+
+/* ============================================
+   EXAMPLE 7: Creating Color Schemes
+   ============================================ */
+
+// Marine theme
+.theme-marine {
+  background-color: $darker-marine;
+  color: $light-marine;
+  
+  .highlight {
+    color: $main-marine;
+  }
+}
+
+// Pink theme
+.theme-pink {
+  background-color: $dark-pink;
+  color: $light-pink;
+  
+  .highlight {
+    color: $main-pink;
+  }
+}
+
+// Yellow theme
+.theme-yellow {
+  background-color: $dark-yellow;
+  color: $main-yellow;
+  
+  .highlight {
+    color: $primary-dialog-highlight;
+  }
+}
+
+/* ============================================
+   EXAMPLE 8: Using Variables in Calculations
+   ============================================ */
+
+.example-calculated {
+  // Double the base spacing
+  padding: $spacing-md * 2;
+  
+  // Half the base font size
+  font-size: $font-size-base * 0.5;
+  
+  // Combine spacing values
+  margin: $spacing-sm $spacing-lg;
+}
+
+/* ============================================
+   EXAMPLE 9: Creating Mixins with Variables
+   ============================================ */
+
+@mixin button-style($bg-color, $text-color) {
+  background-color: $bg-color;
+  color: $text-color;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-md;
+  transition: all $transition-base;
+  border: none;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($bg-color, 0.4);
+  }
+}
+
+// Usage of mixin
+.btn-primary {
+  @include button-style($main-pink, $light-yellow);
+}
+
+.btn-secondary {
+  @include button-style($main-marine, $white);
+}
+
+.btn-highlight {
+  @include button-style($primary-dialog-highlight, $dark-blue);
+}
+
+/* ============================================
+   EXAMPLE 10: Nested Selectors with Variables
+   ============================================ */
+
+.game-ui {
+  background-color: $dark-blue;
+  padding: $spacing-lg;
+  
+  .header {
+    color: $main-yellow;
+    font-size: $font-size-2xl;
+    margin-bottom: $spacing-md;
+    
+    .subtitle {
+      color: $light-yellow;
+      font-size: $font-size-base;
+    }
+  }
+  
+  .content {
+    background-color: $darker-marine;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    
+    .item {
+      padding: $spacing-sm;
+      border-bottom: 1px solid $dark-marine;
+      transition: background-color $transition-fast;
+      
+      &:hover {
+        background-color: $main-marine;
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+  
+  .footer {
+    margin-top: $spacing-lg;
+    padding-top: $spacing-md;
+    border-top: 2px solid $primary-dialog-highlight;
+    color: $light-marine;
+  }
+}
+

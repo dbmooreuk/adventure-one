@@ -5,8 +5,10 @@
   "type": "module",
   "main": "src/main.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "sass:watch": "sass --watch src/styles/main.scss:src/styles/main.css --style expanded",
+    "sass:build": "sass src/styles/main.scss:src/styles/main.css --style compressed",
+    "dev": "npm run sass:watch & vite",
+    "build": "npm run sass:build && vite build",
     "preview": "vite preview",
     "serve": "vite preview --port 3000"
   },
