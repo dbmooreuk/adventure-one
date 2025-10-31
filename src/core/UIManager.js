@@ -56,6 +56,7 @@ export class UIManager extends EventEmitter {
             // Navigation buttons
             btnBack: document.querySelector('.btn-back'),
             btnNext: document.querySelector('.btn-next'),
+            btnStart: document.querySelector('.btn-start'),
             
             // Menu elements
             menuToggle: document.querySelector('#menu-toggle'),
@@ -68,6 +69,7 @@ export class UIManager extends EventEmitter {
             // Containers
             gameContainer: document.querySelector('.game-container'),
             sceneContainer: document.querySelector('.scene-container'),
+            btnActionsContainer: document.querySelector('.btn-actions-container'),
             messages: document.querySelector('.messages'),
             loader: document.querySelector('#loader')
         }
@@ -85,6 +87,7 @@ export class UIManager extends EventEmitter {
         // Navigation buttons
         this.elements.btnBack?.addEventListener('click', () => this.navigateBack())
         this.elements.btnNext?.addEventListener('click', () => this.navigateNext())
+        this.elements.btnStart?.addEventListener('click', () => this.startGame())
         
         // Menu buttons
         this.elements.menuToggle?.addEventListener('click', () => this.toggleMenu())
@@ -268,6 +271,14 @@ export class UIManager extends EventEmitter {
     }
 
     /**
+     * Start the game from splash screen
+     */
+    startGame() {
+        // Navigate to the first actual game scene (scene1)
+        this.game.sceneManager?.changeScene('scene1')
+    }
+
+    /**
      * Toggle menu visibility
      */
     toggleMenu() {
@@ -312,35 +323,54 @@ export class UIManager extends EventEmitter {
      * @param {Object} sceneData - Scene data
      */
     updateScene(sceneData) {
+        console.log(`🎬 UIManager.updateScene called with:`, sceneData)
+
+        // Update body classes first
+        this.updateBodyClasses(sceneData)
+
+        // Update UI visibility based on scene type BEFORE fadeIn
+        this.updateUIVisibility(sceneData)
+
         // Update scene text
+        const isSplashScene = sceneData.sceneType === 'splash'
+
         if (this.elements.sceneTitle) {
-            this.elements.sceneTitle.style.display = 'none'
             this.elements.sceneTitle.innerHTML = sceneData.title || ''
-            this.fadeIn(this.elements.sceneTitle)
+            if (!isSplashScene) {
+                this.elements.sceneTitle.style.display = 'none'
+                this.fadeIn(this.elements.sceneTitle)
+            } else {
+                // On splash, just show it without animation
+                this.elements.sceneTitle.style.display = 'block'
+                this.elements.sceneTitle.style.opacity = '1'
+            }
         }
-        
+
         if (this.elements.sceneText) {
-            this.elements.sceneText.style.display = 'none'
             this.elements.sceneText.innerHTML = sceneData.textOne || ''
-            this.fadeIn(this.elements.sceneText)
+            if (!isSplashScene) {
+                this.elements.sceneText.style.display = 'none'
+                this.fadeIn(this.elements.sceneText)
+            } else {
+                // On splash, just show it without animation
+                this.elements.sceneText.style.display = 'block'
+                this.elements.sceneText.style.opacity = '1'
+            }
         }
-        
+
         // Update stage title
         if (this.elements.stageTitle) {
             this.elements.stageTitle.textContent = sceneData.stage || ''
         }
-        
+
         // Update scene items
         this.updateSceneItems()
-        
+
         // Update navigation buttons
         this.updateNavigationButtons()
-        
+
         // Update progress pips
         this.updateProgressPips()
-        
-        // Update body classes
-        this.updateBodyClasses(sceneData)
     }
 
     /**
@@ -532,13 +562,59 @@ export class UIManager extends EventEmitter {
     updateBodyClasses(sceneData) {
         // Remove old scene classes
         document.body.className = document.body.className.replace(/scene-\w+/g, '')
-        
+
         // Add new scene class
         document.body.classList.add(`scene-${sceneData.sceneName}`)
-        
+
         // Add scene type class
         if (sceneData.sceneType) {
             document.body.classList.add(`type-${sceneData.sceneType}`)
+        }
+    }
+
+    /**
+     * Update UI element visibility based on scene type
+     * @param {Object} sceneData - Scene data
+     */
+    updateUIVisibility(sceneData) {
+        const isSplashScene = sceneData.sceneType === 'splash'
+
+        console.log(`🎭 Updating UI visibility for scene: ${sceneData.sceneName}, type: ${sceneData.sceneType}, isSplash: ${isSplashScene}`)
+
+        // Elements to hide on splash screen
+        const elementsToHide = [
+            this.elements.scoreBox,
+            this.elements.panelText,
+            this.elements.sceneInventoryOverlay,
+            this.elements.btnActionsContainer,
+            this.elements.stageTitle,
+            this.elements.pipsContainer
+        ]
+
+        // Hide/show elements based on scene type
+        elementsToHide.forEach((element, index) => {
+            if (element) {
+                element.style.display = isSplashScene ? 'none' : ''
+                console.log(`  Element ${index} (${element.className}): ${isSplashScene ? 'hidden' : 'shown'}`)
+            } else {
+                console.log(`  Element ${index}: not found`)
+            }
+        })
+
+        // Handle navigation buttons
+        if (this.elements.btnBack) {
+            this.elements.btnBack.style.display = isSplashScene ? 'none' : ''
+            console.log(`  Back button: ${isSplashScene ? 'hidden' : 'shown'}`)
+        }
+        if (this.elements.btnNext) {
+            this.elements.btnNext.style.display = isSplashScene ? 'none' : ''
+            console.log(`  Next button: ${isSplashScene ? 'hidden' : 'shown'}`)
+        }
+        if (this.elements.btnStart) {
+            this.elements.btnStart.style.display = isSplashScene ? '' : 'none'
+            console.log(`  Start button: ${isSplashScene ? 'shown' : 'hidden'}`)
+        } else {
+            console.log(`  Start button: not found`)
         }
     }
 
@@ -600,9 +676,14 @@ export class UIManager extends EventEmitter {
      * @param {Element} element - Element to fade in
      */
     fadeIn(element) {
+        // Don't fade in if element should be hidden (e.g., on splash screen)
+        if (element.style.display === 'none') {
+            return
+        }
+
         element.style.opacity = '0'
         element.style.display = 'block'
-        
+
         element.animate([
             { opacity: '0' },
             { opacity: '1' }

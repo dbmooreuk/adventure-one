@@ -170,6 +170,7 @@ export class Game extends EventEmitter {
      * Handle scene change events
      */
     handleSceneChange(sceneData) {
+        console.log(`🎮 Game.handleSceneChange called with:`, sceneData)
         this.currentScene = sceneData
         this.stateManager.setState('currentScene', sceneData.sceneName)
         

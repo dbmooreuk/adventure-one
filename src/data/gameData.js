@@ -119,7 +119,7 @@ export const gameData = {
             stageNumber: 10,
             sceneType: "treasure",
             sceneMusic: "ambient10",
-            items: ["treasure", "crown"]
+            items: ["treasure", "darkness"]
         },
         {
             sceneName: "scene11",
@@ -165,7 +165,7 @@ export const gameData = {
             useWith: "darkness",
             useMessage: "The torch illuminates the area, revealing hidden details.",
             useResult: "light",
-            outcome: "keep",
+            outcome: "keep",//means stays in inventory after use
             points: 10,
             position: [100, 150],
             size: [50, 80]
@@ -229,6 +229,8 @@ export const gameData = {
             position: [180, 250],
             size: [120, 80]
         },
+
+
         {
             name: "oar",
             longName: "Wooden Oar",

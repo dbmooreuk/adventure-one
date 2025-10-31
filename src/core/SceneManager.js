@@ -72,10 +72,14 @@ export class SceneManager extends EventEmitter {
             this.game.stateManager.setState('currentSceneIndex', this.currentSceneIndex)
 
             // Handle stage intro
+            console.log(`🎭 About to handle stage intro for scene:`, scene.sceneName)
             this.handleStageIntro(scene)
+            console.log(`🎭 Stage intro handled`)
 
             // Emit scene change event
+            console.log(`🎭 SceneManager emitting 'sceneChanged' event for:`, scene)
             this.emit('sceneChanged', scene)
+            console.log(`🎭 Event emitted successfully`)
 
             console.log(`✅ Scene changed to: ${sceneName}`)
 
