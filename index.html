@@ -30,7 +30,7 @@
     <!-- Game Container -->
     <div class="game-container">
         <!-- Menu -->
-        <div id="menu-container">
+        <div id="menu-container" class="menu-container">
             <div id="menu-toggle" class="menu-toggle">
                 <div class="burger-line one"></div>
                 <div class="burger-line two"></div>
@@ -46,26 +46,29 @@
 
         <!-- Game Scene -->
         <div class="scene-container">
+
+                            <!-- Inventory -->
+                <div class="inventory-wrapper">
+                    <h1 class="scene-title"></h1>
+                    <p class="scene-text"></p>
+                    <div class="panel-text"></div>
+                    <div class="scene-inventory-overlay"></div>
+                    <div class="score-box">0%</div>
+                </div>
+
+
             <!-- Scene Items Overlay -->
             <div class="scene-items-overlay"></div>
             
-            <!-- Scene Content -->
-            <div class="scene-content">
-                <h1 class="scene-title"></h1>
-                <p class="scene-text"></p>
-                <div class="score-box">0%</div>
-                <div class="panel-text"></div>
-                
-                <!-- Inventory -->
-                <div class="scene-inventory-overlay"></div>
-                
-                <!-- Action Buttons -->
+
+
+
+                            <!-- Action Buttons -->
                 <div class="btn-actions-container">
                     <button class="btn btn-action btn-examine">Examine</button>
                     <button class="btn btn-action btn-get">Get</button>
                     <button class="btn btn-action btn-use">Use</button>
                 </div>
-            </div>
             
             <!-- Navigation -->
             <nav class="nav-directions">
@@ -75,8 +78,8 @@
             </nav>
             
             <!-- Stage Info -->
-            <h2 class="stage-title"></h2>
-            <div class="pips-container">
+            <!-- <h2 class="stage-title"></h2> -->
+            <!-- <div class="pips-container"> -->
                 <span></span>
             </div>
         </div>

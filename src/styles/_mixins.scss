@@ -1,0 +1,117 @@
+// =============================================================================
+// Mixins
+// =============================================================================
+
+/**
+ * Vertical gradient mixin
+ * @param {color} $start - Starting color at the top
+ * @param {color} $end - Ending color at the bottom
+ */
+@mixin vertical-gradient($start, $end) {
+    background: $start;
+    background: linear-gradient(to bottom, $start 0%, $end 100%);
+}
+
+/**
+ * Horizontal gradient mixin
+ * @param {color} $start - Starting color on the left
+ * @param {color} $end - Ending color on the right
+ */
+@mixin horizontal-gradient($start, $end) {
+    background: $start;
+    background: linear-gradient(to right, $start 0%, $end 100%);
+}
+
+/**
+ * Radial gradient mixin
+ * @param {color} $center - Center color
+ * @param {color} $edge - Edge color
+ */
+@mixin radial-gradient($center, $edge) {
+    background: $center;
+    background: radial-gradient(circle, $center 0%, $edge 100%);
+}
+
+// =============================================================================
+// Box Shadow Mixins
+// =============================================================================
+
+/**
+ * Small shadow - subtle elevation
+ */
+@mixin shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/**
+ * Medium shadow - default elevation
+ */
+@mixin shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/**
+ * Large shadow - prominent elevation
+ */
+@mixin shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/**
+ * Extra large shadow - high elevation
+ */
+@mixin shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/**
+ * 2XL shadow - maximum elevation
+ */
+@mixin shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/**
+ * Inner shadow - inset effect
+ */
+@mixin shadow-inner {
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+/**
+ * Custom shadow mixin
+ * @param {string} $x - Horizontal offset
+ * @param {string} $y - Vertical offset
+ * @param {string} $blur - Blur radius
+ * @param {string} $spread - Spread radius
+ * @param {color} $color - Shadow color
+ */
+@mixin shadow-custom($x, $y, $blur, $spread, $color) {
+    box-shadow: $x $y $blur $spread $color;
+}
+
+/**
+ * Glow effect - colored shadow
+ * @param {color} $color - Glow color
+ * @param {string} $size - Glow size (sm, md, lg)
+ */
+@mixin shadow-glow($color, $size: md) {
+    @if $size == sm {
+        box-shadow: 0 0 10px rgba($color, 0.5);
+    } @else if $size == md {
+        box-shadow: 0 0 20px rgba($color, 0.6);
+    } @else if $size == lg {
+        box-shadow: 0 0 30px rgba($color, 0.7);
+    }
+}
+
+/**
+ * No shadow - remove all shadows
+ */
+@mixin shadow-none {
+    box-shadow: none;
+}
+

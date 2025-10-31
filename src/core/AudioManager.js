@@ -154,11 +154,9 @@ export class AudioManager extends EventEmitter {
      * @param {number} volume - Volume override (0-1)
      */
     playSound(soundId, volume = null) {
-        console.log(`🔊 playSound called with: ${soundId}`)
         const audio = this.audioElements.get(soundId)
         if (!audio) {
             console.warn(`🔊 Sound not found: ${soundId}`)
-            console.log(`🔊 Available audio elements:`, Array.from(this.audioElements.keys()))
             return
         }
 
@@ -167,16 +165,12 @@ export class AudioManager extends EventEmitter {
             const soundClone = audio.cloneNode(true)
             soundClone.volume = (volume !== null ? volume : this.sfxVolume) * this.masterVolume
 
-            console.log(`🔊 Playing sound: ${soundId} at volume: ${soundClone.volume}`)
-
             // Clean up after playing
             soundClone.addEventListener('ended', () => {
                 soundClone.remove()
             })
 
-            soundClone.play().then(() => {
-                console.log(`🔊 Sound started playing: ${soundId}`)
-            }).catch(err => {
+            soundClone.play().catch(err => {
                 console.error(`🔊 Failed to play sound ${soundId}:`, err)
             })
 

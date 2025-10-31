@@ -63,12 +63,7 @@ export class InventoryManager extends EventEmitter {
         this.emit('inventoryChanged', this.getItems())
 
         // Play sound effect
-        console.log(`🎒 Attempting to play sound, audioManager exists:`, !!this.game.audioManager)
-        if (this.game.audioManager) {
-            this.game.audioManager.playSound('addToInventory')
-        } else {
-            console.warn(`🎒 AudioManager not available!`)
-        }
+        this.game.audioManager?.playSound('addToInventory')
 
         return true
     }
