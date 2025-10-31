@@ -39,11 +39,46 @@ npm run sass:build
 ## File Structure
 
 ```
-src/styles/
-├── _variables.scss       # Color palette and design tokens
-├── _example-usage.scss   # Examples of how to use variables
-├── main.scss            # Main stylesheet (imports variables)
-└── README.md            # This file
+src/
+├── assets/
+│   └── fonts/           # Web font files (woff, ttf)
+└── styles/
+    ├── _fonts.scss          # Font-face declarations
+    ├── _variables.scss      # Color palette, typography, and design tokens
+    ├── _example-usage.scss  # Examples of how to use variables
+    ├── main.scss           # Main stylesheet (imports fonts & variables)
+    └── README.md           # This file
+```
+
+## Typography
+
+### Font Families
+
+The project uses **Latin Modern Mono** as the primary font - a clean, modern monospace typeface.
+
+**Available font variables:**
+- `$font-family-mono: 'Latin Modern Mono', 'Courier New', Courier, monospace`
+- `$font-family-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, ...`
+
+**Font weights and styles:**
+- Regular (400) - Normal text
+- Bold (700) - Headings, emphasis
+- Italic (400) - Emphasis, quotes
+
+**Usage:**
+```scss
+body {
+  font-family: $font-family-mono;
+}
+
+.system-text {
+  font-family: $font-family-system; // Fallback to system fonts if needed
+}
+
+.emphasis {
+  font-weight: 700; // Bold
+  font-style: italic; // Italic
+}
 ```
 
 ## Color Palette

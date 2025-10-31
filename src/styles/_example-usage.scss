@@ -6,6 +6,42 @@
 @use 'variables' as *;
 
 /* ============================================
+   EXAMPLE 0: Using Typography Variables
+   ============================================ */
+
+// Using the monospace font
+.game-text {
+  font-family: $font-family-mono;
+  font-size: $font-size-base;
+}
+
+// Bold text
+.game-title {
+  font-family: $font-family-mono;
+  font-size: $font-size-3xl;
+  font-weight: 700; // Bold
+}
+
+// Italic text
+.game-description {
+  font-family: $font-family-mono;
+  font-size: $font-size-lg;
+  font-style: italic;
+}
+
+// Bold italic
+.game-emphasis {
+  font-family: $font-family-mono;
+  font-weight: 700;
+  font-style: italic;
+}
+
+// Fallback to system fonts
+.ui-text {
+  font-family: $font-family-system;
+}
+
+/* ============================================
    EXAMPLE 1: Using Color Variables
    ============================================ */
 
