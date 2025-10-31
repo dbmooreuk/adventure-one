@@ -7,6 +7,36 @@ import './styles/main.css'
 import { Game } from './core/Game.js'
 import { registerServiceWorker } from './utils/serviceWorker.js'
 
+/**
+ * Scale game to fit window while maintaining aspect ratio
+ */
+function scaleGame() {
+    const baseWidth = 1280
+    const baseHeight = 720
+    const gameContainer = document.querySelector('.game-container')
+
+    if (!gameContainer) return
+
+    // Calculate scale to fit window while maintaining aspect ratio
+    const scaleX = window.innerWidth / baseWidth
+    const scaleY = window.innerHeight / baseHeight
+    const scale = Math.min(scaleX, scaleY)
+
+    // Apply scale transform
+    gameContainer.style.transform = `scale(${scale})`
+
+    // Center the game container
+    const scaledWidth = baseWidth * scale
+    const scaledHeight = baseHeight * scale
+    const offsetX = (window.innerWidth - scaledWidth) / 2
+    const offsetY = (window.innerHeight - scaledHeight) / 2
+
+    gameContainer.style.left = `${offsetX}px`
+    gameContainer.style.top = `${offsetY}px`
+
+    console.log(`🎮 Game scaled to ${(scale * 100).toFixed(1)}% (${Math.round(scaledWidth)}x${Math.round(scaledHeight)})`)
+}
+
 // Initialize the game when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -26,10 +56,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Initialize the game
         const game = new Game()
         await game.initialize()
-        
+
         // Make game globally accessible for debugging
         window.game = game
-        
+
+        // Initial game scaling
+        scaleGame()
+
         console.log('🎮 Adventure Game initialized successfully!')
         
     } catch (error) {
@@ -63,4 +96,12 @@ window.addEventListener('beforeunload', () => {
     if (window.game) {
         window.game.saveManager?.autoSave()
     }
+})
+
+// Handle window resize for responsive scaling
+window.addEventListener('resize', scaleGame)
+
+// Handle orientation change for mobile devices
+window.addEventListener('orientationchange', () => {
+    setTimeout(scaleGame, 100) // Small delay to ensure dimensions are updated
 })
