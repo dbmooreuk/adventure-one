@@ -8,6 +8,7 @@
     "sass:watch": "sass --watch src/styles/main.scss:src/styles/main.css --style expanded",
     "sass:build": "sass src/styles/main.scss:src/styles/main.css --style compressed",
     "dev": "npm run sass:watch & vite",
+    "dev:network": "npm run sass:watch & vite --host",
     "build": "npm run sass:build && vite build",
     "preview": "vite preview",
     "serve": "vite preview --port 3000"

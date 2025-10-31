@@ -398,13 +398,16 @@ export class UIManager extends EventEmitter {
         // Update UI visibility based on scene type BEFORE fadeIn
         this.updateUIVisibility(sceneData)
 
+        // Update scene background image
+        this.updateSceneBackground(sceneData)
+
         // Update scene text
         const isSplashScene = sceneData.sceneType === 'splash'
 
         if (this.elements.sceneTitle) {
             this.elements.sceneTitle.innerHTML = sceneData.title || ''
             if (!isSplashScene) {
-                this.elements.sceneTitle.style.display = 'none'
+                this.elements.sceneTitle.style.display = 'block'
                 this.fadeIn(this.elements.sceneTitle)
             } else {
                 // On splash, just show it without animation
@@ -416,7 +419,7 @@ export class UIManager extends EventEmitter {
         if (this.elements.sceneText) {
             this.elements.sceneText.innerHTML = sceneData.textOne || ''
             if (!isSplashScene) {
-                this.elements.sceneText.style.display = 'none'
+                this.elements.sceneText.style.display = 'block'
                 this.fadeIn(this.elements.sceneText)
             } else {
                 // On splash, just show it without animation
@@ -438,6 +441,25 @@ export class UIManager extends EventEmitter {
 
         // Update progress pips
         this.updateProgressPips()
+    }
+
+    /**
+     * Update scene background image
+     * @param {Object} sceneData - Scene data
+     */
+    updateSceneBackground(sceneData) {
+        const sceneContainer = this.elements.sceneContainer
+        if (!sceneContainer) return
+
+        if (sceneData.backgroundImage) {
+            const imagePath = `/src/assets/images/backgrounds/${sceneData.backgroundImage}`
+            sceneContainer.style.backgroundImage = `url('${imagePath}')`
+            console.log(`🖼️ Set background image: ${imagePath}`)
+        } else {
+            // Use default gradient if no image specified
+            sceneContainer.style.backgroundImage = ''
+            console.log(`🖼️ Using default background (no image specified)`)
+        }
     }
 
     /**
@@ -472,16 +494,31 @@ export class UIManager extends EventEmitter {
         const element = document.createElement('button')
         element.className = `${itemData.name} icon-font icon-${itemData.name} scene-${itemData.type} prop`
 
-        if (itemData.type === 'link') {
+        // Position the element
+        if (itemData.position && itemData.size) {
             element.style.position = 'absolute'
             element.style.left = `${itemData.position[0]}px`
             element.style.top = `${itemData.position[1]}px`
             element.style.width = `${itemData.size[0]}px`
             element.style.height = `${itemData.size[1]}px`
-            console.log('🎨 Link positioned at:', itemData.position, 'size:', itemData.size)
+            console.log('🎨 Item positioned at:', itemData.position, 'size:', itemData.size)
         }
 
-        element.textContent = itemData.longName || itemData.name
+        // Add image if specified
+        if (itemData.image) {
+            const imagePath = `/src/assets/images/items/${itemData.image}`
+            element.style.backgroundImage = `url('${imagePath}')`
+            element.style.backgroundSize = 'contain'
+            element.style.backgroundRepeat = 'no-repeat'
+            element.style.backgroundPosition = 'center'
+            console.log(`🖼️ Set item image: ${imagePath}`)
+
+            // If image is used, make text smaller or hide it
+            element.style.fontSize = '0.7rem'
+            element.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.8)'
+        } else {
+            element.textContent = itemData.longName || itemData.name
+        }
 
         console.log('🎨 Appending element to overlay. Overlay exists?', !!this.elements.sceneItemsOverlay)
         this.elements.sceneItemsOverlay?.appendChild(element)
@@ -506,18 +543,32 @@ export class UIManager extends EventEmitter {
      */
     updateInventory(items) {
         if (!this.elements.sceneInventoryOverlay) return
-        
+
         this.elements.sceneInventoryOverlay.innerHTML = ''
-        
+
         const gameData = this.game.gameData
-        
+
         items.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
             if (itemData) {
                 const element = document.createElement('button')
                 element.className = `${itemName} icon-font icon-${itemName} inventory-item prop`
-                element.textContent = itemData.longName || itemName
-                
+
+                // Add image if specified
+                if (itemData.image) {
+                    const imagePath = `/src/assets/images/items/${itemData.image}`
+                    element.style.backgroundImage = `url('${imagePath}')`
+                    element.style.backgroundSize = 'contain'
+                    element.style.backgroundRepeat = 'no-repeat'
+                    element.style.backgroundPosition = 'center'
+
+                    // Make text smaller for inventory items with images
+                    element.style.fontSize = '0.6rem'
+                    element.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.8)'
+                } else {
+                    element.textContent = itemData.longName || itemName
+                }
+
                 this.elements.sceneInventoryOverlay.appendChild(element)
             }
         })
@@ -751,10 +802,7 @@ export class UIManager extends EventEmitter {
      * @param {Element} element - Element to fade in
      */
     fadeIn(element) {
-        // Don't fade in if element should be hidden (e.g., on splash screen)
-        if (element.style.display === 'none') {
-            return
-        }
+        if (!element) return
 
         element.style.opacity = '0'
         element.style.display = 'block'

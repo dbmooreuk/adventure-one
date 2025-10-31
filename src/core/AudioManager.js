@@ -96,6 +96,8 @@ export class AudioManager extends EventEmitter {
         // Stop current ambient if playing
         if (this.currentAmbient && this.currentAmbient !== audio) {
             await this.stopAmbient(true) // Fade out current
+            // Small delay to ensure audio state is clean
+            await new Promise(resolve => setTimeout(resolve, 100))
         }
 
         // Don't restart if same track is already playing
@@ -104,19 +106,23 @@ export class AudioManager extends EventEmitter {
         }
 
         try {
+            // Reset audio element state
+            audio.pause()
+            audio.currentTime = 0
+
             this.currentAmbient = audio
             audio.loop = true
             audio.volume = fadeIn ? 0 : this.musicVolume * this.masterVolume
-            
+
             await audio.play()
-            
+
             if (fadeIn) {
                 this.fadeIn(audio, this.musicVolume * this.masterVolume)
             }
-            
+
             console.log(`🔊 Playing ambient: ${trackId}`)
             this.emit('ambientStarted', trackId)
-            
+
         } catch (error) {
             console.error(`🔊 Failed to play ambient ${trackId}:`, error)
         }
@@ -148,24 +154,32 @@ export class AudioManager extends EventEmitter {
      * @param {number} volume - Volume override (0-1)
      */
     playSound(soundId, volume = null) {
+        console.log(`🔊 playSound called with: ${soundId}`)
         const audio = this.audioElements.get(soundId)
         if (!audio) {
             console.warn(`🔊 Sound not found: ${soundId}`)
+            console.log(`🔊 Available audio elements:`, Array.from(this.audioElements.keys()))
             return
         }
 
         try {
             // Clone the audio element for overlapping sounds
-            const soundClone = audio.cloneNode()
+            const soundClone = audio.cloneNode(true)
             soundClone.volume = (volume !== null ? volume : this.sfxVolume) * this.masterVolume
-            
+
+            console.log(`🔊 Playing sound: ${soundId} at volume: ${soundClone.volume}`)
+
             // Clean up after playing
             soundClone.addEventListener('ended', () => {
                 soundClone.remove()
             })
-            
-            soundClone.play()
-            
+
+            soundClone.play().then(() => {
+                console.log(`🔊 Sound started playing: ${soundId}`)
+            }).catch(err => {
+                console.error(`🔊 Failed to play sound ${soundId}:`, err)
+            })
+
             this.emit('soundPlayed', soundId)
             
         } catch (error) {
