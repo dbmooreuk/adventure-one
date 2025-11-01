@@ -19,7 +19,7 @@ export const gameData = {
             stageNumber: 0,
             sceneType: "splash",
             sceneMusic: "silence",
-            backgroundImage: "splash.png", // Optional: background image filename
+            backgroundImage: "screen-splash.png", // Optional: background image filename
             items: []
         },
         {

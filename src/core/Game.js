@@ -10,12 +10,13 @@ import { AudioManager } from './AudioManager.js'
 import { UIManager } from './UIManager.js'
 import { SaveManager } from './SaveManager.js'
 import { InventoryManager } from './InventoryManager.js'
+import { IntroManager } from './IntroManager.js'
 import { gameData } from '../data/gameData.js'
 
 export class Game extends EventEmitter {
     constructor() {
         super()
-        
+
         // Core systems
         this.stateManager = new StateManager()
         this.sceneManager = new SceneManager(this)
@@ -23,6 +24,7 @@ export class Game extends EventEmitter {
         this.uiManager = new UIManager(this)
         this.saveManager = new SaveManager(this)
         this.inventoryManager = new InventoryManager(this)
+        this.introManager = new IntroManager(this)
         
         // Game state
         this.isInitialized = false
@@ -54,18 +56,14 @@ export class Game extends EventEmitter {
             await this.sceneManager.initialize()
             await this.saveManager.initialize()
             await this.inventoryManager.initialize()
-            
+            await this.introManager.initialize()
+
             // Set up event listeners
             this.setupEventListeners()
-            
-            // Try to load saved game or start new game
-            const hasSavedGame = await this.saveManager.hasSavedGame()
-            if (hasSavedGame) {
-                await this.saveManager.loadGame()
-            } else {
-                await this.startNewGame()
-            }
-            
+
+            // Show intro screen (it will handle saved game check)
+            // Don't auto-start the game anymore - let intro screen handle it
+
             this.isInitialized = true
             this.emit('gameInitialized')
             
@@ -128,8 +126,8 @@ export class Game extends EventEmitter {
         this.inventoryManager.clear()
         this.stateManager.reset()
 
-        // Start with splash scene
-        await this.sceneManager.changeScene('splash')
+        // Start with first actual game scene (skip splash)
+        await this.sceneManager.changeScene('scene1')
 
         this.emit('gameStarted')
     }
@@ -139,10 +137,26 @@ export class Game extends EventEmitter {
      */
     async resetGame() {
         console.log('🔄 Resetting game...')
-        
+
+        // Confirm before resetting
+        const confirmed = confirm('Are you sure you want to reset the game? This will delete your saved progress and return you to the intro screen.')
+        if (!confirmed) {
+            console.log('Reset cancelled by user')
+            return
+        }
+
+        // Clear saved game
         await this.saveManager.clearSave()
-        await this.startNewGame()
-        
+
+        // Reset all state
+        this.score = 0
+        this.achievements.clear()
+        this.inventoryManager.clear()
+        this.stateManager.reset()
+
+        // Show intro screen instead of starting game
+        await this.introManager.show()
+
         this.emit('gameReset')
     }
 

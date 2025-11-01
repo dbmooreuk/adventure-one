@@ -53,12 +53,17 @@ npm install
 # Start development server
 npm run dev
 
+npm run dev -- --host # To access on network
+
 # Build for production
 npm run build
 
 # Preview production build
 npm run serve
-```
+
+#kill all running servers
+killall node
+
 
 ### Development
 

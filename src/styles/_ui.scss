@@ -2,12 +2,7 @@
 @use 'variables' as *;
 
 
-.menu-container{
-  position: absolute;
-  top: $spacing-md;
-  left: $spacing-md;
-  z-index: 100;
-}
+
 
 /* UI Panel */
 .ui-panel {
@@ -92,12 +87,37 @@
   transform: translateY(0);
 }
 
+/* Secondary Button Styling */
+.btn-secondary {
+  background: transparent;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
 
 /* Menu */
 .menu-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
+  position: absolute;
+  top: $spacing-md;
+  left: $spacing-md;
   width: 50px;
   height: 50px;
   border: none;
@@ -115,9 +135,12 @@
 }
 
 .menu {
-  position: fixed;
-  top: 4rem;
-  right: 1rem;
+  position: absolute;
+  top: auto;
+  bottom: auto;
+  right: auto;
+  left: auto;
+  display: block;
   background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(15px);
   border-radius: 10px;
