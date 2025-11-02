@@ -31,7 +31,7 @@ export const gameData = {
             sceneType: "outdoor",
             sceneMusic: "ambient1",
             backgroundImage: "screen-stasis.png", // Background image for this scene
-            items: ["torch", "rope"]
+            items: ["torch", "rope" , "crossing"]
         },
         {
             sceneName: "scene2",
