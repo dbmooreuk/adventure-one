@@ -1,4 +1,5 @@
 import { EventEmitter } from './EventEmitter.js'
+import { audio } from '../config/gameConfig.js'
 
 /**
  * IntroManager - Manages the intro/splash screen
@@ -144,12 +145,28 @@ export class IntroManager extends EventEmitter {
      */
     async resetGame() {
         console.log('🔄 Resetting game from intro...')
-        
+
         const confirmed = confirm('This will delete your saved game. Are you sure?')
         if (!confirmed) return
 
+        // Stop all audio
+        this.game.audioManager?.stopAmbient()
+
         // Clear saved game
         await this.game.saveManager.clearSave()
+
+        // Reset all game state
+        this.game.score = 0
+        this.game.achievements.clear()
+        this.game.inventoryManager.clear()
+        this.game.stateManager.reset()
+        this.game.sceneManager.reset() // Reset all scene states (restores items to scenes)
+
+        // Clear all scene UI elements (even though we're on intro, clear any residual UI)
+        this.game.uiManager?.clearScene()
+
+        // Play intro music again
+        await this.game.audioManager?.playAmbient(audio.introMusic)
 
         // Update button visibility
         await this.checkSavedGame()
@@ -194,6 +211,11 @@ export class IntroManager extends EventEmitter {
         }
         if (menuContainer) {
             menuContainer.style.display = 'none'
+        }
+
+        // Play intro music
+        if (this.game.audioManager) {
+            await this.game.audioManager.playAmbient(audio.introMusic)
         }
 
         // Refresh saved game check

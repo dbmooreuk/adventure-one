@@ -4,6 +4,7 @@
  */
 
 import { EventEmitter } from './EventEmitter.js'
+import { audio } from '../config/gameConfig.js'
 
 export class AudioManager extends EventEmitter {
     constructor(game) {
@@ -13,9 +14,11 @@ export class AudioManager extends EventEmitter {
         this.currentAmbient = null
         this.isMuted = false
         this.masterVolume = 1.0
-        this.musicVolume = 0.7
+        this.musicVolume = audio.defaultVolume
         this.sfxVolume = 0.8
         this.fadeInterval = null
+        this.fadeOutDuration = audio.fadeOutDuration
+        this.fadeInDuration = audio.fadeInDuration
     }
 
     /**
@@ -185,9 +188,9 @@ export class AudioManager extends EventEmitter {
      * Fade in audio
      * @param {HTMLAudioElement} audio - Audio element
      * @param {number} targetVolume - Target volume (0-1)
-     * @param {number} duration - Fade duration in milliseconds
+     * @param {number} duration - Fade duration in milliseconds (uses config default)
      */
-    fadeIn(audio, targetVolume = 1, duration = 1000) {
+    fadeIn(audio, targetVolume = 1, duration = this.fadeInDuration) {
         return new Promise((resolve) => {
             if (this.isMuted) {
                 resolve()
@@ -217,9 +220,9 @@ export class AudioManager extends EventEmitter {
     /**
      * Fade out audio
      * @param {HTMLAudioElement} audio - Audio element
-     * @param {number} duration - Fade duration in milliseconds
+     * @param {number} duration - Fade duration in milliseconds (uses config default)
      */
-    fadeOut(audio, duration = 1000) {
+    fadeOut(audio, duration = this.fadeOutDuration) {
         return new Promise((resolve) => {
             const startVolume = audio.volume
             const volumeStep = startVolume / (duration / 50)
@@ -353,14 +356,15 @@ export class AudioManager extends EventEmitter {
             const saved = localStorage.getItem('audioSettings')
             if (saved) {
                 const settings = JSON.parse(saved)
-                
+
                 this.isMuted = settings.isMuted || false
                 this.masterVolume = settings.masterVolume || 1.0
-                this.musicVolume = settings.musicVolume || 0.7
+                this.musicVolume = settings.musicVolume || audio.defaultVolume
                 this.sfxVolume = settings.sfxVolume || 0.8
-                
-                this.updateAllVolumes()
             }
+
+            // Always update volumes to apply config defaults or loaded settings
+            this.updateAllVolumes()
         } catch (error) {
             console.warn('🔊 Failed to load audio settings:', error)
         }

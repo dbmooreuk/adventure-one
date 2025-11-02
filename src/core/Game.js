@@ -12,6 +12,7 @@ import { SaveManager } from './SaveManager.js'
 import { InventoryManager } from './InventoryManager.js'
 import { IntroManager } from './IntroManager.js'
 import { gameData } from '../data/gameData.js'
+import { gameplay } from '../config/gameConfig.js'
 
 export class Game extends EventEmitter {
     constructor() {
@@ -25,13 +26,13 @@ export class Game extends EventEmitter {
         this.saveManager = new SaveManager(this)
         this.inventoryManager = new InventoryManager(this)
         this.introManager = new IntroManager(this)
-        
+
         // Game state
         this.isInitialized = false
         this.isPaused = false
         this.currentScene = null
         this.score = 0
-        this.stages = 13
+        this.stages = gameplay.totalStages
         this.achievements = new Set() // Track completed achievements to prevent duplicate scoring
 
         // Bind methods
@@ -125,6 +126,10 @@ export class Game extends EventEmitter {
         this.achievements.clear() // Clear all achievements
         this.inventoryManager.clear()
         this.stateManager.reset()
+        this.sceneManager.reset() // Reset all scene states (restores items to scenes)
+
+        // Clear UI
+        this.uiManager.clearScene()
 
         // Start with first actual game scene (skip splash)
         await this.sceneManager.changeScene('scene1')
@@ -145,6 +150,9 @@ export class Game extends EventEmitter {
             return
         }
 
+        // Stop all audio
+        this.audioManager.stopAmbient()
+
         // Clear saved game
         await this.saveManager.clearSave()
 
@@ -153,6 +161,10 @@ export class Game extends EventEmitter {
         this.achievements.clear()
         this.inventoryManager.clear()
         this.stateManager.reset()
+        this.sceneManager.reset() // Reset all scene states (restores items to scenes)
+
+        // Clear all scene UI elements
+        this.uiManager.clearScene()
 
         // Show intro screen instead of starting game
         await this.introManager.show()

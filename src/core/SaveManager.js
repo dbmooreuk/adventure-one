@@ -4,15 +4,16 @@
  */
 
 import { EventEmitter } from './EventEmitter.js'
+import { storage, gameplay } from '../config/gameConfig.js'
 
 export class SaveManager extends EventEmitter {
     constructor(game) {
         super()
         this.game = game
-        this.saveKey = 'adventureGame_save'
-        this.settingsKey = 'adventureGame_settings'
+        this.saveKey = storage.saveGameKey
+        this.settingsKey = storage.settingsKey
         this.autoSaveInterval = null
-        this.autoSaveDelay = 30000 // 30 seconds
+        this.autoSaveDelay = gameplay.autoSaveDelay
     }
 
     /**

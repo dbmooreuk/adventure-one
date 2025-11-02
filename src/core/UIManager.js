@@ -4,6 +4,7 @@
  */
 
 import { EventEmitter } from './EventEmitter.js'
+import { ui } from '../config/gameConfig.js'
 
 export class UIManager extends EventEmitter {
     constructor(game) {
@@ -587,19 +588,32 @@ export class UIManager extends EventEmitter {
     /**
      * Show a message to the player
      * @param {string} message - Message text
-     * @param {number} duration - Display duration in milliseconds
+     * @param {number} duration - Display duration in milliseconds (uses config default)
      */
-    showMessage(message, duration = 3000) {
+    showMessage(message, duration = ui.messageDisplayDuration) {
         if (!this.elements.panelText) return
-        
+
+        // Remove existing show class if present
+        this.elements.panelText.classList.remove('show')
+
+        // Set message content
         this.elements.panelText.innerHTML = message
-        
+
+        // Set CSS variable for animation duration
+        this.elements.panelText.style.setProperty('--message-duration', `${duration}ms`)
+
+        // Force reflow to restart animation
+        void this.elements.panelText.offsetWidth
+
+        // Add show class to trigger animation
+        this.elements.panelText.classList.add('show')
+
         // Clear existing timeout
         if (this.messageTimeout) {
             clearTimeout(this.messageTimeout)
         }
-        
-        // Auto-clear message after duration
+
+        // Auto-clear message after animation completes
         this.messageTimeout = setTimeout(() => {
             this.clearMessage()
         }, duration)
@@ -610,9 +624,15 @@ export class UIManager extends EventEmitter {
      */
     clearMessage() {
         if (this.elements.panelText) {
-            this.elements.panelText.innerHTML = ''
+            this.elements.panelText.classList.remove('show')
+            // Clear content after animation
+            setTimeout(() => {
+                if (this.elements.panelText) {
+                    this.elements.panelText.innerHTML = ''
+                }
+            }, 300)
         }
-        
+
         if (this.messageTimeout) {
             clearTimeout(this.messageTimeout)
             this.messageTimeout = null
@@ -810,9 +830,47 @@ export class UIManager extends EventEmitter {
         element.animate([
             { opacity: '0' },
             { opacity: '1' }
-        ], { duration: 1000, easing: 'ease-in' }).onfinish = () => {
+        ], { duration: ui.sceneTransitionDuration, easing: 'ease-in' }).onfinish = () => {
             element.style.opacity = '1'
         }
+    }
+
+    /**
+     * Clear all scene UI elements
+     */
+    clearScene() {
+        console.log('🧹 Clearing all scene UI elements...')
+
+        // Clear scene items
+        if (this.elements.sceneItemsOverlay) {
+            this.elements.sceneItemsOverlay.innerHTML = ''
+        }
+
+        // Clear inventory
+        if (this.elements.sceneInventoryOverlay) {
+            this.elements.sceneInventoryOverlay.innerHTML = ''
+        }
+
+        // Clear scene text
+        if (this.elements.sceneTitle) {
+            this.elements.sceneTitle.textContent = ''
+        }
+        if (this.elements.sceneText) {
+            this.elements.sceneText.textContent = ''
+        }
+
+        // Clear background
+        if (this.elements.sceneContainer) {
+            this.elements.sceneContainer.style.backgroundImage = ''
+        }
+
+        // Reset score display
+        this.updateScore(0)
+
+        // Clear any active messages
+        this.clearMessage()
+
+        console.log('✅ Scene UI cleared')
     }
 
     /**
@@ -822,7 +880,7 @@ export class UIManager extends EventEmitter {
         if (this.messageTimeout) {
             clearTimeout(this.messageTimeout)
         }
-        
+
         this.elements = {}
         this.removeAllListeners()
     }

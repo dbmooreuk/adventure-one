@@ -329,6 +329,26 @@ export class SceneManager extends EventEmitter {
     }
 
     /**
+     * Reset all scene states to initial values
+     */
+    reset() {
+        console.log('🔄 Resetting all scene states...')
+
+        // Clear existing states
+        this.sceneStates.clear()
+
+        // Reinitialize all scene states from original game data
+        this.initializeSceneStates()
+
+        // Reset current scene
+        this.currentScene = null
+        this.currentSceneIndex = 0
+        this.stagesIntroStatus = false
+
+        console.log('✅ Scene states reset to initial values')
+    }
+
+    /**
      * Destroy the scene manager
      */
     destroy() {

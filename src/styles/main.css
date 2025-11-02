@@ -105,9 +105,45 @@ html {
 
 /* Messages */
 .panel-text {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
   font-size: 1rem;
+  background: rgba(0, 25, 40, 0.9);
+  padding: 12px 16px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 200;
+  pointer-events: none;
+  /* Initially hidden */
+  opacity: 0;
+  transform: translateY(20px);
+  /* Animation when shown - duration controlled by CSS variable */
+}
+.panel-text.show {
+  animation: fadeUpAndOut var(--message-duration, 5000ms) ease-in-out forwards;
 }
 
+/* Keyframe animation: fade up from bottom, stay visible, then fade out */
+@keyframes fadeUpAndOut {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
 .stage-title {
   top: 1rem;
   left: 1rem;

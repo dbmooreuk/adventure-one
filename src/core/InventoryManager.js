@@ -4,13 +4,14 @@
  */
 
 import { EventEmitter } from './EventEmitter.js'
+import { audio, inventory } from '../config/gameConfig.js'
 
 export class InventoryManager extends EventEmitter {
     constructor(game) {
         super()
         this.game = game
         this.items = []
-        this.maxItems = 20 // Maximum inventory size
+        this.maxItems = inventory.maxItems
         this.selectedItems = [] // For item combinations
     }
 
@@ -62,8 +63,8 @@ export class InventoryManager extends EventEmitter {
         this.emit('itemAdded', itemName)
         this.emit('inventoryChanged', this.getItems())
 
-        // Play sound effect
-        this.game.audioManager?.playSound('addToInventory')
+        // Play sound effect from config
+        this.game.audioManager?.playSound(audio.pickupSound)
 
         return true
     }
