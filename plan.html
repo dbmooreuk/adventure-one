@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Development Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .info-badge {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .scene-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .scene-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .scene-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .scene-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-stage {
+            background: #667eea;
+            color: white;
+        }
+
+        .badge-type {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .badge-locked {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .scene-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .scene-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .items-section {
+            margin-top: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
+        }
+
+        .item-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.2s;
+        }
+
+        .item-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .item-type {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-item {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .type-target {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .type-link {
+            background: #95e1d3;
+            color: #333;
+        }
+
+        .item-details {
+            display: grid;
+            gap: 8px;
+        }
+
+        .item-detail-row {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .item-detail-label {
+            font-weight: 600;
+            color: #666;
+            min-width: 100px;
+        }
+
+        .item-detail-value {
+            color: #333;
+            flex: 1;
+        }
+
+        .no-items {
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .outcome-keep { color: #4ecdc4; font-weight: 600; }
+        .outcome-remove { color: #ff6b6b; font-weight: 600; }
+        .outcome-scene { color: #95e1d3; font-weight: 600; }
+
+        /* Legend Section */
+        .legend-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .legend-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .legend-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .legend-heading {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .legend-label {
+            font-weight: 700;
+            color: #667eea;
+            min-width: 100px;
+            font-size: 13px;
+        }
+
+        .legend-desc {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="game-title">Loading...</h1>
+            <div class="game-info">
+                <div class="info-badge">Version: <span id="game-version">-</span></div>
+                <div class="info-badge">Total Scenes: <span id="total-scenes">-</span></div>
+                <div class="info-badge">Total Stages: <span id="total-stages">-</span></div>
+                <div class="info-badge">Total Items: <span id="total-items">-</span></div>
+            </div>
+        </header>
+
+        <div class="legend-section">
+            <h2 class="legend-title">📖 Game Mechanics Reference</h2>
+
+            <div class="legend-grid">
+                <div class="legend-card">
+                    <h3 class="legend-heading">Item Types</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="item-type type-item">item</span>
+                            <span class="legend-desc">Pickable items that go into inventory. Can be used with other items or targets.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="item-type type-target">target</span>
+                            <span class="legend-desc">Objects in the scene that items can be used on. Cannot be picked up.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="item-type type-link">link</span>
+                            <span class="legend-desc">Navigation links that appear after certain actions. Click to travel to another scene.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3 class="legend-heading">Outcomes</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="outcome-keep">keep</span>
+                            <span class="legend-desc">Item stays in inventory after use. Can be reused multiple times.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="outcome-remove">remove</span>
+                            <span class="legend-desc">Item is consumed/removed from inventory after use. One-time use only.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="outcome-scene">scene</span>
+                            <span class="legend-desc">Using this item/link triggers scene navigation or unlocks a new scene.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3 class="legend-heading">Use Result</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-label">Purpose:</span>
+                            <span class="legend-desc">The name of the new item/link created when two items are combined or used together.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Example:</span>
+                            <span class="legend-desc">Using "oar" on "boat" creates "crossing" (a link item that appears in the scene).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3 class="legend-heading">Scene Properties</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-label">Locked:</span>
+                            <span class="legend-desc">Scene cannot be accessed until unlocked by a specific action/item.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Unlocked By:</span>
+                            <span class="legend-desc">The useResult name that unlocks this scene (e.g., "crossing" unlocks scene3).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Link To Scene:</span>
+                            <span class="legend-desc">For link-type items, the scene ID they navigate to when clicked.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scenes-container">
+            <!-- Scenes will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { gameData } from './src/data/gameData.js';
+
+        function renderGamePlan() {
+            // Update header info
+            document.getElementById('game-title').textContent = gameData.title + ' - Development Plan';
+            document.getElementById('game-version').textContent = gameData.version;
+            document.getElementById('total-scenes').textContent = gameData.scenes.length;
+            document.getElementById('total-stages').textContent = gameData.stages;
+            document.getElementById('total-items').textContent = gameData.sceneItems.length;
+
+            const container = document.getElementById('scenes-container');
+            container.innerHTML = '';
+
+            // Render each scene
+            gameData.scenes.forEach(scene => {
+                const sceneCard = createSceneCard(scene);
+                container.appendChild(sceneCard);
+            });
+        }
+
+        function createSceneCard(scene) {
+            const card = document.createElement('div');
+            card.className = 'scene-card';
+
+            // Get items for this scene
+            const sceneItemNames = scene.items || [];
+            const sceneItemsData = sceneItemNames.map(itemName => 
+                gameData.sceneItems.find(item => item.name === itemName)
+            ).filter(Boolean);
+
+            card.innerHTML = `
+                <div class="scene-header">
+                    <div class="scene-title">${scene.title}</div>
+                    <div class="scene-meta">
+                        <span class="badge badge-stage">${scene.stage}</span>
+                        <span class="badge badge-type">${scene.sceneType}</span>
+                        ${scene.locked ? '<span class="badge badge-locked">🔒 Locked</span>' : ''}
+                    </div>
+                </div>
+
+                <div class="scene-description">${scene.textOne}</div>
+
+                <div class="scene-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Scene Name</div>
+                        <div class="detail-value">${scene.sceneName}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Stage Number</div>
+                        <div class="detail-value">${scene.stageNumber}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Music</div>
+                        <div class="detail-value">${scene.sceneMusic}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Background</div>
+                        <div class="detail-value">${scene.backgroundImage || 'None'}</div>
+                    </div>
+                    ${scene.locked ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Unlocked By</div>
+                            <div class="detail-value">${scene.unlockedBy}</div>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="items-section">
+                    <div class="section-title">
+                        Scene Items
+                        <span class="item-count">${sceneItemsData.length}</span>
+                    </div>
+                    ${sceneItemsData.length > 0 ? `
+                        <div class="items-grid">
+                            ${sceneItemsData.map(item => createItemCard(item)).join('')}
+                        </div>
+                    ` : '<div class="no-items">No items in this scene</div>'}
+                </div>
+            `;
+
+            return card;
+        }
+
+        function createItemCard(item) {
+            return `
+                <div class="item-card">
+                    <div class="item-header">
+                        <div class="item-name">${item.longName || item.name}</div>
+                        <div class="item-type type-${item.type}">${item.type}</div>
+                    </div>
+                    <div class="item-details">
+                        <div class="item-detail-row">
+                            <span class="item-detail-label">Name:</span>
+                            <span class="item-detail-value">${item.name}</span>
+                        </div>
+                        <div class="item-detail-row">
+                            <span class="item-detail-label">Look At:</span>
+                            <span class="item-detail-value">${item.lookAt || '-'}</span>
+                        </div>
+                        ${item.type === 'item' || item.type === 'target' ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Use With:</span>
+                                <span class="item-detail-value">${item.useWith || '-'}</span>
+                            </div>
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Use Result:</span>
+                                <span class="item-detail-value">${item.useResult || '-'}</span>
+                            </div>
+                        ` : ''}
+                        <div class="item-detail-row">
+                            <span class="item-detail-label">Outcome:</span>
+                            <span class="item-detail-value outcome-${item.outcome}">${item.outcome}</span>
+                        </div>
+                        ${item.linkToScene ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Link To Scene:</span>
+                                <span class="item-detail-value">${item.linkToScene}</span>
+                            </div>
+                        ` : ''}
+                        ${item.nextScene ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Next Scene:</span>
+                                <span class="item-detail-value">${item.nextScene}</span>
+                            </div>
+                        ` : ''}
+                        <div class="item-detail-row">
+                            <span class="item-detail-label">Points:</span>
+                            <span class="item-detail-value">${item.points || 0}</span>
+                        </div>
+                        ${item.image ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Image:</span>
+                                <span class="item-detail-value">${item.image}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initial render
+        renderGamePlan();
+
+        // Hot reload support - re-render when module changes
+        if (import.meta.hot) {
+            import.meta.hot.accept('./src/data/gameData.js', (newModule) => {
+                console.log('🔄 Game data updated, refreshing plan...');
+                location.reload();
+            });
+        }
+    </script>
+</body>
+</html>
+
