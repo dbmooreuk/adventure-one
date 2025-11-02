@@ -169,8 +169,9 @@ export class UIManager extends EventEmitter {
         if (itemType === 'link') {
             const itemData = this.game.inventoryManager?.getItemData(itemName)
 
-            // If it's a navigation link, activate it (unless using "use" action)
-            if (itemData?.linkToScene && this.currentAction !== 'use') {
+            // If it's a navigation link, activate it only when no action is selected or when action is 'get'
+            // Allow 'examine' and 'use' to work normally on links
+            if (itemData?.linkToScene && (!this.currentAction || this.currentAction === 'get')) {
                 this.activateSceneLink(itemName)
                 return
             }

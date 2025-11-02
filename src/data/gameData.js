@@ -224,7 +224,7 @@ export const gameData = {
             size: [80, 60]
         },
         
-        // Scene 3 items
+        // Scene 2 items (boat is in scene2, not scene3)
         {
             name: "boat",
             longName: "Small Boat",
@@ -233,7 +233,7 @@ export const gameData = {
             useWith: "oar",
             useMessage: "You use the oar to paddle across the lake safely. The boat takes you to the other side!",
             useResult: "crossing",
-            outcome: "scene",
+            outcome: "scene", // Create crossing link in scene
             nextScene: "scene3",  // Unlocks scene3 when used
             points: 30,
             image: "boat.png",
@@ -251,7 +251,7 @@ export const gameData = {
             useWith: "boat",
             useMessage: "You use the oar to paddle the boat across the water.",
             useResult: "crossing",
-            outcome: "remove",
+            outcome: "remove", // Remove oar from inventory when used on boat
             points: 15,
             position: [300, 200],
             size: [100, 30]

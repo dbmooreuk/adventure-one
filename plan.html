@@ -394,6 +394,14 @@
                             <span class="outcome-scene">scene</span>
                             <span class="legend-desc">Using this item/link triggers scene navigation or unlocks a new scene.</span>
                         </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Multiple:</span>
+                            <span class="legend-desc">Can use array like ["remove", "scene"] to combine outcomes.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Item + Target:</span>
+                            <span class="legend-desc">When using item on target, "remove" is checked on BOTH. Other outcomes (keep/scene) use target's value.</span>
+                        </div>
                     </div>
                 </div>
 
@@ -536,6 +544,13 @@
             return Array.from(outcomes).map(outcome => `<code>${outcome}</code>`).join(' ');
         }
 
+        function formatOutcome(outcome) {
+            if (Array.isArray(outcome)) {
+                return outcome.map(o => `<span class="outcome-${o}">${o}</span>`).join(', ');
+            }
+            return `<span class="outcome-${outcome}">${outcome}</span>`;
+        }
+
         function createItemCard(item) {
             return `
                 <div class="item-card">
@@ -564,7 +579,7 @@
                         ` : ''}
                         <div class="item-detail-row">
                             <span class="item-detail-label">Outcome:</span>
-                            <span class="item-detail-value outcome-${item.outcome}">${item.outcome}</span>
+                            <span class="item-detail-value">${formatOutcome(item.outcome)}</span>
                         </div>
                         ${item.linkToScene ? `
                             <div class="item-detail-row">

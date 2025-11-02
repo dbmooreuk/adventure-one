@@ -359,15 +359,22 @@ export class InventoryManager extends EventEmitter {
 
         console.log('🎯 Result data:', { resultItem, outcome, type: resultData.type })
 
-        // Remove item from inventory if specified
-        if (outcome === 'remove') {
+        // Normalize outcomes to arrays for easier checking (supports both string and array)
+        const resultOutcomes = Array.isArray(outcome) ? outcome : [outcome]
+        const itemOutcomes = Array.isArray(itemData.outcome) ? itemData.outcome : [itemData.outcome]
+
+        // Remove item from inventory if specified in EITHER the item's outcome OR the target's outcome
+        if (resultOutcomes.includes('remove') || itemOutcomes.includes('remove')) {
             this.removeItem(itemData.name)
         }
+
+        // Use result outcomes for scene/keep logic
+        const outcomes = resultOutcomes
 
         // Add result item if specified
         if (resultItem) {
             console.log('🎯 Adding result item:', resultItem, 'outcome:', outcome, 'type:', resultData.type)
-            if (outcome === 'scene' || resultData.type === 'target') {
+            if (outcomes.includes('scene') || resultData.type === 'target') {
                 // Add to scene (for targets or scene outcomes)
                 console.log('🎯 Adding to scene:', resultItem)
                 this.game.sceneManager?.addItemToScene(resultItem)
