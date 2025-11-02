@@ -1,0 +1,31 @@
+@use 'variables' as *;
+
+// Text colors
+
+.main-yellow {
+  color: $main-yellow;
+}
+.primary-highlight {
+  color: $primary-highlight;
+}
+.main-pink {
+  color: $main-pink;
+}
+
+.main-marine {
+  color: $main-marine;
+}
+
+// Background colors
+.main-yellow-bg{
+  background-color: $main-yellow;
+}
+.primary-highlight-bg {
+  background-color: $primary-highlight;
+}
+.main-pink-bg {
+  background-color: $main-pink;
+}
+.main-marine-bg {
+  background-color: $main-marine;
+}

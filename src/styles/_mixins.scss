@@ -7,30 +7,48 @@
  * Vertical gradient mixin
  * @param {color} $start - Starting color at the top
  * @param {color} $end - Ending color at the bottom
+ * @param {number} $opacity - Optional opacity (0-1), default is 1
  */
-@mixin vertical-gradient($start, $end) {
-    background: $start;
-    background: linear-gradient(to bottom, $start 0%, $end 100%);
+@mixin vertical-gradient($start, $end, $opacity: 1) {
+    @if $opacity < 1 {
+        background: rgba($start, $opacity);
+        background: linear-gradient(to bottom, rgba($start, $opacity) 0%, rgba($end, $opacity) 100%);
+    } @else {
+        background: $start;
+        background: linear-gradient(to bottom, $start 0%, $end 100%);
+    }
 }
 
 /**
  * Horizontal gradient mixin
  * @param {color} $start - Starting color on the left
  * @param {color} $end - Ending color on the right
+ * @param {number} $opacity - Optional opacity (0-1), default is 1
  */
-@mixin horizontal-gradient($start, $end) {
-    background: $start;
-    background: linear-gradient(to right, $start 0%, $end 100%);
+@mixin horizontal-gradient($start, $end, $opacity: 1) {
+    @if $opacity < 1 {
+        background: rgba($start, $opacity);
+        background: linear-gradient(to right, rgba($start, $opacity) 0%, rgba($end, $opacity) 100%);
+    } @else {
+        background: $start;
+        background: linear-gradient(to right, $start 0%, $end 100%);
+    }
 }
 
 /**
  * Radial gradient mixin
  * @param {color} $center - Center color
  * @param {color} $edge - Edge color
+ * @param {number} $opacity - Optional opacity (0-1), default is 1
  */
-@mixin radial-gradient($center, $edge) {
-    background: $center;
-    background: radial-gradient(circle, $center 0%, $edge 100%);
+@mixin radial-gradient($center, $edge, $opacity: 1) {
+    @if $opacity < 1 {
+        background: rgba($center, $opacity);
+        background: radial-gradient(circle, rgba($center, $opacity) 0%, rgba($edge, $opacity) 100%);
+    } @else {
+        background: $center;
+        background: radial-gradient(circle, $center 0%, $edge 100%);
+    }
 }
 
 // =============================================================================

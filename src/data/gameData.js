@@ -24,13 +24,13 @@ export const gameData = {
         },
         {
             sceneName: "scene1",
-            title: "The Beginning",
+            title: "The Stasis Chamber",
             textOne: "You find yourself standing at the entrance of a mysterious cave. The air is thick with anticipation.",
             stage: "Stage 1",
             stageNumber: 1,
             sceneType: "outdoor",
             sceneMusic: "ambient1",
-            backgroundImage: "scene1.png", // Background image for this scene
+            backgroundImage: "screen-stasis.png", // Background image for this scene
             items: ["torch", "rope"]
         },
         {

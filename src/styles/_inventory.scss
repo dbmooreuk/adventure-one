@@ -4,38 +4,30 @@
 /* Inventory */
 
 
-
-.inventory-wrapper {
+.panel-wrapper {
   position: absolute;
   top: $spacing-md;
   bottom: $spacing-md;
   right: $spacing-md;
-  border-radius: $border-radius-md;
-  width: 218px;
-  
-  display: flex;
+  border-radius: $border-radius-lg;
+  width: $inventory-width;
+  display: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 3px;
+  padding: $spacing-lg;
   pointer-events: none;
- @include vertical-gradient($main-blue, $dark-marine);
-     @include shadow-custom(2px, 4px, 8px, 0px, rgba(0, 0, 0, 0.3));
+ @include vertical-gradient($main-blue, $dark-marine, 0.2);
+  @include shadow-custom(2px, 4px, 8px, 0px, rgba(0, 0, 0, 0.3));
 }
 
-
-
 .scene-inventory-overlay {
-  // position: absolute;
-  // bottom: 80px;
-  // left: 0;
-  // right: 0;
-  // height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
+  position: absolute;
+  bottom: $spacing-lg;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 3px;
   pointer-events: none;
 }
 
@@ -43,21 +35,20 @@
   position: relative;
   width: 60px;
   height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.5rem;
   text-align: center;
   pointer-events: all;
   border: none;
-  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
   border-radius: 10px;
-  padding: 0.5rem;
-  color: white;
+
+
   cursor: pointer;
-  transition: all 0.3s ease;
-}
+    transition: all 0.3s ease;
+    border-radius: $border-radius-md;
+    background-color: $main-yellow;
+    box-shadow: 2px 2px 8.7px 0 var(--secondary-dark, $dark-blue) inset;
+  }
 
 .inventory-item:hover {
   background: rgba(255, 255, 255, 0.2);
