@@ -233,7 +233,7 @@ export const gameData = {
             useWith: "oar",
             useMessage: "You use the oar to paddle across the lake safely. The boat takes you to the other side!",
             useResult: "crossing",
-            outcome: "scene", // Create crossing link in scene
+            outcome: "scene", // ["scene", "removeTarget"] Create crossing link, remove oar from inventory, remove boat from scene
             nextScene: "scene3",  // Unlocks scene3 when used
             points: 30,
             image: "boat.png",

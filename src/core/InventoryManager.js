@@ -368,6 +368,12 @@ export class InventoryManager extends EventEmitter {
             this.removeItem(itemData.name)
         }
 
+        // Remove target from scene if specified (only works on targets)
+        if (resultOutcomes.includes('removeTarget') && targetData.type === 'target') {
+            this.game.sceneManager?.removeItemFromScene(targetName)
+            this.game.uiManager?.removeSceneItemElement(targetName)
+        }
+
         // Use result outcomes for scene/keep logic
         const outcomes = resultOutcomes
 

@@ -264,6 +264,7 @@
 
         .outcome-keep { color: #4ecdc4; font-weight: 600; }
         .outcome-remove { color: #ff6b6b; font-weight: 600; }
+        .outcome-removeTarget { color: #ff4757; font-weight: 600; }
         .outcome-scene { color: #95e1d3; font-weight: 600; }
 
         /* Legend Section */
@@ -391,16 +392,20 @@
                             <span class="legend-desc">Item is consumed/removed from inventory after use. One-time use only.</span>
                         </div>
                         <div class="legend-item">
+                            <span class="outcome-removeTarget">removeTarget</span>
+                            <span class="legend-desc">Target is removed from the scene after use (only works on targets).</span>
+                        </div>
+                        <div class="legend-item">
                             <span class="outcome-scene">scene</span>
                             <span class="legend-desc">Using this item/link triggers scene navigation or unlocks a new scene.</span>
                         </div>
                         <div class="legend-item">
                             <span class="legend-label">Multiple:</span>
-                            <span class="legend-desc">Can use array like ["remove", "scene"] to combine outcomes.</span>
+                            <span class="legend-desc">Can use array like ["scene", "remove", "removeTarget"] to combine outcomes.</span>
                         </div>
                         <div class="legend-item">
                             <span class="legend-label">Item + Target:</span>
-                            <span class="legend-desc">When using item on target, "remove" is checked on BOTH. Other outcomes (keep/scene) use target's value.</span>
+                            <span class="legend-desc">When using item on target, "remove" is checked on BOTH. Other outcomes use target's value.</span>
                         </div>
                     </div>
                 </div>
