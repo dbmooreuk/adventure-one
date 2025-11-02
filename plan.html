@@ -143,6 +143,17 @@
             font-weight: 500;
         }
 
+        .detail-value code {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            margin-right: 4px;
+            display: inline-block;
+        }
+
         .items-section {
             margin-top: 25px;
         }
@@ -491,6 +502,12 @@
                             <div class="detail-value">${scene.unlockedBy}</div>
                         </div>
                     ` : ''}
+                    ${getSceneOutcomes(sceneItemsData) ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Possible Outcomes</div>
+                            <div class="detail-value">${getSceneOutcomes(sceneItemsData)}</div>
+                        </div>
+                    ` : ''}
                 </div>
 
                 <div class="items-section">
@@ -507,6 +524,16 @@
             `;
 
             return card;
+        }
+
+        function getSceneOutcomes(sceneItems) {
+            const outcomes = new Set();
+            sceneItems.forEach(item => {
+                if (item.useResult) {
+                    outcomes.add(item.useResult);
+                }
+            });
+            return Array.from(outcomes).map(outcome => `<code>${outcome}</code>`).join(' ');
         }
 
         function createItemCard(item) {

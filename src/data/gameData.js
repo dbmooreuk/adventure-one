@@ -134,7 +134,9 @@ export const gameData = {
             stageNumber: 11,
             sceneType: "guardian",
             sceneMusic: "ambient11",
-            items: ["sword", "shield"]
+            items: ["sword", "shield"],
+            locked: true,  // Locked until crystal reveals the passage
+            unlockedBy: "revelation"  // Unlocked by using crystal on darkness
         },
         {
             sceneName: "scene12",
@@ -299,6 +301,39 @@ export const gameData = {
             points: 100,
             position: [250, 200],
             size: [100, 80]
+        },
+
+        // Scene 10 items - Treasure Chamber
+        {
+            name: "darkness",
+            longName: "Dark Corner",
+            type: "target",
+            lookAt: "A dark corner of the chamber shrouded in shadows. Something seems hidden there.",
+            useWith: "crystal",
+            useMessage: "The crystal's light reveals hidden passages in the darkness!",
+            useResult: "revelation",
+            outcome: "scene",
+            nextScene: "scene11",  // Reveals the path to the Guardian's Lair
+            points: 50,
+            image: "darkness.png",
+            position: [50, 100],
+            size: [80, 120]
+        },
+        {
+            name: "revelation",
+            longName: "Hidden Passage",
+            type: "link",
+            lookAt: "A secret passage revealed by the crystal's light. It leads deeper into the chamber.",
+            pickUpMessage: null,
+            useWith: null,
+            useMessage: "You step through the revealed passage.",
+            useResult: null,
+            outcome: "scene",
+            linkToScene: "scene11",  // Links to Guardian's Lair
+            lockedMessage: "The passage is still hidden in darkness.",
+            points: 30,
+            position: [60, 110],
+            size: [100, 140]
         }
     ],
     
