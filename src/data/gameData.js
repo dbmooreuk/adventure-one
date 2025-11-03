@@ -36,13 +36,39 @@ export const gameData = {
         {
             sceneName: "scene2",
             title: "Inside the Cave",
-            textOne: "The cave is dark and damp. You can hear water dripping somewhere in the distance. You see a boat by the water's edge.",
+            textOne: "The cave is dark and damp. You can hear water dripping somewhere in the distance. You see a boat by the water's edge and a mysterious safe in the corner.",
             stage: "Stage 2",
             stageNumber: 2,
             sceneType: "indoor",
             sceneMusic: "ambient2",
             backgroundImage: "scene2.png",
-            items: ["key", "map", "boat", "oar"]  // Boat and oar are HERE so you can use them to unlock scene3
+            items: ["key", "map", "boat", "oar", "safe_door"]  // Added safe_door for puzzle test
+        },
+        {
+            sceneName: "safe_puzzle",
+            title: "Safe Combination Lock",
+            textOne: "Enter the correct combination to unlock the safe.",
+            stage: "Stage 2",
+            stageNumber: 2,
+            sceneType: "puzzle",
+            puzzleModule: "SafeCombinationPuzzle",
+            puzzleConfig: {
+                solution: [3, 7, 2],
+                maxAttempts: 10,
+                dialCount: 3,
+                dialMax: 9,
+                hints: [
+                    "The first number is less than 5",
+                    "The middle number is greater than 5",
+                    "The last number is even"
+                ],
+                reward: "gold_bars",
+                points: 50,
+                returnScene: "scene2"
+            },
+            backgroundImage: "safe-closeup.png",
+            sceneMusic: "ambient2",
+            items: []
         },
         {
             sceneName: "scene3",
@@ -177,6 +203,28 @@ export const gameData = {
             image: "torch.png", // Item image filename
             position: [100, 150],
             size: [50, 80]
+        },
+
+        // Puzzle items - Safe puzzle
+        {
+            name: "safe_door",
+            longName: "Mysterious Safe",
+            type: "link",
+            linkToScene: "safe_puzzle",
+            lookAt: "A heavy safe with a combination lock. Maybe you can crack the code? (Hint: 3-7-2)",
+            image: "safe-small.png",
+            position: [800, 250],
+            size: [150, 200]
+        },
+        {
+            name: "gold_bars",
+            longName: "Gold Bars",
+            type: "item",
+            lookAt: "Shiny gold bars! These must be worth a fortune.",
+            pickUpMessage: "You obtained the gold bars from the safe!",
+            image: "gold-bars.png",
+            position: [0, 0],
+            size: [0, 0]
         },
         {
             name: "rope",

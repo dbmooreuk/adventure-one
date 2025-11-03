@@ -515,6 +515,30 @@
                             <div class="detail-value">${scene.unlockedBy}</div>
                         </div>
                     ` : ''}
+                    ${scene.sceneType === 'puzzle' && scene.puzzleConfig ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Puzzle Module</div>
+                            <div class="detail-value">${scene.puzzleModule}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Puzzle Reward</div>
+                            <div class="detail-value"><strong>${scene.puzzleConfig.reward || 'None'}</strong></div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Puzzle Points</div>
+                            <div class="detail-value">${scene.puzzleConfig.points || 0}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Return Scene</div>
+                            <div class="detail-value">${scene.puzzleConfig.returnScene || 'N/A'}</div>
+                        </div>
+                        ${scene.puzzleConfig.unlockScene ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Unlocks Scene</div>
+                                <div class="detail-value">${scene.puzzleConfig.unlockScene}</div>
+                            </div>
+                        ` : ''}
+                    ` : ''}
                     ${getSceneOutcomes(sceneItemsData) ? `
                         <div class="detail-item">
                             <div class="detail-label">Possible Outcomes</div>
@@ -572,6 +596,12 @@
                             <span class="item-detail-label">Look At:</span>
                             <span class="item-detail-value">${item.lookAt || '-'}</span>
                         </div>
+                        ${item.pickUpMessage ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Pickup Message:</span>
+                                <span class="item-detail-value">${item.pickUpMessage}</span>
+                            </div>
+                        ` : ''}
                         ${item.type === 'item' || item.type === 'target' ? `
                             <div class="item-detail-row">
                                 <span class="item-detail-label">Use With:</span>

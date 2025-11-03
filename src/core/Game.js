@@ -11,6 +11,7 @@ import { UIManager } from './UIManager.js'
 import { SaveManager } from './SaveManager.js'
 import { InventoryManager } from './InventoryManager.js'
 import { IntroManager } from './IntroManager.js'
+import { PuzzleManager } from './PuzzleManager.js'
 import { gameData } from '../data/gameData.js'
 import { gameplay } from '../config/gameConfig.js'
 
@@ -26,6 +27,7 @@ export class Game extends EventEmitter {
         this.saveManager = new SaveManager(this)
         this.inventoryManager = new InventoryManager(this)
         this.introManager = new IntroManager(this)
+        this.puzzleManager = new PuzzleManager(this)
 
         // Game state
         this.isInitialized = false
@@ -58,6 +60,7 @@ export class Game extends EventEmitter {
             await this.saveManager.initialize()
             await this.inventoryManager.initialize()
             await this.introManager.initialize()
+            await this.puzzleManager.initialize()
 
             // Set up event listeners
             this.setupEventListeners()

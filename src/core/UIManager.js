@@ -725,10 +725,11 @@ export class UIManager extends EventEmitter {
      */
     updateUIVisibility(sceneData) {
         const isSplashScene = sceneData.sceneType === 'splash'
+        const isPuzzleScene = sceneData.sceneType === 'puzzle'
 
-        console.log(`🎭 Updating UI visibility for scene: ${sceneData.sceneName}, type: ${sceneData.sceneType}, isSplash: ${isSplashScene}`)
+        console.log(`🎭 Updating UI visibility for scene: ${sceneData.sceneName}, type: ${sceneData.sceneType}, isSplash: ${isSplashScene}, isPuzzle: ${isPuzzleScene}`)
 
-        // Elements to hide on splash screen
+        // Elements to hide on splash screen or puzzle scenes
         const elementsToHide = [
             this.elements.scoreBox,
             this.elements.panelText,
@@ -741,8 +742,8 @@ export class UIManager extends EventEmitter {
         // Hide/show elements based on scene type
         elementsToHide.forEach((element, index) => {
             if (element) {
-                element.style.display = isSplashScene ? 'none' : ''
-                console.log(`  Element ${index} (${element.className}): ${isSplashScene ? 'hidden' : 'shown'}`)
+                element.style.display = (isSplashScene || isPuzzleScene) ? 'none' : ''
+                console.log(`  Element ${index} (${element.className}): ${(isSplashScene || isPuzzleScene) ? 'hidden' : 'shown'}`)
             } else {
                 console.log(`  Element ${index}: not found`)
             }
@@ -750,12 +751,18 @@ export class UIManager extends EventEmitter {
 
         // Handle navigation buttons
         if (this.elements.btnBack) {
-            this.elements.btnBack.style.display = isSplashScene ? 'none' : ''
-            console.log(`  Back button: ${isSplashScene ? 'hidden' : 'shown'}`)
+            this.elements.btnBack.style.display = (isSplashScene || isPuzzleScene) ? 'none' : ''
+            console.log(`  Back button: ${(isSplashScene || isPuzzleScene) ? 'hidden' : 'shown'}`)
         }
         if (this.elements.btnNext) {
-            this.elements.btnNext.style.display = isSplashScene ? 'none' : ''
-            console.log(`  Next button: ${isSplashScene ? 'hidden' : 'shown'}`)
+            this.elements.btnNext.style.display = (isSplashScene || isPuzzleScene) ? 'none' : ''
+            console.log(`  Next button: ${(isSplashScene || isPuzzleScene) ? 'hidden' : 'shown'}`)
+        }
+
+        // Load puzzle if this is a puzzle scene
+        if (isPuzzleScene && this.game.puzzleManager) {
+            console.log('🧩 Loading puzzle for scene:', sceneData.sceneName)
+            this.game.puzzleManager.loadPuzzle(sceneData)
         }
         if (this.elements.btnStart) {
             this.elements.btnStart.style.display = isSplashScene ? '' : 'none'
