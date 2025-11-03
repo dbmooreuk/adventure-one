@@ -250,15 +250,16 @@ export class Game extends EventEmitter {
             console.log(`🏆 New achievement earned: ${achievementId} (+${points} points)`)
         }
 
-        const newScore = this.score + points
-        this.emit('scoreChanged', newScore)
+        this.score += points // Actually update the score
+        console.log(`📊 Score updated: ${this.score} (+${points})`)
+        this.emit('scoreChanged', this.score)
     }
 
     /**
      * Get current game state for saving
      */
     getGameState() {
-        return {
+        const state = {
             currentScene: this.currentScene?.sceneName || 'splash',
             score: this.score,
             achievements: Array.from(this.achievements), // Convert Set to Array for JSON serialization
@@ -267,6 +268,8 @@ export class Game extends EventEmitter {
             customState: this.stateManager.getState('customState') || {},
             timestamp: Date.now()
         }
+        console.log('💾 Getting game state for save:', { score: state.score, achievements: state.achievements })
+        return state
     }
 
     /**
@@ -274,6 +277,7 @@ export class Game extends EventEmitter {
      */
     async restoreGameState(saveData) {
         try {
+            console.log('💾 Restoring game state:', { score: saveData.score, achievements: saveData.achievements })
             this.score = saveData.score || 0
 
             // Restore achievements
@@ -295,8 +299,12 @@ export class Game extends EventEmitter {
             // Change to saved scene
             await this.sceneManager.changeScene(saveData.currentScene || 'splash')
 
+            // Update UI with restored score
+            this.uiManager.updateScore(this.score)
+            console.log('📊 UI updated with restored score:', this.score)
+
             console.log('✅ Game state restored successfully')
-            
+
         } catch (error) {
             console.error('❌ Failed to restore game state:', error)
             throw error
