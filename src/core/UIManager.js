@@ -709,11 +709,12 @@ export class UIManager extends EventEmitter {
     updateBodyClasses(sceneData) {
         // Remove old scene classes
         document.body.className = document.body.className.replace(/scene-\w+/g, '')
+        document.body.className = document.body.className.replace(/type-\w+/g, '')
 
         // Add new scene class
         document.body.classList.add(`scene-${sceneData.sceneName}`)
 
-        // Add scene type class
+        // Add scene type class (only 3 types: scene, puzzle, splash)
         if (sceneData.sceneType) {
             document.body.classList.add(`type-${sceneData.sceneType}`)
         }

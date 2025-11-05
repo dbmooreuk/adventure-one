@@ -451,10 +451,9 @@ html {
   transition: all 0.3s ease;
   font-size: 0.9rem;
 }
-
-.scene-item:hover,
-.scene-target:hover,
-.scene-link:hover {
+.scene-itemhover,
+.scene-targethover,
+.scene-linkhover {
   background: rgba(102, 126, 234, 0.5);
   border-color: rgba(255, 255, 255, 0.8);
   transform: scale(1.05);
@@ -483,7 +482,7 @@ html {
   max-width: 600px;
   width: 90%;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 2px solid #091D40;
+  border: 2px solid #619E9F;
 }
 
 .safe-puzzle-header {
@@ -507,7 +506,7 @@ html {
 .safe-puzzle-attempts {
   font-size: 16px;
   color: #619E9F;
-  background: rgba(9, 29, 64, 0.3);
+  background: rgba(97, 158, 159, 0.3);
   padding: 8px 12px;
   border-radius: 8px;
   display: inline-block;
@@ -540,7 +539,7 @@ html {
 }
 
 .dial-btn {
-  background: #091D40;
+  background: #619E9F;
   color: #F8FCE2;
   border: none;
   border-radius: 8px;
@@ -552,7 +551,6 @@ html {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 .dial-btn:hover:not(:disabled) {
-  background: rgb(15.2876712329, 49.2602739726, 108.7123287671);
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
@@ -577,7 +575,7 @@ html {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  border: 3px solid #091D40;
+  border: 3px solid #619E9F;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
@@ -586,7 +584,7 @@ html {
   background: rgba(0, 25, 40, 0.6);
   padding: 16px;
   border-radius: 12px;
-  border: 2px solid #091D40;
+  border: 2px solid #619E9F;
 }
 
 .safe-display-numbers {
@@ -651,18 +649,10 @@ html {
   background: #619E9F;
   color: white;
 }
-.btn-submit:hover:not(:disabled) {
-  background: rgb(128.7244094488, 177.4763779528, 178.2755905512);
-}
-
 .btn-hint {
-  background: #091D40;
+  background: #619E9F;
   color: #F8FCE2;
 }
-.btn-hint:hover:not(:disabled) {
-  background: rgb(15.2876712329, 49.2602739726, 108.7123287671);
-}
-
 .btn-cancel {
   background: rgba(201, 40, 144, 0.8);
   color: white;
@@ -681,7 +671,7 @@ html {
 
 .hint-item {
   font-size: 16px;
-  background: rgba(9, 29, 64, 0.3);
+  background: rgba(97, 158, 159, 0.3);
   color: #F8FCE2;
   padding: 8px 12px;
   border-radius: 8px;
@@ -708,9 +698,9 @@ html {
   border: 2px solid #C92890;
 }
 .safe-message.info {
-  background: rgba(9, 29, 64, 0.3);
+  background: rgba(97, 158, 159, 0.3);
   color: #F8FCE2;
-  border: 2px solid #091D40;
+  border: 2px solid #619E9F;
 }
 
 /* Responsive */

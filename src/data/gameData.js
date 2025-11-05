@@ -28,7 +28,7 @@ export const gameData = {
             textOne: "You find yourself standing at the entrance of a mysterious cave. The air is thick with anticipation.",
             stage: "Stage 1",
             stageNumber: 1,
-            sceneType: "outdoor",
+            sceneType: "scene",
             sceneMusic: "ambient1",
             backgroundImage: "screen-stasis.png", // Background image for this scene
             items: ["torch", "rope" , "crossing"]
@@ -39,7 +39,7 @@ export const gameData = {
             textOne: "The cave is dark and damp. You can hear water dripping somewhere in the distance. You see a boat by the water's edge and a mysterious safe in the corner.",
             stage: "Stage 2",
             stageNumber: 2,
-            sceneType: "indoor",
+            sceneType: "scene",
             sceneMusic: "ambient2",
             backgroundImage: "scene2.png",
             items: ["key", "map", "boat", "oar", "safe_door"]  // Added safe_door for puzzle test
@@ -76,7 +76,7 @@ export const gameData = {
             textOne: "You emerge into a vast underground cavern with a crystal-clear lake in the center.",
             stage: "Stage 3",
             stageNumber: 3,
-            sceneType: "underground",
+            sceneType: "scene",
             sceneMusic: "ambient3",
             items: [],  // Empty - you unlock this by using oar on boat in scene2
             locked: true,  // This scene is locked initially - need to use oar on boat to unlock
@@ -88,7 +88,7 @@ export const gameData = {
             textOne: "An old stone bridge spans across a deep chasm. It looks fragile but passable.",
             stage: "Stage 4",
             stageNumber: 4,
-            sceneType: "bridge",
+            sceneType: "scene",
             sceneMusic: "ambient4",
             items: ["plank", "hammer"]
         },
@@ -98,7 +98,7 @@ export const gameData = {
             textOne: "You find yourself in a peaceful forest clearing surrounded by tall trees.",
             stage: "Stage 5",
             stageNumber: 5,
-            sceneType: "forest",
+            sceneType: "scene",
             sceneMusic: "ambient5",
             items: ["berries", "stick"]
         },
@@ -108,7 +108,7 @@ export const gameData = {
             textOne: "A weathered wooden cabin sits in the middle of the clearing, its door slightly ajar.",
             stage: "Stage 6",
             stageNumber: 6,
-            sceneType: "cabin",
+            sceneType: "scene",
             sceneMusic: "ambient6",
             items: ["lantern", "book"]
         },
@@ -118,7 +118,7 @@ export const gameData = {
             textOne: "A winding path leads up the mountainside. The view is breathtaking but treacherous.",
             stage: "Stage 7",
             stageNumber: 7,
-            sceneType: "mountain",
+            sceneType: "scene",
             sceneMusic: "ambient7",
             items: ["pickaxe", "compass"]
         },
@@ -128,7 +128,7 @@ export const gameData = {
             textOne: "You enter a chamber filled with glowing crystals that illuminate the entire space.",
             stage: "Stage 8",
             stageNumber: 8,
-            sceneType: "crystal",
+            sceneType: "scene",
             sceneMusic: "ambient8",
             items: ["crystal", "gem"]
         },
@@ -138,7 +138,7 @@ export const gameData = {
             textOne: "Before you stands an ancient temple with intricate carvings covering its walls.",
             stage: "Stage 9",
             stageNumber: 9,
-            sceneType: "temple",
+            sceneType: "scene",
             sceneMusic: "ambient9",
             items: ["statue", "scroll"]
         },
@@ -148,7 +148,7 @@ export const gameData = {
             textOne: "You've discovered the legendary treasure chamber! Gold and jewels sparkle everywhere.",
             stage: "Stage 10",
             stageNumber: 10,
-            sceneType: "treasure",
+            sceneType: "scene",
             sceneMusic: "ambient10",
             items: ["treasure", "darkness"]
         },
@@ -158,7 +158,7 @@ export const gameData = {
             textOne: "A massive chamber where an ancient guardian once protected the treasure.",
             stage: "Stage 11",
             stageNumber: 11,
-            sceneType: "guardian",
+            sceneType: "scene",
             sceneMusic: "ambient11",
             items: ["sword", "shield"],
             locked: true,  // Locked until crystal reveals the passage
@@ -170,7 +170,7 @@ export const gameData = {
             textOne: "You face the final challenge that will determine your fate in this adventure.",
             stage: "Stage 12",
             stageNumber: 12,
-            sceneType: "challenge",
+            sceneType: "scene",
             sceneMusic: "ambient12",
             items: ["orb", "staff"]
         },
@@ -180,7 +180,7 @@ export const gameData = {
             textOne: "Congratulations! You have successfully completed your adventure and claimed the treasure!",
             stage: "The End",
             stageNumber: 13,
-            sceneType: "ending",
+            sceneType: "scene",
             sceneMusic: "victory",
             items: []
         }
@@ -237,7 +237,7 @@ export const gameData = {
             useResult: "bridge",
             outcome: "remove",
             points: 15,
-            image: "bottle-complete.png",
+            image: "rope.png",
             position: [200, 180],
             size: [60, 40]
         },
@@ -254,6 +254,7 @@ export const gameData = {
             useResult: "openDoor",
             outcome: "remove",
             points: 20,
+            image: "karibiner.png",
             position: [150, 200],
             size: [30, 60]
         },

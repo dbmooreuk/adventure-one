@@ -24,7 +24,7 @@
   max-width: 600px;
   width: 90%;
   @include shadow-xl;
-  border: 2px solid $main-blue;
+  border: 2px solid $main-marine;
 }
 
 .safe-puzzle-header {
@@ -48,7 +48,7 @@
 .safe-puzzle-attempts {
   font-size: $font-size-md;
   color: $main-marine;
-  background: rgba($main-blue, 0.3);
+  background: rgba($main-marine, 0.3);
   padding: $spacing-sm $spacing-md;
   border-radius: $border-radius-md;
   display: inline-block;
@@ -81,7 +81,7 @@
 }
 
 .dial-btn {
-  background: $main-blue;
+  background: $main-marine;
   color: $light-yellow;
   border: none;
   border-radius: $border-radius-md;
@@ -93,7 +93,7 @@
   @include shadow-md;
 
   &:hover:not(:disabled) {
-    background: lighten($main-blue, 10%);
+    // background: lighten($main-marine, 10%);
     transform: translateY(-2px);
     @include shadow-lg;
   }
@@ -121,7 +121,7 @@
   align-items: center;
   justify-content: center;
   border-radius: $border-radius-lg;
-  border: 3px solid $main-blue;
+  border: 3px solid $main-marine;
   @include shadow-lg;
 }
 
@@ -130,7 +130,7 @@
   background: rgba($dark-blue, 0.6);
   padding: $spacing-lg;
   border-radius: $border-radius-lg;
-  border: 2px solid $main-blue;
+  border: 2px solid $main-marine;
 }
 
 .safe-display-numbers {
@@ -200,16 +200,16 @@
   color: white;
 
   &:hover:not(:disabled) {
-    background: lighten($main-marine, 10%);
+    // background: lighten($main-marine, 10%);
   }
 }
 
 .btn-hint {
-  background: $main-blue;
+  background: $main-marine;
   color: $light-yellow;
 
   &:hover:not(:disabled) {
-    background: lighten($main-blue, 10%);
+    // background: lighten($main-marine, 10%);
   }
 }
 
@@ -232,7 +232,7 @@
 
 .hint-item {
   font-size: $font-size-md;
-  background: rgba($main-blue, 0.3);
+  background: rgba($main-marine, 0.3);
   color: $light-yellow;
   padding: $spacing-sm $spacing-md;
   border-radius: $border-radius-md;
@@ -261,9 +261,9 @@
   }
 
   &.info {
-    background: rgba($main-blue, 0.3);
+    background: rgba($main-marine, 0.3);
     color: $light-yellow;
-    border: 2px solid $main-blue;
+    border: 2px solid $main-marine;
   }
 }
 
