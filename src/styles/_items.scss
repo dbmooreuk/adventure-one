@@ -60,23 +60,22 @@
 /* Inventory Items */
 .inventory-item {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 100%;
+    height: 100%;
     padding: 0.5rem;
     font-family: $font-family-mono;
     font-size: 0.7rem;
     font-weight: bold;
     text-align: center;
-    border: 2px solid $main-yellow;
+    border: none; // Border is handled by the slot
     border-radius: 4px;
-    background: rgba(26, 10, 0, 0.9);
+    background: transparent; // Background is handled by the slot
     color: $main-yellow;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(4px);
     pointer-events: all;
 
     &:hover {

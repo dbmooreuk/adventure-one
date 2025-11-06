@@ -589,23 +589,37 @@ export class UIManager extends EventEmitter {
     updateInventory(items) {
         if (!this.elements.sceneInventoryOverlay) return
 
+        // Get all inventory slots
+        const slots = this.elements.sceneInventoryOverlay.querySelectorAll('.inventory-slot')
+        console.log('🎒 Found', slots.length, 'inventory slots')
+
         // Clear existing inventory components
         this.inventoryComponents.forEach(component => component.destroy())
         this.inventoryComponents.clear()
 
+        // Clear all slots
+        slots.forEach(slot => {
+            slot.innerHTML = ''
+        })
+
         const gameData = this.game.gameData
 
-        items.forEach(itemName => {
+        // Place items into slots (max 7 items)
+        console.log('🎒 Placing', items.length, 'items into slots:', items)
+        items.slice(0, 7).forEach((itemName, index) => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
-            if (itemData) {
+            if (itemData && slots[index]) {
+                console.log('  🎒 Placing', itemName, 'in slot', index)
                 // Create inventory item component
                 const component = new InventoryItem(itemData, this.game)
 
                 // Store component reference
                 this.inventoryComponents.set(itemName, component)
 
-                // Append to inventory overlay
-                this.elements.sceneInventoryOverlay.appendChild(component.getElement())
+                // Place item in slot
+                slots[index].appendChild(component.getElement())
+            } else {
+                console.log('  ⚠️ Could not place', itemName, '- itemData:', !!itemData, 'slot:', !!slots[index])
             }
         })
     }
@@ -939,9 +953,12 @@ export class UIManager extends EventEmitter {
             this.elements.sceneItemsOverlay.innerHTML = ''
         }
 
-        // Clear inventory
+        // Clear inventory slots (but keep the slots themselves)
         if (this.elements.sceneInventoryOverlay) {
-            this.elements.sceneInventoryOverlay.innerHTML = ''
+            const slots = this.elements.sceneInventoryOverlay.querySelectorAll('.inventory-slot')
+            slots.forEach(slot => {
+                slot.innerHTML = ''
+            })
         }
 
         // Clear scene title
