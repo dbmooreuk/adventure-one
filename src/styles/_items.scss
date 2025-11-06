@@ -1,0 +1,282 @@
+/**
+ * Item Styles
+ * BEM naming convention for scene and inventory items
+ */
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+/* Scene Items */
+.scene-item {
+    position: absolute;
+    padding: 0.5rem 1rem;
+    font-family: $font-family-mono;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 2px solid $main-yellow;
+    border-radius: 4px;
+    background: rgba(26, 10, 0, 0.8);
+    color: $main-yellow;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+
+    &:hover {
+        background: $main-yellow;
+        color: $dark-blue;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+        z-index: 10;
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    /* Item with image */
+    &--with-image {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        font-size: 0.7rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Item types */
+    &--item {
+        border-color: $main-yellow;
+    }
+
+    &--target {
+        border-color: $main-pink;
+    }
+
+    &--link {
+        border-color: $main-marine;
+    }
+}
+
+/* Inventory Items */
+.inventory-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    padding: 0.5rem;
+    font-family: $font-family-mono;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center;
+    border: 2px solid $main-yellow;
+    border-radius: 4px;
+    background: rgba(26, 10, 0, 0.9);
+    color: $main-yellow;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+
+    &:hover {
+        background: rgba(255, 215, 0, 0.2);
+        border-color: $main-pink;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+        z-index: 10;
+    }
+
+    &:active {
+        transform: scale(1.05);
+    }
+
+    /* Selected state */
+    &.selected,
+    &--selected {
+        background: $main-pink;
+        border-color: $main-pink;
+        color: $dark-blue;
+        box-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+
+        &::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: $main-marine;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: $dark-blue;
+            font-weight: bold;
+        }
+    }
+
+    /* Item with image */
+    &--with-image {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        font-size: 0.6rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Item label */
+    &__label {
+        position: relative;
+        z-index: 1;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Item Animations */
+@keyframes item-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes item-disappear {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
+.scene-item--appearing,
+.inventory-item--appearing {
+    animation: item-appear 0.3s ease-out;
+}
+
+.scene-item--disappearing,
+.inventory-item--disappearing {
+    animation: item-disappear 0.3s ease-in;
+}
+
+/* Item Hover Effects */
+.scene-item[data-hover="glow"]:hover,
+.inventory-item[data-hover="glow"]:hover {
+    box-shadow: 0 0 20px $main-yellow,
+                0 0 40px $main-yellow;
+    animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+.scene-item[data-hover="pulse"]:hover,
+.inventory-item[data-hover="pulse"]:hover {
+    animation: pulse-scale 0.8s ease-in-out infinite;
+}
+
+.scene-item[data-hover="shine"]:hover,
+.inventory-item[data-hover="shine"]:hover {
+    animation: shine-effect 2s linear infinite;
+    background-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+}
+
+.scene-item[data-hover="swing"]:hover,
+.inventory-item[data-hover="swing"]:hover {
+    animation: swing 1s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px $main-yellow;
+    }
+    50% {
+        box-shadow: 0 0 40px $main-yellow,
+                    0 0 60px $main-pink;
+    }
+}
+
+@keyframes pulse-scale {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes shine-effect {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes swing {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(5deg);
+    }
+    75% {
+        transform: rotate(-5deg);
+    }
+}
+
+/* Item Containers */
+.scene-items-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    > * {
+        pointer-events: auto;
+    }
+}
+
+.scene-inventory-overlay {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 1rem;
+    justify-content: center;
+}
+
+/* Specific Item Styles */
+.item--torch {
+    border-color: #FFA500;
+}
+
+.item--key {
+    border-color: #FFD700;
+}
+
+.item--gold {
+    border-color: #FFD700;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+}
+
+.item--safe {
+    border-color: #808080;
+}
+
+.item--rope {
+    border-color: #8B4513;
+}
+

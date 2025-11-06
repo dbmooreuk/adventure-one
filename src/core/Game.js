@@ -52,7 +52,7 @@ export class Game extends EventEmitter {
             
             // Load game data
             await this.loadGameData()
-            
+
             // Initialize all managers
             await this.audioManager.initialize()
             await this.uiManager.initialize()
@@ -321,9 +321,9 @@ export class Game extends EventEmitter {
         this.saveManager?.destroy()
         this.inventoryManager?.destroy()
         this.stateManager?.destroy()
-        
+
         this.removeAllListeners()
-        
+
         console.log('🗑️ Game destroyed')
     }
 }

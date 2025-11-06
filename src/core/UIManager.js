@@ -5,6 +5,8 @@
 
 import { EventEmitter } from './EventEmitter.js'
 import { ui } from '../config/gameConfig.js'
+import { SceneItem } from '../components/SceneItem.js'
+import { InventoryItem } from '../components/InventoryItem.js'
 
 export class UIManager extends EventEmitter {
     constructor(game) {
@@ -14,6 +16,8 @@ export class UIManager extends EventEmitter {
         this.currentAction = null
         this.isMenuOpen = false
         this.messageTimeout = null
+        this.components = new Map() // Track component instances
+        this.inventoryComponents = new Map() // Track inventory item components
     }
 
     /**
@@ -66,7 +70,7 @@ export class UIManager extends EventEmitter {
             btnLoad: document.querySelector('.btn-load'),
             btnReset: document.querySelector('.btn-reset'),
             btnMute: document.querySelector('.btn-mute'),
-            
+
             // Containers
             gameContainer: document.querySelector('.game-container'),
             sceneContainer: document.querySelector('.scene-container'),
@@ -96,7 +100,7 @@ export class UIManager extends EventEmitter {
         this.elements.btnLoad?.addEventListener('click', () => this.emit('loadRequested'))
         this.elements.btnReset?.addEventListener('click', () => this.emit('resetRequested'))
         this.elements.btnMute?.addEventListener('click', () => this.toggleMute())
-        
+
         // Scene item interactions
         this.elements.sceneItemsOverlay?.addEventListener('click', (e) => this.handleSceneItemClick(e))
         this.elements.sceneInventoryOverlay?.addEventListener('click', (e) => this.handleInventoryItemClick(e))
@@ -488,90 +492,61 @@ export class UIManager extends EventEmitter {
     }
 
     /**
-     * Create scene item element
+     * Create scene item element using component
      * @param {Object} itemData - Item data
      */
     createSceneItemElement(itemData) {
         console.log('🎨 Creating scene item element for:', itemData.name, 'type:', itemData.type)
-        const element = document.createElement('button')
-        element.className = `${itemData.name} icon-font icon-${itemData.name} scene-${itemData.type} prop`
 
-        // Position the element
-        if (itemData.position && itemData.size) {
-            element.style.position = 'absolute'
-            element.style.left = `${itemData.position[0]}px`
-            element.style.top = `${itemData.position[1]}px`
-            element.style.width = `${itemData.size[0]}px`
-            element.style.height = `${itemData.size[1]}px`
-            console.log('🎨 Item positioned at:', itemData.position, 'size:', itemData.size)
-        }
+        // Create component instance
+        const component = new SceneItem(itemData, this.game)
 
-        // Add image if specified
-        if (itemData.image) {
-            const imagePath = `/src/assets/images/items/${itemData.image}`
-            element.style.backgroundImage = `url('${imagePath}')`
-            element.style.backgroundSize = 'contain'
-            element.style.backgroundRepeat = 'no-repeat'
-            element.style.backgroundPosition = 'center'
-            console.log(`🖼️ Set item image: ${imagePath}`)
+        // Store component reference
+        this.components.set(itemData.name, component)
 
-            // If image is used, make text smaller or hide it
-            element.style.fontSize = '0.7rem'
-            element.style.textShadow = '1px 1px 3px rgba(0, 0, 0, 0.8)'
-        } else {
-            element.textContent = itemData.longName || itemData.name
-        }
-
+        // Append to overlay
+        const element = component.getElement()
         console.log('🎨 Appending element to overlay. Overlay exists?', !!this.elements.sceneItemsOverlay)
         this.elements.sceneItemsOverlay?.appendChild(element)
         console.log('🎨 Element appended. Total children:', this.elements.sceneItemsOverlay?.children.length)
     }
 
     /**
-     * Remove scene item element
+     * Remove scene item element using component
      * @param {string} itemName - Item name
      */
     removeSceneItemElement(itemName) {
-        const element = this.elements.sceneItemsOverlay?.querySelector(`.${itemName}`)
-        if (element) {
-            element.style.animation = 'fadeOut 0.3s ease-out'
-            setTimeout(() => element.remove(), 300)
+        const component = this.components.get(itemName)
+        if (component) {
+            component.remove('fadeOut')
+            this.components.delete(itemName)
         }
     }
 
     /**
-     * Update inventory display
+     * Update inventory display using components
      * @param {string[]} items - Inventory items
      */
     updateInventory(items) {
         if (!this.elements.sceneInventoryOverlay) return
 
-        this.elements.sceneInventoryOverlay.innerHTML = ''
+        // Clear existing inventory components
+        this.inventoryComponents.forEach(component => component.destroy())
+        this.inventoryComponents.clear()
 
         const gameData = this.game.gameData
 
         items.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
             if (itemData) {
-                const element = document.createElement('button')
-                element.className = `${itemName} icon-font icon-${itemName} inventory-item prop`
+                // Create inventory item component
+                const component = new InventoryItem(itemData, this.game)
 
-                // Add image if specified
-                if (itemData.image) {
-                    const imagePath = `/src/assets/images/items/${itemData.image}`
-                    element.style.backgroundImage = `url('${imagePath}')`
-                    element.style.backgroundSize = 'contain'
-                    element.style.backgroundRepeat = 'no-repeat'
-                    element.style.backgroundPosition = 'center'
+                // Store component reference
+                this.inventoryComponents.set(itemName, component)
 
-                    // Make text smaller for inventory items with images
-                    element.style.fontSize = '0.6rem'
-                    element.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.8)'
-                } else {
-                    element.textContent = itemData.longName || itemName
-                }
-
-                this.elements.sceneInventoryOverlay.appendChild(element)
+                // Append to inventory overlay
+                this.elements.sceneInventoryOverlay.appendChild(component.getElement())
             }
         })
     }
@@ -889,6 +864,13 @@ export class UIManager extends EventEmitter {
         if (this.messageTimeout) {
             clearTimeout(this.messageTimeout)
         }
+
+        // Clean up all components
+        this.components.forEach(component => component.destroy())
+        this.components.clear()
+
+        this.inventoryComponents.forEach(component => component.destroy())
+        this.inventoryComponents.clear()
 
         this.elements = {}
         this.removeAllListeners()

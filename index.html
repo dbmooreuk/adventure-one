@@ -162,6 +162,23 @@
         <source src="/assets/audio/success.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- HTML Templates -->
+    <template id="scene-item-template">
+        <button class="scene-item prop" data-item-name="">
+            <span class="item-label" data-bind="label"></span>
+        </button>
+    </template>
+
+    <template id="inventory-item-template">
+        <div class="inventory-item" data-item-name="">
+            <span class="item-label" data-bind="label"></span>
+        </div>
+    </template>
+
+    <template id="button-template">
+        <button class="btn" data-bind="text"></button>
+    </template>
+
     <!-- Main Application -->
     <script type="module" src="/src/main.js"></script>
 </body>

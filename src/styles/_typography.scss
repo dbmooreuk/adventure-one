@@ -62,9 +62,9 @@ body {
   opacity: 0;
   transform: translateY(20px);
 
-  /* Animation when shown - duration controlled by CSS variable */
+  /* Animation when shown */
   &.show {
-    animation: fadeUpAndOut var(--message-duration, 5000ms) ease-in-out forwards;
+    animation: fadeUpAndOut 5000ms ease-in-out forwards;
   }
 }
 

@@ -47,7 +47,7 @@
     transition: all 0.3s ease;
     border-radius: $border-radius-md;
     background-color: $main-yellow;
-    box-shadow: 2px 2px 8.7px 0 var(--secondary-dark, $dark-blue) inset;
+    box-shadow: 2px 2px 8.7px 0 $dark-blue inset;
   }
 
 .inventory-item:hover {

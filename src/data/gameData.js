@@ -8,7 +8,7 @@ export const gameData = {
     title: "Adventure Game",
     version: "2.0.0",
     stages: 13,
-    
+
     // Game scenes configuration
     scenes: [
         {
@@ -192,6 +192,7 @@ export const gameData = {
         {
             name: "torch",
             longName: "Wooden Torch",
+            shortName: "Torch",
             type: "item",
             lookAt: "A sturdy wooden torch that could provide light in dark places.",
             pickUpMessage: "You pick up the torch. It might be useful in dark areas.",
@@ -202,33 +203,48 @@ export const gameData = {
             points: 10,
             image: "torch.png", // Item image filename
             position: [100, 150],
-            size: [50, 80]
+            size: [50, 80],
+            style: {
+                className: "item--torch",
+                hoverEffect: "glow"
+            }
         },
 
         // Puzzle items - Safe puzzle
         {
             name: "safe_door",
             longName: "Mysterious Safe",
+            shortName: "Safe",
             type: "link",
             linkToScene: "safe_puzzle",
             lookAt: "A heavy safe with a combination lock. Maybe you can crack the code? (Hint: 3-7-2)",
             image: "safe-small.png",
             position: [800, 250],
-            size: [150, 200]
+            size: [150, 200],
+            style: {
+                className: "item--safe",
+                hoverEffect: "pulse"
+            }
         },
         {
             name: "gold_bars",
             longName: "Gold Bars",
+            shortName: "Gold",
             type: "item",
             lookAt: "Shiny gold bars! These must be worth a fortune.",
             pickUpMessage: "You obtained the gold bars from the safe!",
             image: "gold-bars.png",
             position: [0, 0],
-            size: [0, 0]
+            size: [0, 0],
+            style: {
+                className: "item--gold",
+                hoverEffect: "shine"
+            }
         },
         {
             name: "rope",
             longName: "Coiled Rope",
+            shortName: "Rope",
             type: "item",
             lookAt: "A long, sturdy rope that could be used for climbing or securing things.",
             pickUpMessage: "You coil the rope and add it to your inventory.",
@@ -239,13 +255,18 @@ export const gameData = {
             points: 15,
             image: "rope.png",
             position: [200, 180],
-            size: [60, 40]
+            size: [60, 40],
+            style: {
+                className: "item--rope",
+                hoverEffect: "swing"
+            }
         },
         
         // Scene 2 items
         {
             name: "key",
             longName: "Ancient Key",
+            shortName: "Key",
             type: "item",
             lookAt: "An old, ornate key with mysterious symbols carved into it.",
             pickUpMessage: "You carefully pick up the ancient key.",
@@ -256,11 +277,16 @@ export const gameData = {
             points: 20,
             image: "karibiner.png",
             position: [150, 200],
-            size: [30, 60]
+            size: [30, 60],
+            style: {
+                className: "item--key",
+                hoverEffect: "glow"
+            }
         },
         {
             name: "map",
             longName: "Treasure Map",
+            shortName: "Map",
             type: "item",
             lookAt: "A weathered map showing the layout of the cave system.",
             pickUpMessage: "You study the map briefly before folding it carefully.",
@@ -411,22 +437,5 @@ export const gameData = {
             error: "audio/error.mp3",
             success: "audio/success.mp3"
         }
-    },
-    
-    // UI configuration
-    ui: {
-        actions: ["examine", "get", "use"],
-        maxInventorySize: 20,
-        messageDisplayTime: 3000,
-        fadeTransitionTime: 1000
-    },
-    
-    // Game settings
-    settings: {
-        autoSave: true,
-        autoSaveInterval: 30000, // 30 seconds
-        soundEnabled: true,
-        musicEnabled: true,
-        defaultVolume: 0.7
     }
 }

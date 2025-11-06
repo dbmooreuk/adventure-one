@@ -1,0 +1,156 @@
+/**
+ * Button Styles
+ * BEM naming convention for button components
+ */
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+/* Base Button */
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-family: $font-family-mono;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 2px solid $main-yellow;
+    border-radius: 4px;
+    background: $dark-blue;
+    color: $main-yellow;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &:hover:not(:disabled) {
+        background: $main-yellow;
+        color: $dark-blue;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus {
+        outline: 2px solid $main-pink;
+        outline-offset: 2px;
+    }
+}
+
+/* Button Variants */
+.btn--primary {
+    background: $main-yellow;
+    color: $dark-blue;
+    border-color: $main-yellow;
+
+    &:hover:not(:disabled) {
+        background: $main-pink;
+        border-color: $main-pink;
+    }
+}
+
+.btn--secondary {
+    background: $main-pink;
+    color: $main-yellow;
+    border-color: $main-pink;
+
+    &:hover:not(:disabled) {
+        background: $main-yellow;
+        border-color: $main-yellow;
+        color: $dark-blue;
+    }
+}
+
+.btn--action {
+    background: linear-gradient(135deg, $main-yellow, $main-pink);
+    border: none;
+    color: $dark-blue;
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, $main-pink, $main-yellow);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.btn--nav {
+    background: transparent;
+    border: 1px solid $main-yellow;
+    color: $main-yellow;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+
+    &:hover:not(:disabled) {
+        background: rgba(255, 254, 224, 0.1);
+        border-color: $main-pink;
+        color: $main-pink;
+    }
+}
+
+/* Button Sizes */
+.btn--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn--large {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+}
+
+/* Button States */
+.btn--loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1rem;
+        height: 1rem;
+        margin: -0.5rem 0 0 -0.5rem;
+        border: 2px solid $main-yellow;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: btn-spin 0.6s linear infinite;
+    }
+}
+
+@keyframes btn-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Button Groups */
+.btn-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    &--vertical {
+        flex-direction: column;
+    }
+
+    &--center {
+        justify-content: center;
+    }
+
+    &--right {
+        justify-content: flex-end;
+    }
+}
+
