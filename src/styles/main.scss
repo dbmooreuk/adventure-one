@@ -8,10 +8,12 @@
 @use 'mixins' as *;
 
 // Import other modules
+
 @use 'media-queries' as *;
 @use 'typography' as *;
 @use 'buttons' as *;
 @use 'items' as *;
+@use 'utilities' as *;
 @use 'ui' as *;
 @use 'inventory' as *;
 @use 'scene' as *;

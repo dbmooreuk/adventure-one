@@ -311,7 +311,7 @@ export const gameData = {
             outcome: "scene", // ["scene", "removeTarget"] Create crossing link, remove oar from inventory, remove boat from scene
             nextScene: "scene3",  // Unlocks scene3 when used
             points: 30,
-            image: "boat.png",
+            image: "boat-without-oar.png",
             position: [180, 250],
             size: [120, 80]
         },

@@ -44,11 +44,11 @@
 
         <!-- Menu -->
         <div id="menu-container" class="menu-container" style="display: none;">
-            <div id="menu-toggle" class="menu-toggle">
+            <!-- <div id="menu-toggle" class="menu-toggle">
                 <div class="burger-line one"></div>
                 <div class="burger-line two"></div>
                 <div class="burger-line three"></div>
-            </div>
+            </div> -->
             <div id="menu" class="menu">
                 <button class="menu-item btn-save">Save</button>
                 <button class="menu-item btn-reset">Reset</button>
@@ -62,7 +62,7 @@
 
                             <!-- Inventory -->
                 <div class="panel-wrapper">
-                    <h1 class="scene-title body-xl text-main-yellow"></h1>
+                    <!-- <h1 class="scene-title body-xl text-main-yellow"></h1> -->
                     <p class="scene-text body-sm text-main-yellow"></p>
                     <div class="scene-inventory-overlay"></div>
                     <div class="score-box body-lg text-main-yellow">0%</div>
@@ -79,9 +79,9 @@
 
 
                             <!-- Action Buttons -->
-                <div class="btn-actions-container">
+                <div class="btn-actions-container btn-group p-xs border-radius-md">
                     <button class="btn btn-action btn-examine">Examine</button>
-                    <button class="btn btn-action btn-get">Get</button>
+                    <button class="btn btn-action btn-get border-radius-none">Get</button>
                     <button class="btn btn-action btn-use">Use</button>
                 </div>
 
@@ -93,8 +93,14 @@
             </nav>
 
             <!-- Stage Info -->
-            <!-- <h2 class="stage-title"></h2> -->
-            <!-- <div class="pips-container"> -->
+             <div class="scene-title-wrapper bg-darker-marine border-radius-md shadow-2xl p-sm pr-md">
+             <div id="menu-toggle" class="menu-toggle"><image src="src/assets/images/ui/fingerprint.svg"></image></div>
+            <h1 class="stage-title body-md text-main-marine text-uppercase"></h1>
+            <h2 class="scene-title body-md text-light-marine text-uppercase"></h2>
+            </div>
+
+
+            <div class="pips-container">
                 <span></span>
             </div>
         </div>

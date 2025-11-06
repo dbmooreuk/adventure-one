@@ -11,6 +11,10 @@ body {
   // color: #333;
 }
 
+.text-uppercase{
+  text-transform: uppercase;
+}
+
 /* Body */
 .body-xs {
   font-size: $font-size-xs;
@@ -56,65 +60,25 @@ body {
 
 
 
-.scene-title {
-  z-index: 15;
-}
 
-.scene-text {
-  // font-size: 1.2rem;
-  // z-index: 15;
-}
 
-/* Messages */
-.panel-text {
-  position: fixed;
-  bottom: $spacing-lg;
-  left: $spacing-lg;
-  font-size: 1rem;
-  background: rgba($dark-blue, 0.9);
-  padding: $spacing-md $spacing-lg;
-  border-radius: $border-radius-md;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  z-index: 200;
-  pointer-events: none;
 
-  /* Initially hidden */
-  opacity: 0;
-  transform: translateY(20px);
 
-  /* Animation when shown */
-  &.show {
-    animation: fadeUpAndOut 5000ms ease-in-out forwards;
-  }
-}
+// .pips-container {
+//   position: absolute;
+//   top: 1rem;
+//   right: 1rem;
+//   display: flex;
+//   gap: 0.5rem;
+//   z-index: 10;
+// }
 
-/* Keyframe animation: fade up from bottom, stay visible, then fade out */
-@keyframes fadeUpAndOut {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  90% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-}
-
-.score-box {
-  // font-weight: 600;
-  // font-size: 1.2rem;
-}
-
-.stage-title {
-  top: 1rem;
-  left: 1rem;
-}
+// .scene-pip {
+//   width: 12px;
+//   height: 12px;
+//   border-radius: 50%;
+//   background: rgba($main-yellow, 0.3);
+//   border: 2px solid $main-yellow;
+//   opacity: 0.3;
+//   transition: opacity 0.3s ease;
+// }

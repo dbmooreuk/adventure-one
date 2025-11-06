@@ -232,9 +232,17 @@ export class UIManager extends EventEmitter {
                 return
             }
 
-            // Navigate to the linked scene
-            const message = itemData.useMessage || `You proceed through the ${itemData.longName || itemName}.`
-            this.showMessage(message)
+            // Get target scene data to check if it's a puzzle
+            const targetScene = this.game.sceneManager?.findScene(itemData.linkToScene)
+            const isPuzzleScene = targetScene?.sceneType === 'puzzle'
+
+            // Only show message for non-puzzle scenes
+            if (!isPuzzleScene && itemData.useMessage) {
+                this.showMessage(itemData.useMessage)
+            } else if (!isPuzzleScene) {
+                const message = `You proceed through the ${itemData.longName || itemName}.`
+                this.showMessage(message)
+            }
 
             // Add points if specified
             if (itemData.points) {

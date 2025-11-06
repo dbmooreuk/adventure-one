@@ -87,7 +87,7 @@ export class SafeCombinationPuzzle {
                             <span>💡</span> Get Hint (${hints.length - this.state.hintsUsed.length} left)
                         </button>
                         <button class="btn btn-puzzle btn-cancel">
-                            <span>❌</span> Cancel
+                            <span>❌</span> Exit
                         </button>
                     </div>
 

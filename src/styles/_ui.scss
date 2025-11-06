@@ -6,26 +6,28 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
+
+
 /* UI Panel */
-.ui-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba($black, 0.8);
-    backdrop-filter: blur(10px);
-    padding: $spacing-md;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: $z-index-dropdown;
-}
+// .ui-panel {
+//     position: fixed;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     background: rgba($black, 0.8);
+//     backdrop-filter: blur(10px);
+//     padding: $spacing-md;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     z-index: $z-index-dropdown;
+// }
 
 /* Menu Toggle Button */
 .menu-toggle {
     position: absolute;
-    top: $spacing-md;
-    left: $spacing-md;
+    top: $spacing-xs;
+    left: $spacing-xs;
     width: 50px;
     height: 50px;
     border: none;
@@ -82,4 +84,15 @@
     &:last-child {
         margin-bottom: 0;
     }
+}
+
+
+
+.btn-actions-container {
+    position: absolute;
+    top: $spacing-md;
+    right: 400px;
+   @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);   
+    z-index: 10;
+
 }

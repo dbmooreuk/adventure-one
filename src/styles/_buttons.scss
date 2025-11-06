@@ -138,7 +138,7 @@
 /* Button Groups */
 .btn-group {
     display: flex;
-    gap: 0.5rem;
+    gap: 0;
     flex-wrap: wrap;
 
     &--vertical {
@@ -152,5 +152,34 @@
     &--right {
         justify-content: flex-end;
     }
+}
+.btn-action{
+    border: 1px solid $main-pink;
+    background-color: transparent;
+    color: $main-pink;
+    &.active {
+        background: $main-pink;
+        color: $dark-marine;
+        @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);
+        border: 1px solid $darker-marine;   
+    }
+    &.inactive {
+        opacity: 0.5;
+
+    }
+}
+
+.btn-use{
+    border-radius: 0 $border-radius-sm $border-radius-sm 0;
+    margin-left: -1px;
+}
+.btn-examine{
+    border-radius:  $border-radius-sm 0 0 $border-radius-sm ;
+    margin-right: -1px;
+}
+
+button.prop{
+    background-color: transparent;
+    border: none;
 }
 

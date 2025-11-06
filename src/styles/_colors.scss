@@ -5,36 +5,138 @@
 
 @use 'variables' as *;
 
-/* Text Colors */
-.text-yellow {
+/* Text Colors - Yellow */
+.text-light-yellow {
+    color: $light-yellow;
+}
+
+.text-main-yellow {
     color: $main-yellow;
 }
 
-.text-pink {
+.text-dark-yellow {
+    color: $dark-yellow;
+}
+
+/* Text Colors - Pink */
+.text-lighter-pink {
+    color: $lighter-pink;
+}
+
+.text-light-pink {
+    color: $light-pink;
+}
+
+.text-main-pink {
     color: $main-pink;
 }
 
-.text-marine {
+.text-dark-pink {
+    color: $dark-pink;
+}
+
+/* Text Colors - Blue */
+.text-light-blue {
+    color: $light-blue;
+}
+
+.text-main-blue {
+    color: $main-blue;
+}
+
+.text-dark-blue {
+    color: $dark-blue;
+}
+
+/* Text Colors - Marine */
+.text-lighter-marine {
+    color: $lighter-marine;
+}
+
+.text-light-marine {
+    color: $light-marine;
+}
+
+.text-main-marine {
     color: $main-marine;
 }
 
-.text-highlight {
-    color: $primary-highlight;
+.text-dark-marine {
+    color: $dark-marine;
 }
 
-/* Background Colors */
-.bg-yellow {
+.text-darker-marine {
+    color: $darker-marine;
+}
+
+.text-darkest-marine {
+    color: $darkest-marine;
+}
+
+/* Background Colors - Yellow */
+.bg-light-yellow {
+    background-color: $light-yellow;
+}
+
+.bg-main-yellow {
     background-color: $main-yellow;
 }
 
-.bg-pink {
+.bg-dark-yellow {
+    background-color: $dark-yellow;
+}
+
+/* Background Colors - Pink */
+.bg-lighter-pink {
+    background-color: $lighter-pink;
+}
+
+.bg-light-pink {
+    background-color: $light-pink;
+}
+
+.bg-main-pink {
     background-color: $main-pink;
 }
 
-.bg-marine {
+.bg-dark-pink {
+    background-color: $dark-pink;
+}
+
+/* Background Colors - Blue */
+.bg-light-blue {
+    background-color: $light-blue;
+}
+
+.bg-main-blue {
+    background-color: $main-blue;
+}
+
+.bg-dark-blue {
+    background-color: $dark-blue;
+}
+
+/* Background Colors - Marine */
+.bg-lighter-marine {
+    background-color: $lighter-marine;
+}
+
+.bg-light-marine {
+    background-color: $light-marine;
+}
+
+.bg-main-marine {
     background-color: $main-marine;
 }
 
-.bg-highlight {
-    background-color: $primary-highlight;
+.bg-dark-marine {
+    background-color: $dark-marine;
+}
+
+.bg-darker-marine {
+    background-color: $darker-marine;
+}
+
+.bg-darkest-marine {
+    background-color: $darkest-marine;
 }
