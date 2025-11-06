@@ -117,6 +117,15 @@
         }
     }
 
+    /* Using state - when item is selected for use action */
+    &.using {
+        background: rgba($main-marine, 0.4);
+        border-color: $main-marine;
+        border-width: 3px;
+        box-shadow: 0 0 20px rgba($main-marine, 0.6);
+        animation: pulse-using 1.5s ease-in-out infinite;
+    }
+
     /* Item with image */
     &--with-image {
         background-size: contain;

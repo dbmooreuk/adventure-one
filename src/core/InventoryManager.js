@@ -5,6 +5,7 @@
 
 import { EventEmitter } from './EventEmitter.js'
 import { audio, inventory } from '../config/gameConfig.js'
+import { getRandomFailureMessage } from '../data/failureMessages.js'
 
 export class InventoryManager extends EventEmitter {
     constructor(game) {
@@ -330,6 +331,7 @@ export class InventoryManager extends EventEmitter {
 
         if (!itemData) {
             this.game.uiManager?.showMessage("You can't use that.")
+            this.clearSelection()
             return
         }
 
@@ -339,7 +341,11 @@ export class InventoryManager extends EventEmitter {
             // This allows targets to define what happens when items are used on them
             this.performItemUse(itemData, targetData || itemData, targetName)
         } else {
-            this.game.uiManager?.showMessage("That doesn't work.")
+            // Show random failure message
+            this.game.uiManager?.showMessage(getRandomFailureMessage())
+            // Clear selection and exit use mode
+            this.clearSelection()
+            this.game.uiManager?.setAction(null)
         }
     }
 

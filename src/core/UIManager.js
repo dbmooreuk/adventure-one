@@ -107,6 +107,11 @@ export class UIManager extends EventEmitter {
         // Inventory item interactions
         this.elements.sceneInventoryOverlay?.addEventListener('click', (e) => this.handleInventoryItemClick(e))
 
+        // Listen for inventory item selection/deselection events
+        this.game.inventoryManager?.on('itemSelected', (itemName) => this.handleItemSelected(itemName))
+        this.game.inventoryManager?.on('itemDeselected', (itemName) => this.handleItemDeselected(itemName))
+        this.game.inventoryManager?.on('selectionCleared', () => this.handleSelectionCleared())
+
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (this.isMenuOpen && !this.elements.menu?.contains(e.target) && !this.elements.menuToggle?.contains(e.target)) {
@@ -254,6 +259,37 @@ export class UIManager extends EventEmitter {
 
         const itemName = this.getItemNameFromElement(item)
         this.emit('itemClicked', itemName)
+    }
+
+    /**
+     * Handle item selected event - add 'using' class
+     * @param {string} itemName - Name of the selected item
+     */
+    handleItemSelected(itemName) {
+        const component = this.inventoryComponents.get(itemName)
+        if (component) {
+            component.element.classList.add('using')
+        }
+    }
+
+    /**
+     * Handle item deselected event - remove 'using' class
+     * @param {string} itemName - Name of the deselected item
+     */
+    handleItemDeselected(itemName) {
+        const component = this.inventoryComponents.get(itemName)
+        if (component) {
+            component.element.classList.remove('using')
+        }
+    }
+
+    /**
+     * Handle selection cleared event - remove 'using' class from all items
+     */
+    handleSelectionCleared() {
+        this.inventoryComponents.forEach(component => {
+            component.element.classList.remove('using')
+        })
     }
 
     /**
