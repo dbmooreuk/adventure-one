@@ -15,9 +15,12 @@
 @use 'ui' as *;
 @use 'inventory' as *;
 @use 'scene' as *;
-@use 'puzzle' as *;
 @use 'animation-general' as *;
 @use 'colors' as *;
+
+// Import puzzle styles
+@use 'puzzles/puzzles-common' as *;
+@use 'puzzles/SafeCombinationPuzzle' as *;
 
 /*General stuff*/
 
