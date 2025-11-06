@@ -57,6 +57,7 @@
 }
 
 /* padding utilities */
+.p-xxs { padding: $spacing-xxs; }
 .p-xs { padding: $spacing-xs; }
 .p-sm { padding: $spacing-sm; }
 .p-md { padding: $spacing-md; }
@@ -64,6 +65,7 @@
 .p-xl { padding: $spacing-xl; }
 .p-xxl { padding: $spacing-xxl; }
 
+.pt-xxs { padding-top: $spacing-xxs; }
 .pt-xs { padding-top: $spacing-xs; }
 .pt-sm { padding-top: $spacing-sm; }
 .pt-md { padding-top: $spacing-md; }
@@ -71,6 +73,7 @@
 .pt-xl { padding-top: $spacing-xl; }
 .pt-xxl { padding-top: $spacing-xxl; }
 
+.pr-xxs { padding-right: $spacing-xxs; }
 .pr-xs { padding-right: $spacing-xs; }
 .pr-sm { padding-right: $spacing-sm; }
 .pr-md { padding-right: $spacing-md; }
@@ -78,6 +81,7 @@
 .pr-xl { padding-right: $spacing-xl; }
 .pr-xxl { padding-right: $spacing-xxl; }
 
+.pb-xxs { padding-bottom: $spacing-xxs; }
 .pb-xs { padding-bottom: $spacing-xs; }
 .pb-sm { padding-bottom: $spacing-sm; }
 .pb-md { padding-bottom: $spacing-md; }
@@ -85,6 +89,7 @@
 .pb-xl { padding-bottom: $spacing-xl; }
 .pb-xxl { padding-bottom: $spacing-xxl; }
 
+.pl-xxs { padding-left: $spacing-xxs; }
 .pl-xs { padding-left: $spacing-xs; }
 .pl-sm { padding-left: $spacing-sm; }
 .pl-md { padding-left: $spacing-md; }
@@ -92,6 +97,7 @@
 .pl-xl { padding-left: $spacing-xl; }
 .pl-xxl { padding-left: $spacing-xxl; }
 
+.px-xxs { padding-left: $spacing-xxs; padding-right: $spacing-xxs; }
 .px-xs { padding-left: $spacing-xs; padding-right: $spacing-xs; }
 .px-sm { padding-left: $spacing-sm; padding-right: $spacing-sm; }
 .px-md { padding-left: $spacing-md; padding-right: $spacing-md; }
@@ -99,6 +105,7 @@
 .px-xl { padding-left: $spacing-xl; padding-right: $spacing-xl; }
 .px-xxl { padding-left: $spacing-xxl; padding-right: $spacing-xxl; }
 
+.py-xxs { padding-top: $spacing-xxs; padding-bottom: $spacing-xxs; }
 .py-xs { padding-top: $spacing-xs; padding-bottom: $spacing-xs; }
 .py-sm { padding-top: $spacing-sm; padding-bottom: $spacing-sm; }
 .py-md { padding-top: $spacing-md; padding-bottom: $spacing-md; }
@@ -107,6 +114,7 @@
 .py-xxl { padding-top: $spacing-xxl; padding-bottom: $spacing-xxl; }
 
 /* margin utilities */
+.m-xxs { margin: $spacing-xxs; }
 .m-xs { margin: $spacing-xs; }
 .m-sm { margin: $spacing-sm; }
 .m-md { margin: $spacing-md; }
@@ -114,6 +122,7 @@
 .m-xl { margin: $spacing-xl; }
 .m-xxl { margin: $spacing-xxl; }
 
+.mt-xxs { margin-top: $spacing-xxs; }
 .mt-xs { margin-top: $spacing-xs; }
 .mt-sm { margin-top: $spacing-sm; }
 .mt-md { margin-top: $spacing-md; }
@@ -121,6 +130,7 @@
 .mt-xl { margin-top: $spacing-xl; }
 .mt-xxl { margin-top: $spacing-xxl; }
 
+.mr-xxs { margin-right: $spacing-xxs; }
 .mr-xs { margin-right: $spacing-xs; }
 .mr-sm { margin-right: $spacing-sm; }
 .mr-md { margin-right: $spacing-md; }
@@ -128,6 +138,7 @@
 .mr-xl { margin-right: $spacing-xl; }
 .mr-xxl { margin-right: $spacing-xxl; }
 
+.mb-xxs { margin-bottom: $spacing-xxs; }
 .mb-xs { margin-bottom: $spacing-xs; }
 .mb-sm { margin-bottom: $spacing-sm; }
 .mb-md { margin-bottom: $spacing-md; }
@@ -135,6 +146,7 @@
 .mb-xl { margin-bottom: $spacing-xl; }
 .mb-xxl { margin-bottom: $spacing-xxl; }
 
+.ml-xxs { margin-left: $spacing-xxs; }
 .ml-xs { margin-left: $spacing-xs; }
 .ml-sm { margin-left: $spacing-sm; }
 .ml-md { margin-left: $spacing-md; }
@@ -142,6 +154,7 @@
 .ml-xl { margin-left: $spacing-xl; }
 .ml-xxl { margin-left: $spacing-xxl; }
 
+.mx-xxs { margin-left: $spacing-xxs; margin-right: $spacing-xxs; }
 .mx-xs { margin-left: $spacing-xs; margin-right: $spacing-xs; }
 .mx-sm { margin-left: $spacing-sm; margin-right: $spacing-sm; }
 .mx-md { margin-left: $spacing-md; margin-right: $spacing-md; }
@@ -149,6 +162,7 @@
 .mx-xl { margin-left: $spacing-xl; margin-right: $spacing-xl; }
 .mx-xxl { margin-left: $spacing-xxl; margin-right: $spacing-xxl; }
 
+.my-xxs { margin-top: $spacing-xxs; margin-bottom: $spacing-xxs; }
 .my-xs { margin-top: $spacing-xs; margin-bottom: $spacing-xs; }
 .my-sm { margin-top: $spacing-sm; margin-bottom: $spacing-sm; }
 .my-md { margin-top: $spacing-md; margin-bottom: $spacing-md; }

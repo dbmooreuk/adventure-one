@@ -635,6 +635,10 @@ button.prop {
 }
 
 /* padding utilities */
+.p-xxs {
+  padding: 4px;
+}
+
 .p-xs {
   padding: 6px;
 }
@@ -657,6 +661,10 @@ button.prop {
 
 .p-xxl {
   padding: 48px;
+}
+
+.pt-xxs {
+  padding-top: 4px;
 }
 
 .pt-xs {
@@ -683,6 +691,10 @@ button.prop {
   padding-top: 48px;
 }
 
+.pr-xxs {
+  padding-right: 4px;
+}
+
 .pr-xs {
   padding-right: 6px;
 }
@@ -705,6 +717,10 @@ button.prop {
 
 .pr-xxl {
   padding-right: 48px;
+}
+
+.pb-xxs {
+  padding-bottom: 4px;
 }
 
 .pb-xs {
@@ -731,6 +747,10 @@ button.prop {
   padding-bottom: 48px;
 }
 
+.pl-xxs {
+  padding-left: 4px;
+}
+
 .pl-xs {
   padding-left: 6px;
 }
@@ -753,6 +773,11 @@ button.prop {
 
 .pl-xxl {
   padding-left: 48px;
+}
+
+.px-xxs {
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .px-xs {
@@ -783,6 +808,11 @@ button.prop {
 .px-xxl {
   padding-left: 48px;
   padding-right: 48px;
+}
+
+.py-xxs {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 .py-xs {
@@ -816,6 +846,10 @@ button.prop {
 }
 
 /* margin utilities */
+.m-xxs {
+  margin: 4px;
+}
+
 .m-xs {
   margin: 6px;
 }
@@ -838,6 +872,10 @@ button.prop {
 
 .m-xxl {
   margin: 48px;
+}
+
+.mt-xxs {
+  margin-top: 4px;
 }
 
 .mt-xs {
@@ -864,6 +902,10 @@ button.prop {
   margin-top: 48px;
 }
 
+.mr-xxs {
+  margin-right: 4px;
+}
+
 .mr-xs {
   margin-right: 6px;
 }
@@ -886,6 +928,10 @@ button.prop {
 
 .mr-xxl {
   margin-right: 48px;
+}
+
+.mb-xxs {
+  margin-bottom: 4px;
 }
 
 .mb-xs {
@@ -912,6 +958,10 @@ button.prop {
   margin-bottom: 48px;
 }
 
+.ml-xxs {
+  margin-left: 4px;
+}
+
 .ml-xs {
   margin-left: 6px;
 }
@@ -934,6 +984,11 @@ button.prop {
 
 .ml-xxl {
   margin-left: 48px;
+}
+
+.mx-xxs {
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .mx-xs {
@@ -964,6 +1019,11 @@ button.prop {
 .mx-xxl {
   margin-left: 48px;
   margin-right: 48px;
+}
+
+.my-xxs {
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .my-xs {
@@ -1135,9 +1195,19 @@ button.prop {
 .btn-actions-container {
   position: absolute;
   top: 16px;
-  right: 400px;
+  right: 132px;
   background: rgba(234, 186, 192, 0.7);
   background: linear-gradient(to bottom, rgba(234, 186, 192, 0.7) 0%, rgba(246, 253, 219, 0.7) 100%);
+  z-index: 10;
+}
+
+.nav-directions {
+  position: absolute;
+  bottom: 16px;
+  right: 132px;
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
   z-index: 10;
 }
 
@@ -1152,8 +1222,7 @@ button.prop {
   top: 16px;
   bottom: 16px;
   right: 16px;
-  border-radius: 16px;
-  width: 218px;
+  width: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1274,13 +1343,25 @@ button.prop {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   z-index: 200;
   pointer-events: none;
+  max-width: 600px;
   /* Initially hidden */
   opacity: 0;
   transform: translateY(20px);
   /* Animation when shown */
 }
 .panel-text.show {
+  pointer-events: auto;
   animation: fadeUpAndOut 5000ms ease-in-out forwards;
+}
+.panel-text.show.persistent {
+  animation: fadeUpStay 300ms ease-out forwards;
+}
+.panel-text .panel-text-content {
+  margin-bottom: 0;
+}
+.panel-text .btn-dismiss {
+  margin-top: 16px;
+  pointer-events: auto;
 }
 
 /* Keyframe animation: fade up from bottom, stay visible, then fade out */
@@ -1300,6 +1381,17 @@ button.prop {
   100% {
     opacity: 0;
     transform: translateY(-10px);
+  }
+}
+/* Keyframe animation: fade up and stay visible (for messages with dismiss button) */
+@keyframes fadeUpStay {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 /* Loader */

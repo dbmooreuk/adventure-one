@@ -18,6 +18,8 @@ export class UIManager extends EventEmitter {
         this.messageTimeout = null
         this.components = new Map() // Track component instances
         this.inventoryComponents = new Map() // Track inventory item components
+        this.currentSceneText = '' // Store current scene text for Look button
+        this.isSceneTextShowing = false // Track if scene text is currently displayed
     }
 
     /**
@@ -45,24 +47,26 @@ export class UIManager extends EventEmitter {
         this.elements = {
             // Scene elements
             sceneTitle: document.querySelector('.scene-title'),
-            sceneText: document.querySelector('.scene-text'),
             sceneItemsOverlay: document.querySelector('.scene-items-overlay'),
             sceneInventoryOverlay: document.querySelector('.scene-inventory-overlay'),
             panelText: document.querySelector('.panel-text'),
+            panelTextContent: document.querySelector('.panel-text-content'),
+            btnDismiss: document.querySelector('.btn-dismiss'),
             scoreBox: document.querySelector('.score-box'),
             stageTitle: document.querySelector('.stage-title'),
             pipsContainer: document.querySelector('.pips-container'),
-            
+
             // Action buttons
             btnExamine: document.querySelector('.btn-examine'),
             btnGet: document.querySelector('.btn-get'),
             btnUse: document.querySelector('.btn-use'),
-            
+            btnLook: document.querySelector('.btn-look'),
+
             // Navigation buttons
             btnBack: document.querySelector('.btn-back'),
             btnNext: document.querySelector('.btn-next'),
             btnStart: document.querySelector('.btn-start'),
-            
+
             // Menu elements
             menuToggle: document.querySelector('#menu-toggle'),
             menu: document.querySelector('#menu'),
@@ -88,6 +92,7 @@ export class UIManager extends EventEmitter {
         this.elements.btnExamine?.addEventListener('click', () => this.setAction('examine'))
         this.elements.btnGet?.addEventListener('click', () => this.setAction('get'))
         this.elements.btnUse?.addEventListener('click', () => this.setAction('use'))
+        this.elements.btnLook?.addEventListener('click', () => this.showSceneText())
 
         // Navigation buttons
         this.elements.btnBack?.addEventListener('click', () => this.navigateBack())
@@ -100,6 +105,9 @@ export class UIManager extends EventEmitter {
         this.elements.btnLoad?.addEventListener('click', () => this.emit('loadRequested'))
         this.elements.btnReset?.addEventListener('click', () => this.emit('resetRequested'))
         this.elements.btnMute?.addEventListener('click', () => this.toggleMute())
+
+        // Dismiss button
+        this.elements.btnDismiss?.addEventListener('click', () => this.dismissMessage())
 
         // Scene item interactions
         this.elements.sceneItemsOverlay?.addEventListener('click', (e) => this.handleSceneItemClick(e))
@@ -473,16 +481,16 @@ export class UIManager extends EventEmitter {
             }
         }
 
-        if (this.elements.sceneText) {
-            this.elements.sceneText.innerHTML = sceneData.textOne || ''
+        // Store and show scene text
+        if (sceneData.textOne) {
+            this.currentSceneText = sceneData.textOne
+
             if (!isSplashScene) {
-                this.elements.sceneText.style.display = 'block'
-                this.fadeIn(this.elements.sceneText)
-            } else {
-                // On splash, just show it without animation
-                this.elements.sceneText.style.display = 'block'
-                this.elements.sceneText.style.opacity = '1'
+                // Show scene text with dismiss button for regular scenes
+                this.showSceneText()
             }
+        } else {
+            this.currentSceneText = ''
         }
 
         // Update stage title
@@ -616,15 +624,26 @@ export class UIManager extends EventEmitter {
      * Show a message to the player
      * @param {string} message - Message text
      * @param {number} duration - Display duration in milliseconds (uses config default)
+     * @param {boolean} showDismiss - Whether to show dismiss button (default: false)
      */
-    showMessage(message, duration = ui.messageDisplayDuration) {
-        if (!this.elements.panelText) return
+    showMessage(message, duration = ui.messageDisplayDuration, showDismiss = false) {
+        if (!this.elements.panelText || !this.elements.panelTextContent) return
 
-        // Remove existing show class if present
-        this.elements.panelText.classList.remove('show')
+        // If scene text is showing and this is a regular message (examine), dismiss scene text first
+        if (this.isSceneTextShowing && !showDismiss) {
+            this.isSceneTextShowing = false
+        }
+
+        // Remove existing classes
+        this.elements.panelText.classList.remove('show', 'persistent')
 
         // Set message content
-        this.elements.panelText.innerHTML = message
+        this.elements.panelTextContent.innerHTML = message
+
+        // Show/hide dismiss button and add persistent class if needed
+        if (this.elements.btnDismiss) {
+            this.elements.btnDismiss.style.display = showDismiss ? 'block' : 'none'
+        }
 
         // Set CSS variable for animation duration
         this.elements.panelText.style.setProperty('--message-duration', `${duration}ms`)
@@ -632,18 +651,41 @@ export class UIManager extends EventEmitter {
         // Force reflow to restart animation
         void this.elements.panelText.offsetWidth
 
-        // Add show class to trigger animation
+        // Add show class and persistent class if showing dismiss button
         this.elements.panelText.classList.add('show')
+        if (showDismiss) {
+            this.elements.panelText.classList.add('persistent')
+        }
 
         // Clear existing timeout
         if (this.messageTimeout) {
             clearTimeout(this.messageTimeout)
         }
 
-        // Auto-clear message after animation completes
-        this.messageTimeout = setTimeout(() => {
-            this.clearMessage()
-        }, duration)
+        // Only auto-clear if not showing dismiss button
+        if (!showDismiss) {
+            this.messageTimeout = setTimeout(() => {
+                this.clearMessage()
+            }, duration)
+        }
+    }
+
+    /**
+     * Show scene text with dismiss button
+     */
+    showSceneText() {
+        if (!this.currentSceneText) return
+
+        this.isSceneTextShowing = true
+        this.showMessage(this.currentSceneText, 0, true) // 0 duration = no auto-dismiss
+    }
+
+    /**
+     * Dismiss the current message (scene text or regular message)
+     */
+    dismissMessage() {
+        this.isSceneTextShowing = false
+        this.clearMessage()
     }
 
     /**
@@ -651,13 +693,17 @@ export class UIManager extends EventEmitter {
      */
     clearMessage() {
         if (this.elements.panelText) {
-            this.elements.panelText.classList.remove('show')
-            // Clear content after animation
-            setTimeout(() => {
-                if (this.elements.panelText) {
-                    this.elements.panelText.innerHTML = ''
-                }
-            }, 300)
+            this.elements.panelText.classList.remove('show', 'persistent')
+        }
+
+        // Clear content immediately
+        if (this.elements.panelTextContent) {
+            this.elements.panelTextContent.innerHTML = ''
+        }
+
+        // Hide dismiss button immediately
+        if (this.elements.btnDismiss) {
+            this.elements.btnDismiss.style.display = 'none'
         }
 
         if (this.messageTimeout) {
@@ -898,12 +944,9 @@ export class UIManager extends EventEmitter {
             this.elements.sceneInventoryOverlay.innerHTML = ''
         }
 
-        // Clear scene text
+        // Clear scene title
         if (this.elements.sceneTitle) {
             this.elements.sceneTitle.textContent = ''
-        }
-        if (this.elements.sceneText) {
-            this.elements.sceneText.textContent = ''
         }
 
         // Clear background
@@ -914,7 +957,9 @@ export class UIManager extends EventEmitter {
         // Reset score display
         this.updateScore(0)
 
-        // Clear any active messages
+        // Clear any active messages and scene text
+        this.currentSceneText = ''
+        this.isSceneTextShowing = false
         this.clearMessage()
 
         console.log('✅ Scene UI cleared')

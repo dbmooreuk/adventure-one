@@ -124,6 +124,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   z-index: 200;
   pointer-events: none;
+  max-width: 600px;
 
   /* Initially hidden */
   opacity: 0;
@@ -131,7 +132,24 @@
 
   /* Animation when shown */
   &.show {
+    pointer-events: auto; // Enable pointer events when shown
+
+    // Default animation for auto-dismissing messages
     animation: fadeUpAndOut 5000ms ease-in-out forwards;
+  }
+
+  // When showing persistent message (with dismiss button)
+  &.show.persistent {
+    animation: fadeUpStay 300ms ease-out forwards;
+  }
+
+  .panel-text-content {
+    margin-bottom: 0;
+  }
+
+  .btn-dismiss {
+    margin-top: $spacing-md;
+    pointer-events: auto;
   }
 }
 
@@ -152,6 +170,18 @@
   100% {
     opacity: 0;
     transform: translateY(-10px);
+  }
+}
+
+/* Keyframe animation: fade up and stay visible (for messages with dismiss button) */
+@keyframes fadeUpStay {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

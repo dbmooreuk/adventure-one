@@ -61,9 +61,9 @@
         <div class="scene-container" style="display: none;">
 
                             <!-- Inventory -->
-                <div class="panel-wrapper">
+                <div class="panel-wrapper border-radius-md">
                     <!-- <h1 class="scene-title body-xl text-main-yellow"></h1> -->
-                    <p class="scene-text body-sm text-main-yellow"></p>
+          
                     <div class="scene-inventory-overlay"></div>
                     <div class="score-box body-lg text-main-yellow">0%</div>
                 </div>
@@ -73,14 +73,15 @@
             <div class="scene-items-overlay"></div>
 
             <!-- Panel Text Popup (bottom-left) -->
-            <div class="panel-text body-sm text-main-yellow"></div>
+            <div class="panel-text body-sm text-main-yellow">
+                <div class="panel-text-content"></div>
+                <button class="btn btn-dismiss" style="display: none;">Dismiss</button>
+            </div>
 
-
-
-
-                            <!-- Action Buttons -->
+            <!-- Action Buttons -->
                 <div class="btn-actions-container btn-group p-xs border-radius-md">
                     <button class="btn btn-action btn-examine">Examine</button>
+                        <button class="btn btn-action btn-look border-radius-none">Look</button>
                     <button class="btn btn-action btn-get border-radius-none">Get</button>
                     <button class="btn btn-action btn-use">Use</button>
                 </div>
