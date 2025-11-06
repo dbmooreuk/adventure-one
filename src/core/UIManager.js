@@ -422,11 +422,16 @@ export class UIManager extends EventEmitter {
      */
     toggleMute() {
         this.emit('muteToggled')
-        
-        // Update button state
+
+        // Update button state and text
         const isMuted = this.game.audioManager?.getAudioState().isMuted
         this.elements.btnMute?.classList.toggle('active', !isMuted)
         this.elements.btnMute?.classList.toggle('inactive', isMuted)
+
+        // Update button text
+        if (this.elements.btnMute) {
+            this.elements.btnMute.textContent = isMuted ? 'Unmute' : 'Mute'
+        }
     }
 
     /**
@@ -695,7 +700,7 @@ export class UIManager extends EventEmitter {
     updateMenuButtons() {
         const hasSavedGame = this.game.saveManager?.hasSavedGame()
         const currentScene = this.game.stateManager?.getState('currentScene')
-        
+
         if (currentScene === 'splash') {
             // On splash screen
             if (this.elements.btnLoad) {
@@ -712,6 +717,12 @@ export class UIManager extends EventEmitter {
             if (this.elements.btnSave) {
                 this.elements.btnSave.style.display = 'block'
             }
+        }
+
+        // Update mute button text based on current audio state
+        const isMuted = this.game.audioManager?.getAudioState().isMuted
+        if (this.elements.btnMute) {
+            this.elements.btnMute.textContent = isMuted ? 'Unmute' : 'Mute'
         }
     }
 
