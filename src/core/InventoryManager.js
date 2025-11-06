@@ -156,7 +156,6 @@ export class InventoryManager extends EventEmitter {
      */
     handleItemClick(itemName) {
         const currentAction = this.game.stateManager.getState('currentAction')
-        console.log(`🎒 Inventory item clicked: ${itemName}, current action: ${currentAction}`)
 
         switch (currentAction) {
             case 'examine':

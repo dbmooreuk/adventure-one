@@ -88,10 +88,8 @@ export class AudioManager extends EventEmitter {
      */
     unlockAudio() {
         const unlock = () => {
-            console.log('🔊 Unlocking audio context...')
-
             // Try to play and immediately pause all audio elements
-            this.audioElements.forEach((audio, id) => {
+            this.audioElements.forEach((audio) => {
                 audio.play().then(() => {
                     audio.pause()
                     audio.currentTime = 0
@@ -99,8 +97,6 @@ export class AudioManager extends EventEmitter {
                     // Ignore errors during unlock
                 })
             })
-
-            console.log('✅ Audio context unlocked')
 
             // Remove the event listeners after first unlock
             document.removeEventListener('click', unlock)
@@ -192,18 +188,13 @@ export class AudioManager extends EventEmitter {
      * @param {number} volume - Volume override (0-1)
      */
     playSound(soundId, volume = null) {
-        console.log(`🔊 playSound called with: ${soundId}`)
-
         const audio = this.audioElements.get(soundId)
         if (!audio) {
             console.warn(`🔊 Sound not found: ${soundId}`)
-            console.log(`🔊 Available sounds:`, Array.from(this.audioElements.keys()))
             return
         }
 
         try {
-            console.log(`🔊 Playing sound: ${soundId}, volume: ${(volume !== null ? volume : this.sfxVolume) * this.masterVolume}`)
-
             // Clone the audio element for overlapping sounds
             const soundClone = audio.cloneNode(true)
             soundClone.volume = (volume !== null ? volume : this.sfxVolume) * this.masterVolume
@@ -213,11 +204,8 @@ export class AudioManager extends EventEmitter {
                 soundClone.remove()
             })
 
-            soundClone.play().then(() => {
-                console.log(`✅ Sound ${soundId} playing successfully`)
-            }).catch(err => {
-                console.error(`❌ Failed to play sound ${soundId}:`, err)
-                console.error(`Error name: ${err.name}, message: ${err.message}`)
+            soundClone.play().catch(err => {
+                console.error(`🔊 Failed to play sound ${soundId}:`, err)
             })
 
             this.emit('soundPlayed', soundId)

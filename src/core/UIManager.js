@@ -105,12 +105,7 @@ export class UIManager extends EventEmitter {
         this.elements.sceneItemsOverlay?.addEventListener('click', (e) => this.handleSceneItemClick(e))
 
         // Inventory item interactions
-        if (this.elements.sceneInventoryOverlay) {
-            console.log('✅ Setting up inventory click listener on:', this.elements.sceneInventoryOverlay)
-            this.elements.sceneInventoryOverlay.addEventListener('click', (e) => this.handleInventoryItemClick(e))
-        } else {
-            console.warn('⚠️ sceneInventoryOverlay not found during setup!')
-        }
+        this.elements.sceneInventoryOverlay?.addEventListener('click', (e) => this.handleInventoryItemClick(e))
 
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
@@ -255,13 +250,9 @@ export class UIManager extends EventEmitter {
      */
     handleInventoryItemClick(e) {
         const item = e.target.closest('.inventory-item')
-        if (!item) {
-            console.log('🖱️ Click on inventory overlay but not on an item')
-            return
-        }
+        if (!item) return
 
         const itemName = this.getItemNameFromElement(item)
-        console.log(`🖱️ Inventory item clicked: ${itemName}`)
         this.emit('itemClicked', itemName)
     }
 
@@ -539,12 +530,7 @@ export class UIManager extends EventEmitter {
      * @param {string[]} items - Inventory items
      */
     updateInventory(items) {
-        console.log('🎒 updateInventory called with items:', items)
-
-        if (!this.elements.sceneInventoryOverlay) {
-            console.warn('⚠️ sceneInventoryOverlay element not found!')
-            return
-        }
+        if (!this.elements.sceneInventoryOverlay) return
 
         // Clear existing inventory components
         this.inventoryComponents.forEach(component => component.destroy())
@@ -555,7 +541,6 @@ export class UIManager extends EventEmitter {
         items.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
             if (itemData) {
-                console.log(`🎒 Creating inventory component for: ${itemName}`)
                 // Create inventory item component
                 const component = new InventoryItem(itemData, this.game)
 
@@ -564,9 +549,6 @@ export class UIManager extends EventEmitter {
 
                 // Append to inventory overlay
                 this.elements.sceneInventoryOverlay.appendChild(component.getElement())
-                console.log(`🎒 Appended ${itemName} to inventory overlay. Total items: ${this.inventoryComponents.size}`)
-            } else {
-                console.warn(`⚠️ Item data not found for: ${itemName}`)
             }
         })
     }
