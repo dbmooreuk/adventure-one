@@ -88,12 +88,12 @@ export class UIManager extends EventEmitter {
         this.elements.btnExamine?.addEventListener('click', () => this.setAction('examine'))
         this.elements.btnGet?.addEventListener('click', () => this.setAction('get'))
         this.elements.btnUse?.addEventListener('click', () => this.setAction('use'))
-        
+
         // Navigation buttons
         this.elements.btnBack?.addEventListener('click', () => this.navigateBack())
         this.elements.btnNext?.addEventListener('click', () => this.navigateNext())
         this.elements.btnStart?.addEventListener('click', () => this.startGame())
-        
+
         // Menu buttons
         this.elements.menuToggle?.addEventListener('click', () => this.toggleMenu())
         this.elements.btnSave?.addEventListener('click', () => this.emit('saveRequested'))
@@ -103,15 +103,22 @@ export class UIManager extends EventEmitter {
 
         // Scene item interactions
         this.elements.sceneItemsOverlay?.addEventListener('click', (e) => this.handleSceneItemClick(e))
-        this.elements.sceneInventoryOverlay?.addEventListener('click', (e) => this.handleInventoryItemClick(e))
-        
+
+        // Inventory item interactions
+        if (this.elements.sceneInventoryOverlay) {
+            console.log('✅ Setting up inventory click listener on:', this.elements.sceneInventoryOverlay)
+            this.elements.sceneInventoryOverlay.addEventListener('click', (e) => this.handleInventoryItemClick(e))
+        } else {
+            console.warn('⚠️ sceneInventoryOverlay not found during setup!')
+        }
+
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (this.isMenuOpen && !this.elements.menu?.contains(e.target) && !this.elements.menuToggle?.contains(e.target)) {
                 this.closeMenu()
             }
         })
-        
+
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e))
     }
@@ -248,9 +255,13 @@ export class UIManager extends EventEmitter {
      */
     handleInventoryItemClick(e) {
         const item = e.target.closest('.inventory-item')
-        if (!item) return
-        
+        if (!item) {
+            console.log('🖱️ Click on inventory overlay but not on an item')
+            return
+        }
+
         const itemName = this.getItemNameFromElement(item)
+        console.log(`🖱️ Inventory item clicked: ${itemName}`)
         this.emit('itemClicked', itemName)
     }
 
@@ -528,7 +539,12 @@ export class UIManager extends EventEmitter {
      * @param {string[]} items - Inventory items
      */
     updateInventory(items) {
-        if (!this.elements.sceneInventoryOverlay) return
+        console.log('🎒 updateInventory called with items:', items)
+
+        if (!this.elements.sceneInventoryOverlay) {
+            console.warn('⚠️ sceneInventoryOverlay element not found!')
+            return
+        }
 
         // Clear existing inventory components
         this.inventoryComponents.forEach(component => component.destroy())
@@ -539,6 +555,7 @@ export class UIManager extends EventEmitter {
         items.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
             if (itemData) {
+                console.log(`🎒 Creating inventory component for: ${itemName}`)
                 // Create inventory item component
                 const component = new InventoryItem(itemData, this.game)
 
@@ -547,6 +564,9 @@ export class UIManager extends EventEmitter {
 
                 // Append to inventory overlay
                 this.elements.sceneInventoryOverlay.appendChild(component.getElement())
+                console.log(`🎒 Appended ${itemName} to inventory overlay. Total items: ${this.inventoryComponents.size}`)
+            } else {
+                console.warn(`⚠️ Item data not found for: ${itemName}`)
             }
         })
     }
@@ -784,6 +804,12 @@ export class UIManager extends EventEmitter {
      * @returns {string} Item name
      */
     getItemNameFromElement(element) {
+        // First try to get from data attribute (used by components)
+        if (element.dataset.itemName) {
+            return element.dataset.itemName
+        }
+
+        // Fallback to class-based detection
         const classes = Array.from(element.classList)
         return classes.find(cls => !['icon-font', 'scene-item', 'scene-target', 'scene-link', 'inventory-item', 'prop'].includes(cls) && !cls.startsWith('icon-'))
     }

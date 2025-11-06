@@ -1,58 +1,40 @@
+/**
+ * Inventory Component Styles
+ * BEM naming convention for inventory elements
+ * Note: Detailed inventory-item styles are in _items.scss
+ */
+
 @use 'variables' as *;
 @use 'mixins' as *;
 
-/* Inventory */
-
-
+/* Inventory Panel Wrapper */
 .panel-wrapper {
-  position: absolute;
-  top: $spacing-md;
-  bottom: $spacing-md;
-  right: $spacing-md;
-  border-radius: $border-radius-lg;
-  width: $inventory-width;
-  display: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: $spacing-lg;
-  pointer-events: none;
- @include vertical-gradient($main-blue, $dark-marine, 0.2);
-  @include shadow-custom(2px, 4px, 8px, 0px, rgba(0, 0, 0, 0.3));
+    position: absolute;
+    top: $spacing-md;
+    bottom: $spacing-md;
+    right: $spacing-md;
+    border-radius: $border-radius-lg;
+    width: $inventory-width;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: $spacing-xs;
+    padding: $spacing-lg;
+    pointer-events: none;
+    @include vertical-gradient($main-blue, $dark-marine, 0.2);
+    @include shadow-custom(2px, 4px, 8px, 0px, rgba($black, 0.3));
 }
 
+/* Scene Inventory Overlay (bottom of screen) */
 .scene-inventory-overlay {
-  position: absolute;
-  bottom: $spacing-lg;
+    position: absolute;
+    bottom: $spacing-lg;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 3px;
-  pointer-events: none;
-}
-
-.inventory-item {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  font-size: 0.5rem;
-  text-align: center;
-  pointer-events: all;
-  border: none;
-  backdrop-filter: blur(5px);
-  border-radius: 10px;
-
-
-  cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: $border-radius-md;
-    background-color: $main-yellow;
-    box-shadow: 2px 2px 8.7px 0 $dark-blue inset;
-  }
-
-.inventory-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+    gap: $spacing-xs;
+    pointer-events: none;
 }
 
 

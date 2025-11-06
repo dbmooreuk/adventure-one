@@ -1,297 +1,293 @@
+/**
+ * Puzzle Component Styles
+ * Single-hyphen naming convention for puzzle elements
+ */
+
 @use 'variables' as *;
 @use 'mixins' as *;
 
 /* Puzzle Container */
 .puzzle-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  background: rgba($dark-blue, 0.95);
-  backdrop-filter: blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: $z-index-dropdown;
+    background: rgba($dark-blue, 0.95);
+    backdrop-filter: blur(10px);
 }
 
 /* Safe Combination Puzzle */
 .safe-puzzle {
-  background: rgba($dark-marine, 0.95);
-  border-radius: $border-radius-xl;
-  padding: $spacing-xxl;
-  max-width: 600px;
-  width: 90%;
-  @include shadow-xl;
-  border: 2px solid $main-marine;
+    background: rgba($dark-marine, 0.95);
+    border-radius: $border-radius-xl;
+    padding: $spacing-xxl;
+    max-width: 600px;
+    width: 90%;
+    @include shadow-xl;
+    border: 2px solid $main-marine;
 }
 
 .safe-puzzle-header {
-  text-align: center;
-  margin-bottom: $spacing-xl;
+    text-align: center;
+    margin-bottom: $spacing-xl;
 }
 
 .safe-puzzle-title {
-  font-size: $font-size-3xl;
-  font-weight: 700;
-  color: $main-yellow;
-  margin-bottom: $spacing-sm;
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $main-yellow;
+    margin-bottom: $spacing-sm;
 }
 
 .safe-puzzle-subtitle {
-  font-size: $font-size-lg;
-  color: $light-yellow;
-  margin-bottom: $spacing-md;
+    font-size: $font-size-lg;
+    color: $light-yellow;
+    margin-bottom: $spacing-md;
 }
 
 .safe-puzzle-attempts {
-  font-size: $font-size-md;
-  color: $main-marine;
-  background: rgba($main-marine, 0.3);
-  padding: $spacing-sm $spacing-md;
-  border-radius: $border-radius-md;
-  display: inline-block;
+    font-size: $font-size-md;
+    color: $main-marine;
+    background: rgba($main-marine, 0.3);
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-md;
+    display: inline-block;
 }
 
-.attempts-count {
-  color: $main-yellow;
-  font-weight: 700;
+.safe-puzzle-attempts-count {
+    color: $main-yellow;
+    font-weight: 700;
 }
 
 /* Puzzle Body */
 .safe-puzzle-body {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
 }
 
 /* Dials */
 .safe-dials {
-  display: flex;
-  justify-content: center;
-  gap: $spacing-xl;
+    display: flex;
+    justify-content: center;
+    gap: $spacing-xl;
 }
 
 .dial-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $spacing-sm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
 }
 
 .dial-btn {
-  background: $main-marine;
-  color: $light-yellow;
-  border: none;
-  border-radius: $border-radius-md;
-  width: 60px;
-  height: 40px;
-  font-size: $font-size-xl;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  @include shadow-md;
+    background: $main-marine;
+    color: $light-yellow;
+    border: none;
+    border-radius: $border-radius-md;
+    width: 60px;
+    height: 40px;
+    font-size: $font-size-xl;
+    cursor: pointer;
+    transition: all $transition-fast;
+    @include shadow-md;
 
-  &:hover:not(:disabled) {
-    // background: lighten($main-marine, 10%);
-    transform: translateY(-2px);
-    @include shadow-lg;
-  }
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        @include shadow-lg;
+    }
 
-  &:active:not(:disabled) {
-    transform: translateY(0);
-    @include shadow-sm;
-  }
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        @include shadow-sm;
+    }
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }
 
 .dial-value {
-  background: rgba($dark-blue, 0.8);
-  color: $main-yellow;
-  font-size: $font-size-4xl;
-  font-weight: 700;
-  font-family: $font-family-mono;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: $border-radius-lg;
-  border: 3px solid $main-marine;
-  @include shadow-lg;
+    background: rgba($dark-blue, 0.8);
+    color: $main-yellow;
+    font-size: $font-size-4xl;
+    font-weight: 700;
+    font-family: $font-family-mono;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-lg;
+    border: 3px solid $main-marine;
+    @include shadow-lg;
 }
 
 /* Display */
 .safe-display {
-  background: rgba($dark-blue, 0.6);
-  padding: $spacing-lg;
-  border-radius: $border-radius-lg;
-  border: 2px solid $main-marine;
+    background: rgba($dark-blue, 0.6);
+    padding: $spacing-lg;
+    border-radius: $border-radius-lg;
+    border: 2px solid $main-marine;
 }
 
 .safe-display-numbers {
-  display: flex;
-  justify-content: center;
-  gap: $spacing-md;
+    display: flex;
+    justify-content: center;
+    gap: $spacing-md;
 }
 
 .display-number {
-  background: rgba(0, 0, 0, 0.5);
-  color: $main-yellow;
-  font-size: $font-size-3xl;
-  font-weight: 700;
-  font-family: $font-family-mono;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: $border-radius-md;
-  border: 2px solid rgba($main-yellow, 0.3);
+    background: rgba($black, 0.5);
+    color: $main-yellow;
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    font-family: $font-family-mono;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-md;
+    border: 2px solid rgba($main-yellow, 0.3);
 }
 
 /* Controls */
 .safe-controls {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
 }
 
 .btn-puzzle {
-  font-size: $font-size-lg;
-  padding: $spacing-md $spacing-lg;
-  border-radius: $border-radius-md;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $spacing-sm;
-  @include shadow-md;
+    font-size: $font-size-lg;
+    padding: $spacing-md $spacing-lg;
+    border-radius: $border-radius-md;
+    border: none;
+    cursor: pointer;
+    transition: all $transition-fast;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    @include shadow-md;
 
-  span {
-    font-size: $font-size-xl;
-  }
+    span {
+        font-size: $font-size-xl;
+    }
 
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    @include shadow-lg;
-  }
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        @include shadow-lg;
+    }
 
-  &:active:not(:disabled) {
-    transform: translateY(0);
-    @include shadow-sm;
-  }
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        @include shadow-sm;
+    }
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }
 
 .btn-submit {
-  background: $main-marine;
-  color: white;
-
-  &:hover:not(:disabled) {
-    // background: lighten($main-marine, 10%);
-  }
+    background: $main-marine;
+    color: $white;
 }
 
 .btn-hint {
-  background: $main-marine;
-  color: $light-yellow;
-
-  &:hover:not(:disabled) {
-    // background: lighten($main-marine, 10%);
-  }
+    background: $main-marine;
+    color: $light-yellow;
 }
 
 .btn-cancel {
-  background: rgba($main-pink, 0.8);
-  color: white;
+    background: rgba($main-pink, 0.8);
+    color: $white;
 
-  &:hover:not(:disabled) {
-    background: $main-pink;
-  }
+    &:hover:not(:disabled) {
+        background: $main-pink;
+    }
 }
 
 /* Hints */
 .safe-hints {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-sm;
-  min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    min-height: 60px;
 }
 
 .hint-item {
-  font-size: $font-size-md;
-  background: rgba($main-marine, 0.3);
-  color: $light-yellow;
-  padding: $spacing-sm $spacing-md;
-  border-radius: $border-radius-md;
-  border-left: 4px solid $main-yellow;
+    font-size: $font-size-md;
+    background: rgba($main-marine, 0.3);
+    color: $light-yellow;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-md;
+    border-left: 4px solid $main-yellow;
 }
 
 /* Message */
 .safe-message {
-  font-size: $font-size-lg;
-  padding: $spacing-md;
-  border-radius: $border-radius-md;
-  text-align: center;
-  font-weight: 600;
-  display: none;
+    font-size: $font-size-lg;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    text-align: center;
+    font-weight: 600;
+    display: none;
 
-  &.success {
-    background: rgba($main-marine, 0.3);
-    color: $main-marine;
-    border: 2px solid $main-marine;
-  }
+    &.success {
+        background: rgba($main-marine, 0.3);
+        color: $main-marine;
+        border: 2px solid $main-marine;
+    }
 
-  &.error {
-    background: rgba($main-pink, 0.3);
-    color: $main-pink;
-    border: 2px solid $main-pink;
-  }
+    &.error {
+        background: rgba($main-pink, 0.3);
+        color: $main-pink;
+        border: 2px solid $main-pink;
+    }
 
-  &.info {
-    background: rgba($main-marine, 0.3);
-    color: $light-yellow;
-    border: 2px solid $main-marine;
-  }
+    &.info {
+        background: rgba($main-marine, 0.3);
+        color: $light-yellow;
+        border: 2px solid $main-marine;
+    }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .safe-puzzle {
-    padding: $spacing-lg;
-  }
+    .safe-puzzle {
+        padding: $spacing-lg;
+    }
 
-  .safe-dials {
-    gap: $spacing-md;
-  }
+    .safe-dials {
+        gap: $spacing-md;
+    }
 
-  .dial-value {
-    width: 60px;
-    height: 60px;
-    font-size: $font-size-3xl;
-  }
+    .dial-value {
+        width: 60px;
+        height: 60px;
+        font-size: $font-size-3xl;
+    }
 
-  .dial-btn {
-    width: 50px;
-    height: 35px;
-  }
+    .dial-btn {
+        width: 50px;
+        height: 35px;
+    }
 
-  .display-number {
-    width: 50px;
-    height: 50px;
-    font-size: $font-size-2xl;
-  }
+    .display-number {
+        width: 50px;
+        height: 50px;
+        font-size: $font-size-2xl;
+    }
 }
 

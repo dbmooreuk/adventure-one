@@ -74,9 +74,44 @@ export class AudioManager extends EventEmitter {
     setupEventListeners() {
         // Listen for mute toggle from UI
         this.game.uiManager?.on('muteToggled', this.toggleMute.bind(this))
-        
+
         // Listen for volume changes
         this.game.uiManager?.on('volumeChanged', this.setMasterVolume.bind(this))
+
+        // Unlock audio on first user interaction (required by browsers)
+        this.unlockAudio()
+    }
+
+    /**
+     * Unlock audio playback (required by browser autoplay policies)
+     * This must be called after a user interaction
+     */
+    unlockAudio() {
+        const unlock = () => {
+            console.log('🔊 Unlocking audio context...')
+
+            // Try to play and immediately pause all audio elements
+            this.audioElements.forEach((audio, id) => {
+                audio.play().then(() => {
+                    audio.pause()
+                    audio.currentTime = 0
+                }).catch(() => {
+                    // Ignore errors during unlock
+                })
+            })
+
+            console.log('✅ Audio context unlocked')
+
+            // Remove the event listeners after first unlock
+            document.removeEventListener('click', unlock)
+            document.removeEventListener('touchstart', unlock)
+            document.removeEventListener('keydown', unlock)
+        }
+
+        // Listen for first user interaction
+        document.addEventListener('click', unlock, { once: true })
+        document.addEventListener('touchstart', unlock, { once: true })
+        document.addEventListener('keydown', unlock, { once: true })
     }
 
     /**
@@ -157,13 +192,18 @@ export class AudioManager extends EventEmitter {
      * @param {number} volume - Volume override (0-1)
      */
     playSound(soundId, volume = null) {
+        console.log(`🔊 playSound called with: ${soundId}`)
+
         const audio = this.audioElements.get(soundId)
         if (!audio) {
             console.warn(`🔊 Sound not found: ${soundId}`)
+            console.log(`🔊 Available sounds:`, Array.from(this.audioElements.keys()))
             return
         }
 
         try {
+            console.log(`🔊 Playing sound: ${soundId}, volume: ${(volume !== null ? volume : this.sfxVolume) * this.masterVolume}`)
+
             // Clone the audio element for overlapping sounds
             const soundClone = audio.cloneNode(true)
             soundClone.volume = (volume !== null ? volume : this.sfxVolume) * this.masterVolume
@@ -173,12 +213,15 @@ export class AudioManager extends EventEmitter {
                 soundClone.remove()
             })
 
-            soundClone.play().catch(err => {
-                console.error(`🔊 Failed to play sound ${soundId}:`, err)
+            soundClone.play().then(() => {
+                console.log(`✅ Sound ${soundId} playing successfully`)
+            }).catch(err => {
+                console.error(`❌ Failed to play sound ${soundId}:`, err)
+                console.error(`Error name: ${err.name}, message: ${err.message}`)
             })
 
             this.emit('soundPlayed', soundId)
-            
+
         } catch (error) {
             console.error(`🔊 Failed to play sound ${soundId}:`, error)
         }

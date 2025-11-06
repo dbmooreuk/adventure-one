@@ -1,31 +1,40 @@
+/**
+ * Color Utility Classes
+ * Utility classes for applying theme colors
+ */
+
 @use 'variables' as *;
 
-// Text colors
-
-.main-yellow {
-  color: $main-yellow;
-}
-.primary-highlight {
-  color: $primary-highlight;
-}
-.main-pink {
-  color: $main-pink;
+/* Text Colors */
+.text-yellow {
+    color: $main-yellow;
 }
 
-.main-marine {
-  color: $main-marine;
+.text-pink {
+    color: $main-pink;
 }
 
-// Background colors
-.main-yellow-bg{
-  background-color: $main-yellow;
+.text-marine {
+    color: $main-marine;
 }
-.primary-highlight-bg {
-  background-color: $primary-highlight;
+
+.text-highlight {
+    color: $primary-highlight;
 }
-.main-pink-bg {
-  background-color: $main-pink;
+
+/* Background Colors */
+.bg-yellow {
+    background-color: $main-yellow;
 }
-.main-marine-bg {
-  background-color: $main-marine;
+
+.bg-pink {
+    background-color: $main-pink;
+}
+
+.bg-marine {
+    background-color: $main-marine;
+}
+
+.bg-highlight {
+    background-color: $primary-highlight;
 }
