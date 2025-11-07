@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Data Editor - Quick Start</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        h1 { color: #4a9eff; }
+        h2 { color: #6bb0ff; margin-top: 2em; }
+        h3 { color: #8cc5ff; }
+        code {
+            background: #252540;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        pre {
+            background: #252540;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4a9eff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin: 10px 10px 10px 0;
+        }
+        .btn:hover {
+            background: #6bb0ff;
+        }
+        .warning {
+            background: #ff9800;
+            color: #000;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #4caf50;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        ul { margin-left: 20px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🎮 Game Data Editor - Quick Start Guide</h1>
+    
+    <div class="success">
+        <strong>✅ Editor is ready to use!</strong><br>
+        Click the button below to open the editor.
+    </div>
+    
+    <a href="index.html" class="btn">🚀 Open Game Data Editor</a>
+    
+    <h2>📋 What is this?</h2>
+    <p>
+        The Game Data Editor is a visual tool for creating and editing your game's scenes and items 
+        without manually editing the <code>gameData.js</code> file.
+    </p>
+    
+    <h2>🎯 Quick Start</h2>
+    
+    <h3>Option 1: Import Existing Data</h3>
+    <ol>
+        <li>Open the editor (click button above)</li>
+        <li>Click "📂 Import gameData.js"</li>
+        <li>Select your <code>src/data/gameData.js</code> file</li>
+        <li>Edit scenes and items visually</li>
+        <li>Click "💾 Export gameData.js" when done</li>
+        <li>Replace your old <code>gameData.js</code> with the exported file</li>
+    </ol>
+    
+    <h3>Option 2: Start Fresh</h3>
+    <ol>
+        <li>Open the editor</li>
+        <li>Click "✨ Start Fresh"</li>
+        <li>Add scenes using the "➕" button</li>
+        <li>Add items using the "➕" button</li>
+        <li>Export when ready</li>
+    </ol>
+    
+    <h2>✨ Key Features</h2>
+    
+    <h3>Scene Editor</h3>
+    <ul>
+        <li>Create and edit scenes with visual forms</li>
+        <li>Set background images and music</li>
+        <li>Add items to scenes with checkboxes</li>
+        <li>Configure puzzle settings</li>
+        <li>Set lock/unlock conditions</li>
+    </ul>
+    
+    <h3>Item Editor</h3>
+    <ul>
+        <li>Create items with all properties</li>
+        <li>Configure animations (bob, pulse, spin, sprite)</li>
+        <li>Set hover effects and click sounds</li>
+        <li>Position items on scenes</li>
+        <li>Define item interactions and outcomes</li>
+    </ul>
+    
+    <h2>🎨 Item Types</h2>
+    <ul>
+        <li><strong>item</strong> - Pickupable items (go into inventory)</li>
+        <li><strong>target</strong> - Non-pickupable items (can be used with other items)</li>
+        <li><strong>link</strong> - Navigation links to other scenes</li>
+        <li><strong>decor</strong> - Decorative items (can be examined but not picked up)</li>
+    </ul>
+    
+    <h2>🎬 Animation Types</h2>
+    <ul>
+        <li><strong>bob</strong> - Vertical bobbing motion</li>
+        <li><strong>pulse</strong> - Scaling pulse effect</li>
+        <li><strong>spin</strong> - Continuous rotation</li>
+        <li><strong>fade</strong> - Fade in/out effect</li>
+        <li><strong>sprite</strong> - Frame-by-frame animation</li>
+    </ul>
+    
+    <h2>💡 Example: Creating an Animated Item</h2>
+    
+    <p>To create a spinning gear item:</p>
+    
+    <ol>
+        <li>Click "➕" next to Items</li>
+        <li>Set name: <code>gear</code></li>
+        <li>Set long name: <code>Mechanical Gear</code></li>
+        <li>Set type: <code>item</code></li>
+        <li>Set look at: <code>A brass gear that's constantly rotating.</code></li>
+        <li>Set image: <code>gear.png</code></li>
+        <li>Set position: <code>[1050, 400]</code></li>
+        <li>Set size: <code>[60, 60]</code></li>
+        <li>In Animation field, enter:</li>
+    </ol>
+    
+    <pre><code>{
+  "type": "spin",
+  "speed": 0.5
+}</code></pre>
+    
+    <ol start="10">
+        <li>In Style field, enter:</li>
+    </ol>
+    
+    <pre><code>{
+  "className": "item--gear",
+  "hoverEffect": "glow"
+}</code></pre>
+    
+    <ol start="11">
+        <li>Click "💾 Save Item"</li>
+        <li>Add the item to a scene</li>
+    </ol>
+    
+    <h2>⚠️ Important Notes</h2>
+    
+    <div class="warning">
+        <strong>⚠️ Always backup your gameData.js before importing!</strong><br>
+        Keep a copy of your working <code>gameData.js</code> file before making changes.
+    </div>
+    
+    <ul>
+        <li>The editor validates required fields but doesn't check if images/sounds exist</li>
+        <li>Make sure referenced assets are in your <code>src/assets/</code> folders</li>
+        <li>Test exported data in the game before committing changes</li>
+        <li>Use lowercase names with underscores for scene and item names</li>
+    </ul>
+    
+    <h2>🔧 Workflow</h2>
+    
+    <ol>
+        <li><strong>Import</strong> your existing gameData.js</li>
+        <li><strong>Edit</strong> scenes and items visually</li>
+        <li><strong>Export</strong> the updated gameData.js</li>
+        <li><strong>Replace</strong> the old file in <code>src/data/</code></li>
+        <li><strong>Test</strong> in your game</li>
+        <li><strong>Repeat</strong> as needed</li>
+    </ol>
+    
+    <h2>📁 File Structure</h2>
+    
+    <pre><code>editor/
+├── index.html          # Main editor (open this!)
+├── QUICKSTART.html     # This guide
+├── README.md           # Detailed documentation
+├── css/
+│   └── editor.css      # Editor styles
+└── js/
+    ├── editor.js       # Main application
+    ├── schema.js       # Data validation
+    ├── ui-manager.js   # UI rendering
+    ├── data-manager.js # Import/export
+    ├── scene-editor.js # Scene editing
+    └── item-editor.js  # Item editing</code></pre>
+    
+    <h2>🚀 Ready to Start?</h2>
+    
+    <a href="index.html" class="btn">🎮 Open Game Data Editor</a>
+    <a href="README.md" class="btn" style="background: #6bb0ff;">📖 Read Full Documentation</a>
+    
+    <hr style="margin: 40px 0; border: 1px solid #3a3a5a;">
+    
+    <p style="text-align: center; color: #a0a0b0; font-size: 0.9em;">
+        Game Data Editor v1.0 | Built for Adventure Game
+    </p>
+</body>
+</html>
+

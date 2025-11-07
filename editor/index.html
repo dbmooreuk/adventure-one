@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Data Editor - Adventure Game</title>
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <div class="editor-container">
+        <!-- Header -->
+        <header class="editor-header">
+            <div class="header-left">
+                <h1>🎮 Game Data Editor</h1>
+                <span class="version">v2.0.0</span>
+            </div>
+            <div class="header-right">
+                <button id="import-btn" class="btn btn-secondary">
+                    📂 Import gameData.js
+                </button>
+                <button id="export-btn" class="btn btn-primary">
+                    💾 Export gameData.js
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="editor-main">
+            <!-- Left Sidebar - Navigation -->
+            <aside class="editor-sidebar">
+                <nav class="editor-nav">
+                    <button class="nav-tab active" data-tab="scenes">
+                        🎬 Scenes
+                    </button>
+                    <button class="nav-tab" data-tab="items">
+                        📦 Items
+                    </button>
+                    <button class="nav-tab" data-tab="settings">
+                        ⚙️ Settings
+                    </button>
+                </nav>
+
+                <!-- Scenes List -->
+                <div class="tab-content active" id="scenes-list">
+                    <div class="list-header">
+                        <h3>Scenes</h3>
+                        <button id="add-scene-btn" class="btn-icon" title="Add Scene">➕</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="scene-search" placeholder="Search scenes...">
+                    </div>
+                    <ul id="scenes-list-items" class="item-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Items List -->
+                <div class="tab-content" id="items-list">
+                    <div class="list-header">
+                        <h3>Items</h3>
+                        <button id="add-item-btn" class="btn-icon" title="Add Item">➕</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="item-search" placeholder="Search items...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Filter by type:</label>
+                        <select id="item-type-filter">
+                            <option value="">All Types</option>
+                            <option value="item">Item</option>
+                            <option value="target">Target</option>
+                            <option value="link">Link</option>
+                            <option value="decor">Decor</option>
+                        </select>
+                    </div>
+                    <ul id="items-list-items" class="item-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Settings -->
+                <div class="tab-content" id="settings-panel">
+                    <div class="list-header">
+                        <h3>Game Settings</h3>
+                    </div>
+                    <div class="settings-content">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="editor-content">
+                <!-- Welcome Screen -->
+                <div id="welcome-screen" class="welcome-screen active">
+                    <div class="welcome-content">
+                        <h2>Welcome to the Game Data Editor</h2>
+                        <p>Get started by:</p>
+                        <ul>
+                            <li>📂 Importing your existing <code>gameData.js</code> file</li>
+                            <li>🎬 Creating a new scene</li>
+                            <li>📦 Adding new items</li>
+                        </ul>
+                        <div class="welcome-actions">
+                            <button id="welcome-import-btn" class="btn btn-primary btn-large">
+                                📂 Import Existing Data
+                            </button>
+                            <button id="welcome-new-btn" class="btn btn-secondary btn-large">
+                                ✨ Start Fresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scene Editor -->
+                <div id="scene-editor" class="editor-panel">
+                    <div class="panel-header">
+                        <h2 id="scene-editor-title">Edit Scene</h2>
+                        <div class="panel-actions">
+                            <button id="delete-scene-btn" class="btn btn-danger">🗑️ Delete</button>
+                            <button id="duplicate-scene-btn" class="btn btn-secondary">📋 Duplicate</button>
+                        </div>
+                    </div>
+                    <form id="scene-form" class="editor-form">
+                        <!-- Scene form fields will be populated by JS -->
+                    </form>
+                </div>
+
+                <!-- Item Editor -->
+                <div id="item-editor" class="editor-panel">
+                    <div class="panel-header">
+                        <h2 id="item-editor-title">Edit Item</h2>
+                        <div class="panel-actions">
+                            <button id="delete-item-btn" class="btn btn-danger">🗑️ Delete</button>
+                            <button id="duplicate-item-btn" class="btn btn-secondary">📋 Duplicate</button>
+                        </div>
+                    </div>
+                    <form id="item-form" class="editor-form">
+                        <!-- Item form fields will be populated by JS -->
+                    </form>
+                </div>
+
+                <!-- Settings Editor -->
+                <div id="settings-editor" class="editor-panel">
+                    <div class="panel-header">
+                        <h2>Game Settings</h2>
+                    </div>
+                    <form id="settings-form" class="editor-form">
+                        <!-- Settings form fields will be populated by JS -->
+                    </form>
+                </div>
+            </main>
+
+            <!-- Right Sidebar - Preview/Canvas -->
+            <aside class="editor-preview">
+                <div class="preview-header">
+                    <h3>Preview</h3>
+                    <button id="toggle-preview-btn" class="btn-icon" title="Toggle Preview">👁️</button>
+                </div>
+                <div id="preview-content" class="preview-content">
+                    <!-- Canvas for visual positioning -->
+                    <div id="scene-canvas" class="scene-canvas">
+                        <div class="canvas-info">
+                            <p>Select a scene to preview</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Item Preview -->
+                    <div id="item-preview" class="item-preview">
+                        <div class="preview-info">
+                            <p>Select an item to preview</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Status Bar -->
+        <footer class="editor-footer">
+            <div class="status-left">
+                <span id="status-message">Ready</span>
+            </div>
+            <div class="status-right">
+                <span id="item-count">0 items</span>
+                <span class="separator">|</span>
+                <span id="scene-count">0 scenes</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="file-input" accept=".js" style="display: none;">
+
+    <!-- Modal for confirmations -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Confirm</h3>
+                <button id="modal-close" class="btn-icon">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="modal-confirm" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/editor.js"></script>
+</body>
+</html>
+
