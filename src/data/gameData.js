@@ -20,7 +20,7 @@ export const gameData = {
             sceneType: "scene",
             sceneMusic: "ambient1",
             backgroundImage: "screen-stasis.png", // Background image for this scene
-            items: ["torch", "rope" , "crossing"]
+            items: ["torch", "rope", "crossing", "butterfly", "gear"]
         },
         {
             sceneName: "scene2",
@@ -266,7 +266,61 @@ export const gameData = {
                 hoverEffect: "swing"
             }
         },
-        
+        {
+            name: "butterfly",
+            longName: "Butterfly",
+            shortName: "Butterfly",
+            type: "decor",
+            lookAt: "A beautiful butterfly fluttering around the chamber.",
+            pickUpMessage: null,
+            useWith: null,
+            useMessage: null,
+            useResult: null,
+            outcome: null,
+            points: 0,
+            image: "butterfly1.png",
+            position: [900, 120],
+            size: [64, 64],
+            animation: {
+                type: "sprite",
+                fps: 8,
+                frames: [
+                    "butterfly1.png",
+                    "butterfly2.png",
+                    "butterfly3.png",
+                    "butterfly4.png"
+                ]
+            },
+            onClickEffect: "bounce",
+            onClickSound: "success",
+            hitW: 90,
+            hitH: 90
+        },
+        {
+            name: "gear",
+            longName: "Mechanical Gear",
+            shortName: "Gear",
+            type: "item",
+            lookAt: "A brass gear that's constantly rotating. It might be part of a mechanism.",
+            pickUpMessage: "You pick up the spinning gear. It's surprisingly light.",
+            useWith: "machine",
+            useMessage: "The gear fits perfectly into the mechanism!",
+            useResult: "machine_activated",
+            outcome: "remove",
+            points: 20,
+            image: "gear.png",
+            position: [1050, 400],
+            size: [60, 60],
+            animation: {
+                type: "spin",
+                speed: 0.5
+            },
+            onClickEffect: "shake",
+            onClickSound: "pickup",
+            hitW: 90,
+            hitH: 90
+        },
+
         // Scene 2 items
         {
             name: "key",
