@@ -17,6 +17,7 @@
     background-size: contain;
     background-position: center;
     will-change: transform, opacity;
+    overflow: hidden; // Prevent background image from expanding outside bounds
 
     /* Remove default button styles */
     border: none;
@@ -64,18 +65,22 @@
 
 /* Type-specific styling */
 .scene-object-type-item {
-    border: 2px solid transparent;
-    
+    // Use box-shadow instead of border to avoid layout shift
+    box-shadow: inset 0 0 0 2px transparent;
+    transition: box-shadow 0.2s ease-out;
+
     &:hover {
-        border-color: $main-yellow;
+        box-shadow: inset 0 0 0 2px $main-yellow;
     }
 }
 
 .scene-object-type-target {
-    border: 2px solid transparent;
-    
+    // Use box-shadow instead of border to avoid layout shift
+    box-shadow: inset 0 0 0 2px transparent;
+    transition: box-shadow 0.2s ease-out;
+
     &:hover {
-        border-color: $main-pink;
+        box-shadow: inset 0 0 0 2px $main-pink;
     }
 }
 
@@ -88,8 +93,8 @@
 }
 
 .scene-object-type-decor {
-    cursor: default;
-    pointer-events: none;
+    /* Decor items can be examined but not picked up */
+    /* Cursor and pointer events are handled normally */
 }
 
 /* Click Effect Animations */

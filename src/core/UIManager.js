@@ -184,7 +184,8 @@ export class UIManager extends EventEmitter {
             return
         }
 
-        const item = e.target.closest('.scene-item, .scene-target, .scene-link')
+        // Look for scene items (both SceneItem components and SceneObjects)
+        const item = e.target.closest('.scene-item, .scene-target, .scene-link, .scene-decor, .scene-object')
         if (!item) return
 
         const itemName = this.getItemNameFromElement(item)
@@ -345,7 +346,10 @@ export class UIManager extends EventEmitter {
      * @param {string} itemType - Item type
      */
     getSceneItem(itemName, itemType) {
-        if (itemType === 'target' || itemType === 'link') {
+        // Check item type - only 'item' type can be picked up
+        const itemData = this.game.inventoryManager?.getItemData(itemName)
+
+        if (itemType === 'target' || itemType === 'link' || itemData?.type === 'decor') {
             this.showMessage("You can't get this.")
             return
         }
@@ -582,14 +586,32 @@ export class UIManager extends EventEmitter {
     }
 
     /**
-     * Remove scene item element using component
+     * Remove scene item element using component or SceneObject
      * @param {string} itemName - Item name
      */
     removeSceneItemElement(itemName) {
+        // Try to remove SceneItem component first
         const component = this.components.get(itemName)
         if (component) {
             component.remove('fadeOut')
             this.components.delete(itemName)
+            return
+        }
+
+        // If not a component, check if it's a SceneObject
+        const sceneObject = this.game.sceneManager?.sceneObjects?.get(itemName)
+        if (sceneObject) {
+            // Fade out and destroy the SceneObject
+            if (sceneObject.element) {
+                sceneObject.element.style.animation = 'fadeOut 0.3s ease-out'
+                setTimeout(() => {
+                    sceneObject.destroy()
+                    this.game.sceneManager?.sceneObjects?.delete(itemName)
+                }, 300)
+            } else {
+                sceneObject.destroy()
+                this.game.sceneManager?.sceneObjects?.delete(itemName)
+            }
         }
     }
 
@@ -914,7 +936,17 @@ export class UIManager extends EventEmitter {
 
         // Fallback to class-based detection
         const classes = Array.from(element.classList)
-        return classes.find(cls => !['icon-font', 'scene-item', 'scene-target', 'scene-link', 'inventory-item', 'prop'].includes(cls) && !cls.startsWith('icon-'))
+        // Exclude common UI classes and prefixed classes
+        const excludedClasses = ['icon-font', 'scene-item', 'scene-target', 'scene-link', 'inventory-item', 'prop', 'scene-object']
+        const excludedPrefixes = ['icon-', 'scene-object-', 'item--', 'target--', 'link--']
+
+        return classes.find(cls => {
+            // Skip if in excluded list
+            if (excludedClasses.includes(cls)) return false
+            // Skip if starts with excluded prefix
+            if (excludedPrefixes.some(prefix => cls.startsWith(prefix))) return false
+            return true
+        })
     }
 
     /**
@@ -926,7 +958,16 @@ export class UIManager extends EventEmitter {
         if (element.classList.contains('scene-item')) return 'item'
         if (element.classList.contains('scene-target')) return 'target'
         if (element.classList.contains('scene-link')) return 'link'
+        if (element.classList.contains('scene-decor')) return 'decor'
         if (element.classList.contains('inventory-item')) return 'inventory'
+
+        // For SceneObjects, check the actual item data
+        if (element.classList.contains('scene-object')) {
+            const itemName = this.getItemNameFromElement(element)
+            const itemData = this.game.inventoryManager?.getItemData(itemName)
+            return itemData?.type || 'unknown'
+        }
+
         return 'unknown'
     }
 

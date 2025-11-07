@@ -96,44 +96,19 @@ export class SceneObject {
     attachEventListeners() {
         if (!this.element) return
 
-        // Use pointerup for better mobile support
-        this.element.addEventListener('pointerup', (e) => this.handlePointerUp(e))
-        
-        // Keyboard accessibility
-        this.element.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                this.handlePointerUp(e)
+        // Listen for clicks to apply visual/audio feedback
+        // Don't prevent default - let the event bubble to UIManager
+        this.element.addEventListener('click', (e) => {
+            // Play click sound if specified
+            if (this.itemData.onClickSound && this.game.audioManager) {
+                this.game.audioManager.playSound(this.itemData.onClickSound)
+            }
+
+            // Apply visual effect if specified
+            if (this.itemData.onClickEffect) {
+                this.applyClickEffect(this.itemData.onClickEffect)
             }
         })
-    }
-
-    /**
-     * Handle pointer/click interactions
-     * @param {PointerEvent} e - The pointer event
-     */
-    handlePointerUp(e) {
-        // Don't prevent default or stop propagation - let UIManager handle the click
-        // Just apply visual/audio feedback here
-
-        // Play click sound if specified
-        if (this.itemData.onClickSound && this.game.audioManager) {
-            this.game.audioManager.playSound(this.itemData.onClickSound)
-        }
-
-        // Apply visual effect if specified
-        if (this.itemData.onClickEffect) {
-            this.applyClickEffect(this.itemData.onClickEffect)
-        }
-
-        // For puzzle triggers and scene links, let UIManager handle them
-        // through the normal click flow, but we can emit an event for tracking
-        if (this.itemData.triggerPuzzle || this.itemData.linkToScene) {
-            this.game.emit('sceneObjectClicked', {
-                itemData: this.itemData,
-                element: this.element
-            })
-        }
     }
 
     /**

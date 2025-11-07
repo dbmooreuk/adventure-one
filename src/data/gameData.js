@@ -199,7 +199,7 @@ export const gameData = {
                 speed: 1
             },
             onClickEffect: "flash",
-            onClickSound: "pickup",
+            onClickSound: "success",
             hitW: 80,
             hitH: 100,
             style: {
@@ -260,7 +260,7 @@ export const gameData = {
                 speed: 0.8
             },
             onClickEffect: "bounce",
-            onClickSound: "pickup",
+            onClickSound: "success",
             style: {
                 className: "item--rope",
                 hoverEffect: "swing"
@@ -316,7 +316,7 @@ export const gameData = {
                 speed: 0.5
             },
             onClickEffect: "shake",
-            onClickSound: "pickup",
+            onClickSound: "success",
             hitW: 90,
             hitH: 90
         },
