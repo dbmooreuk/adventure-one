@@ -186,8 +186,9 @@ export class AudioManager extends EventEmitter {
      * Play a sound effect
      * @param {string} soundId - ID of the sound to play
      * @param {number} volume - Volume override (0-1)
+     * @returns {Promise<void>} Promise that resolves when sound starts playing
      */
-    playSound(soundId, volume = null) {
+    async playSound(soundId, volume = null) {
         const audio = this.audioElements.get(soundId)
         if (!audio) {
             console.warn(`🔊 Sound not found: ${soundId}`)
@@ -204,9 +205,7 @@ export class AudioManager extends EventEmitter {
                 soundClone.remove()
             })
 
-            soundClone.play().catch(err => {
-                console.error(`🔊 Failed to play sound ${soundId}:`, err)
-            })
+            await soundClone.play()
 
             this.emit('soundPlayed', soundId)
 

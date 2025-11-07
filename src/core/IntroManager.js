@@ -109,19 +109,27 @@ export class IntroManager extends EventEmitter {
      */
     async startNewGame() {
         console.log('🆕 Starting new game from intro...')
-        
+
         // If there's a saved game, confirm before starting new
         if (this.hasSavedGame) {
             const confirmed = confirm('Starting a new game will overwrite your saved progress. Continue?')
             if (!confirmed) return
         }
 
+        // Play button click sound to unlock audio context (wait for it to start)
+        console.log('🔊 Playing button click sound to unlock audio...')
+        await this.game.audioManager?.playSound(audio.buttonClickSound)
+        console.log('🔊 Button click sound completed')
+
+        // Small delay to ensure audio context is fully unlocked
+        await new Promise(resolve => setTimeout(resolve, 100))
+
         // Hide intro screen
         this.hide()
 
         // Start new game (this will go to scene1, not splash)
         await this.game.startNewGame()
-        
+
         this.emit('newGameStarted')
     }
 
@@ -130,13 +138,19 @@ export class IntroManager extends EventEmitter {
      */
     async continueGame() {
         console.log('▶️ Continuing from saved game...')
-        
+
+        // Play button click sound to unlock audio context (wait for it to start)
+        await this.game.audioManager?.playSound(audio.buttonClickSound)
+
+        // Small delay to ensure audio context is fully unlocked
+        await new Promise(resolve => setTimeout(resolve, 100))
+
         // Hide intro screen
         this.hide()
 
         // Load saved game
         await this.game.saveManager.loadGame()
-        
+
         this.emit('gameContinued')
     }
 

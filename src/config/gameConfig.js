@@ -26,6 +26,7 @@ export const gameConfig = {
         fadeInDuration: 500,               // Audio fade in time (ms)
         introMusic: 'ambient1',            // Music for intro/splash screen
         pickupSound: 'addToInventory',     // Sound when picking up items
+        buttonClickSound: 'success',       // Sound when clicking Start/Continue buttons (unlocks audio)
     },
 
     // Game Mechanics
@@ -63,7 +64,7 @@ export const gameConfig = {
     dimensions: {
         gameWidth: 1280,                   // Virtual game width (px)
         gameHeight: 720,                   // Virtual game height (px)
-        inventoryWidth: 218,               // Inventory panel width (px)
+        inventoryWidth: 208,               // Inventory panel width (px)
     },
 
     // Local Storage Keys

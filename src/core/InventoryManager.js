@@ -39,9 +39,10 @@ export class InventoryManager extends EventEmitter {
     /**
      * Add an item to inventory
      * @param {string} itemName - Name of the item to add
+     * @param {boolean} silent - If true, don't play sound (for loading saves)
      * @returns {boolean} True if item was added successfully
      */
-    addItem(itemName) {
+    addItem(itemName, silent = false) {
         // Check if inventory is full
         if (this.items.length >= this.maxItems) {
             console.warn('🎒 Inventory is full!')
@@ -64,8 +65,10 @@ export class InventoryManager extends EventEmitter {
         this.emit('itemAdded', itemName)
         this.emit('inventoryChanged', this.getItems())
 
-        // Play sound effect from config
-        this.game.audioManager?.playSound(audio.pickupSound)
+        // Play sound effect from config (unless silent)
+        if (!silent) {
+            this.game.audioManager?.playSound(audio.pickupSound)
+        }
 
         return true
     }

@@ -178,6 +178,12 @@ export class UIManager extends EventEmitter {
      * @param {Event} e - Click event
      */
     handleSceneItemClick(e) {
+        // Ignore clicks if intro screen is visible
+        const introContainer = document.querySelector('.intro-container')
+        if (introContainer && introContainer.style.display !== 'none') {
+            return
+        }
+
         const item = e.target.closest('.scene-item, .scene-target, .scene-link')
         if (!item) return
 
@@ -270,6 +276,12 @@ export class UIManager extends EventEmitter {
      * @param {Event} e - Click event
      */
     handleInventoryItemClick(e) {
+        // Ignore clicks if intro screen is visible
+        const introContainer = document.querySelector('.intro-container')
+        if (introContainer && introContainer.style.display !== 'none') {
+            return
+        }
+
         const item = e.target.closest('.inventory-item')
         if (!item) return
 
@@ -531,7 +543,6 @@ export class UIManager extends EventEmitter {
      * Update scene items display
      */
     updateSceneItems() {
-        console.log('🎨 updateSceneItems called')
         if (!this.elements.sceneItemsOverlay) return
 
         this.elements.sceneItemsOverlay.innerHTML = ''
@@ -539,11 +550,8 @@ export class UIManager extends EventEmitter {
         const sceneItems = this.game.sceneManager?.getCurrentSceneItems() || []
         const gameData = this.game.gameData
 
-        console.log('🎨 Scene items to render:', sceneItems)
-
         sceneItems.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
-            console.log('🎨 Item data for', itemName, ':', itemData)
             if (itemData) {
                 this.createSceneItemElement(itemData)
             }
@@ -555,8 +563,6 @@ export class UIManager extends EventEmitter {
      * @param {Object} itemData - Item data
      */
     createSceneItemElement(itemData) {
-        console.log('🎨 Creating scene item element for:', itemData.name, 'type:', itemData.type)
-
         // Create component instance
         const component = new SceneItem(itemData, this.game)
 
@@ -565,9 +571,7 @@ export class UIManager extends EventEmitter {
 
         // Append to overlay
         const element = component.getElement()
-        console.log('🎨 Appending element to overlay. Overlay exists?', !!this.elements.sceneItemsOverlay)
         this.elements.sceneItemsOverlay?.appendChild(element)
-        console.log('🎨 Element appended. Total children:', this.elements.sceneItemsOverlay?.children.length)
     }
 
     /**
@@ -591,7 +595,6 @@ export class UIManager extends EventEmitter {
 
         // Get all inventory slots
         const slots = this.elements.sceneInventoryOverlay.querySelectorAll('.inventory-slot')
-        console.log('🎒 Found', slots.length, 'inventory slots')
 
         // Clear existing inventory components
         this.inventoryComponents.forEach(component => component.destroy())
@@ -605,11 +608,9 @@ export class UIManager extends EventEmitter {
         const gameData = this.game.gameData
 
         // Place items into slots (max 7 items)
-        console.log('🎒 Placing', items.length, 'items into slots:', items)
         items.slice(0, 7).forEach((itemName, index) => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
             if (itemData && slots[index]) {
-                console.log('  🎒 Placing', itemName, 'in slot', index)
                 // Create inventory item component
                 const component = new InventoryItem(itemData, this.game)
 
@@ -618,8 +619,6 @@ export class UIManager extends EventEmitter {
 
                 // Place item in slot
                 slots[index].appendChild(component.getElement())
-            } else {
-                console.log('  ⚠️ Could not place', itemName, '- itemData:', !!itemData, 'slot:', !!slots[index])
             }
         })
     }

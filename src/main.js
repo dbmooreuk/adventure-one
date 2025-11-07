@@ -91,12 +91,8 @@ document.addEventListener('visibilitychange', () => {
     }
 })
 
-// Handle beforeunload for auto-save
-window.addEventListener('beforeunload', () => {
-    if (window.game) {
-        window.game.saveManager?.autoSave()
-    }
-})
+// Note: Removed beforeunload auto-save as it was causing unwanted saves on page refresh
+// The periodic auto-save (every 30 seconds) is sufficient
 
 // Handle window resize for responsive scaling
 window.addEventListener('resize', scaleGame)

@@ -72,11 +72,11 @@ export class SaveManager extends EventEmitter {
         }
 
         try {
-            console.log('💾 Saving game...')
-            
+            console.log('💾 Saving game to slot:', slot)
+
             // Get current game state
             const gameState = this.game.getGameState()
-            
+
             // Add save metadata
             const saveData = {
                 version: '1.0.0',
@@ -84,19 +84,19 @@ export class SaveManager extends EventEmitter {
                 timestamp: Date.now(),
                 gameState
             }
-            
+
             // Save to localStorage
             const saveKey = slot === 'main' ? this.saveKey : `${this.saveKey}_${slot}`
             localStorage.setItem(saveKey, JSON.stringify(saveData))
-            
+
             // Update save list
             this.updateSaveList(slot, saveData)
-            
+
             console.log(`✅ Game saved to slot: ${slot}`)
             this.emit('gameSaved', { slot, timestamp: saveData.timestamp })
-            
+
             return true
-            
+
         } catch (error) {
             console.error('💾 Failed to save game:', error)
             this.emit('saveError', error.message)
@@ -157,7 +157,7 @@ export class SaveManager extends EventEmitter {
      * Auto-save the game
      */
     autoSave() {
-        this.saveGame('auto').then(success => {
+        this.saveGame('main').then(success => {
             if (success) {
                 console.log('💾 Auto-save completed')
                 this.emit('autoSaved')
@@ -214,17 +214,18 @@ export class SaveManager extends EventEmitter {
      */
     getAllSaves() {
         if (!this.storageAvailable) return []
-        
+
         const saves = []
-        const slots = ['main', 'auto', 'slot1', 'slot2', 'slot3']
-        
+        // Only 'main' slot is used now (auto-save and manual save use the same slot)
+        const slots = ['main']
+
         slots.forEach(slot => {
             const saveInfo = this.getSaveInfo(slot)
             if (saveInfo) {
                 saves.push(saveInfo)
             }
         })
-        
+
         return saves.sort((a, b) => b.timestamp - a.timestamp)
     }
 
@@ -260,23 +261,22 @@ export class SaveManager extends EventEmitter {
      */
     clearSave() {
         if (!this.storageAvailable) return false
-        
+
         try {
-            // Remove all save slots
-            const slots = ['main', 'auto', 'slot1', 'slot2', 'slot3']
-            slots.forEach(slot => {
-                const saveKey = slot === 'main' ? this.saveKey : `${this.saveKey}_${slot}`
-                localStorage.removeItem(saveKey)
-            })
-            
+            // Remove main save slot (auto-save and manual save use the same slot)
+            localStorage.removeItem(this.saveKey)
+
+            // Also clear any legacy 'auto' slot if it exists
+            localStorage.removeItem(`${this.saveKey}_auto`)
+
             // Clear save list
             localStorage.removeItem(`${this.saveKey}_list`)
-            
+
             console.log('💾 All save data cleared')
             this.emit('allSavesCleared')
-            
+
             return true
-            
+
         } catch (error) {
             console.error('💾 Failed to clear save data:', error)
             return false
