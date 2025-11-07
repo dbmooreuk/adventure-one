@@ -19,6 +19,8 @@ export class AudioManager extends EventEmitter {
         this.fadeInterval = null
         this.fadeOutDuration = audio.fadeOutDuration
         this.fadeInDuration = audio.fadeInDuration
+        this.audioUnlocked = false
+        this.pendingAmbient = null // Track ambient music that needs to play after unlock
     }
 
     /**
@@ -118,6 +120,7 @@ export class AudioManager extends EventEmitter {
     async playAmbient(trackId, fadeIn = true) {
         if (!trackId || trackId === 'silence') {
             this.stopAmbient()
+            this.pendingAmbient = null
             return
         }
 
@@ -156,9 +159,13 @@ export class AudioManager extends EventEmitter {
 
             console.log(`🔊 Playing ambient: ${trackId}`)
             this.emit('ambientStarted', trackId)
+            this.audioUnlocked = true
+            this.pendingAmbient = null
 
         } catch (error) {
-            console.error(`🔊 Failed to play ambient ${trackId}:`, error)
+            console.warn(`🔊 Ambient playback blocked (autoplay policy): ${trackId}`)
+            // Store for later playback after user interaction
+            this.pendingAmbient = { trackId, fadeIn }
         }
     }
 
@@ -186,9 +193,8 @@ export class AudioManager extends EventEmitter {
      * Play a sound effect
      * @param {string} soundId - ID of the sound to play
      * @param {number} volume - Volume override (0-1)
-     * @returns {Promise<void>} Promise that resolves when sound starts playing
      */
-    async playSound(soundId, volume = null) {
+    playSound(soundId, volume = null) {
         const audio = this.audioElements.get(soundId)
         if (!audio) {
             console.warn(`🔊 Sound not found: ${soundId}`)
@@ -205,7 +211,22 @@ export class AudioManager extends EventEmitter {
                 soundClone.remove()
             })
 
-            await soundClone.play()
+            soundClone.play().then(() => {
+                // Audio unlocked successfully
+                if (!this.audioUnlocked) {
+                    this.audioUnlocked = true
+                    console.log('🔊 Audio context unlocked')
+
+                    // Play pending ambient if any
+                    if (this.pendingAmbient) {
+                        console.log(`🔊 Playing pending ambient: ${this.pendingAmbient.trackId}`)
+                        const { trackId, fadeIn } = this.pendingAmbient
+                        this.playAmbient(trackId, fadeIn)
+                    }
+                }
+            }).catch(err => {
+                console.warn(`🔊 Failed to play sound ${soundId}:`, err.message)
+            })
 
             this.emit('soundPlayed', soundId)
 

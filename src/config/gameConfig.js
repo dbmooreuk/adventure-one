@@ -17,6 +17,14 @@ export const gameConfig = {
         buttonDebounceDelay: 300,          // Prevent rapid button clicks (ms)
     },
 
+    // Intro Screen Settings
+    intro: {
+        title: 'Adventure Game',
+        text: 'Welcome to your adventure!',
+        music: 'ambient1',
+        backgroundImage: 'screen-splash.png',
+    },
+
     // Audio Settings
     audio: {
         soundEnabled: true,                // Enable sound effects - from gameData
@@ -24,7 +32,6 @@ export const gameConfig = {
         defaultVolume: 0.7,                // Default audio volume (0-1) - from gameData
         fadeOutDuration: 500,              // Audio fade out time (ms)
         fadeInDuration: 500,               // Audio fade in time (ms)
-        introMusic: 'ambient1',            // Music for intro/splash screen
         pickupSound: 'addToInventory',     // Sound when picking up items
         buttonClickSound: 'success',       // Sound when clicking Start/Continue buttons (unlocks audio)
     },
@@ -76,11 +83,12 @@ export const gameConfig = {
 }
 
 // Export individual sections for convenience
-export const { ui, audio, gameplay, animation, inventory, debug, dimensions, storage } = gameConfig
+export const { ui, intro, audio, gameplay, animation, inventory, debug, dimensions, storage } = gameConfig
 
 // Freeze the config to prevent accidental modifications
 Object.freeze(gameConfig)
 Object.freeze(ui)
+Object.freeze(intro)
 Object.freeze(audio)
 Object.freeze(gameplay)
 Object.freeze(animation)

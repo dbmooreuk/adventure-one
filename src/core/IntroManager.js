@@ -1,5 +1,5 @@
 import { EventEmitter } from './EventEmitter.js'
-import { audio } from '../config/gameConfig.js'
+import { intro, audio } from '../config/gameConfig.js'
 
 /**
  * IntroManager - Manages the intro/splash screen
@@ -116,13 +116,8 @@ export class IntroManager extends EventEmitter {
             if (!confirmed) return
         }
 
-        // Play button click sound to unlock audio context (wait for it to start)
-        console.log('🔊 Playing button click sound to unlock audio...')
-        await this.game.audioManager?.playSound(audio.buttonClickSound)
-        console.log('🔊 Button click sound completed')
-
-        // Small delay to ensure audio context is fully unlocked
-        await new Promise(resolve => setTimeout(resolve, 100))
+        // Play button click sound to unlock audio context
+        this.game.audioManager?.playSound(audio.buttonClickSound)
 
         // Hide intro screen
         this.hide()
@@ -139,11 +134,8 @@ export class IntroManager extends EventEmitter {
     async continueGame() {
         console.log('▶️ Continuing from saved game...')
 
-        // Play button click sound to unlock audio context (wait for it to start)
-        await this.game.audioManager?.playSound(audio.buttonClickSound)
-
-        // Small delay to ensure audio context is fully unlocked
-        await new Promise(resolve => setTimeout(resolve, 100))
+        // Play button click sound to unlock audio context
+        this.game.audioManager?.playSound(audio.buttonClickSound)
 
         // Hide intro screen
         this.hide()
@@ -180,7 +172,7 @@ export class IntroManager extends EventEmitter {
         this.game.uiManager?.clearScene()
 
         // Play intro music again
-        await this.game.audioManager?.playAmbient(audio.introMusic)
+        await this.game.audioManager?.playAmbient(intro.music)
 
         // Update button visibility
         await this.checkSavedGame()
@@ -229,7 +221,7 @@ export class IntroManager extends EventEmitter {
 
         // Play intro music
         if (this.game.audioManager) {
-            await this.game.audioManager.playAmbient(audio.introMusic)
+            await this.game.audioManager.playAmbient(intro.music)
         }
 
         // Refresh saved game check

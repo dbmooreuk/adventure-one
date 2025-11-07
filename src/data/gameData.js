@@ -12,17 +12,6 @@ export const gameData = {
     // Game scenes configuration
     scenes: [
         {
-            sceneName: "splash",
-            title: "Adventure Game",
-            textOne: "Welcome to the adventure! Click Next to begin your journey.",
-            stage: "Start",
-            stageNumber: 0,
-            sceneType: "splash",
-            sceneMusic: "silence",
-            backgroundImage: "screen-splash.png", // Optional: background image filename
-            items: []
-        },
-        {
             sceneName: "scene1",
             title: "The Stasis Chamber",
             textOne: "You find yourself standing at the entrance of a mysterious cave. The air is thick with anticipation.",
