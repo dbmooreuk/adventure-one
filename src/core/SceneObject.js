@@ -52,6 +52,11 @@ export class SceneObject {
             el.classList.add(this.itemData.style.className)
         }
 
+        // Add hover effect if specified
+        if (this.itemData.style?.hoverEffect) {
+            el.setAttribute('data-hover', this.itemData.style.hoverEffect)
+        }
+
         // Apply positioning
         if (this.itemData.position && this.itemData.size) {
             el.style.left = `${this.itemData.position[0]}px`

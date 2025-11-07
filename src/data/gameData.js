@@ -263,7 +263,7 @@ export const gameData = {
             onClickSound: "success",
             style: {
                 className: "item--rope",
-                hoverEffect: "swing"
+                hoverEffect: "glow"
             }
         },
         {
@@ -318,7 +318,11 @@ export const gameData = {
             onClickEffect: "shake",
             onClickSound: "success",
             hitW: 90,
-            hitH: 90
+            hitH: 90,
+                        style: {
+                className: "item--key",
+                hoverEffect: "glow"
+            }
         },
 
         // Scene 2 items
@@ -355,7 +359,11 @@ export const gameData = {
             outcome: "keep",
             points: 25,
             position: [250, 120],
-            size: [80, 60]
+            size: [80, 60],
+                        style: {
+                className: "item--key",
+                hoverEffect: "glow"
+            }
         },
         
         // Scene 2 items (boat is in scene2, not scene3)
@@ -388,7 +396,11 @@ export const gameData = {
             outcome: "remove", // Remove oar from inventory when used on boat
             points: 15,
             position: [300, 200],
-            size: [100, 30]
+            size: [100, 30],
+                       style: {
+                className: "item--torch",
+                hoverEffect: "glow"
+            }
         },
         {
             name: "crossing",
