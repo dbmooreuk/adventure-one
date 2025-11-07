@@ -31,16 +31,25 @@ export class SceneObject {
      * Create the DOM element for this object
      */
     createElement() {
-        const el = document.createElement('div')
+        const el = document.createElement('button')
         el.className = 'scene-object'
-        
+
         // Add item-specific classes
         if (this.itemData.name) {
             el.classList.add(`scene-object-${this.itemData.name}`)
+            // Add item name class for UIManager compatibility
+            el.classList.add(this.itemData.name)
         }
-        
+
         if (this.itemData.type) {
             el.classList.add(`scene-object-type-${this.itemData.type}`)
+            // Add legacy scene-type class for UIManager click handler compatibility
+            el.classList.add(`scene-${this.itemData.type}`)
+        }
+
+        // Add custom class if specified
+        if (this.itemData.style?.className) {
+            el.classList.add(this.itemData.style.className)
         }
 
         // Apply positioning
@@ -104,8 +113,8 @@ export class SceneObject {
      * @param {PointerEvent} e - The pointer event
      */
     handlePointerUp(e) {
-        e.preventDefault()
-        e.stopPropagation()
+        // Don't prevent default or stop propagation - let UIManager handle the click
+        // Just apply visual/audio feedback here
 
         // Play click sound if specified
         if (this.itemData.onClickSound && this.game.audioManager) {
@@ -117,23 +126,14 @@ export class SceneObject {
             this.applyClickEffect(this.itemData.onClickEffect)
         }
 
-        // Trigger puzzle if specified
-        if (this.itemData.triggerPuzzle) {
-            this.triggerPuzzle()
-            return
+        // For puzzle triggers and scene links, let UIManager handle them
+        // through the normal click flow, but we can emit an event for tracking
+        if (this.itemData.triggerPuzzle || this.itemData.linkToScene) {
+            this.game.emit('sceneObjectClicked', {
+                itemData: this.itemData,
+                element: this.element
+            })
         }
-
-        // Navigate to scene if specified
-        if (this.itemData.linkToScene) {
-            this.navigateToScene()
-            return
-        }
-
-        // Emit click event for game logic to handle
-        this.game.emit('sceneObjectClicked', {
-            itemData: this.itemData,
-            element: this.element
-        })
     }
 
     /**
