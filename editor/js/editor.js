@@ -7,6 +7,9 @@ import { SceneEditor } from './scene-editor.js';
 import { ItemEditor } from './item-editor.js';
 import { DataManager } from './data-manager.js';
 import { UIManager } from './ui-manager.js';
+import { StorageManager } from './storage-manager.js';
+import { ProjectManager } from './project-manager.js';
+import { CodeEditor } from './code-editor.js';
 
 class GameDataEditor {
     constructor() {
@@ -16,22 +19,38 @@ class GameDataEditor {
             scenes: [],
             sceneItems: []
         };
-        
+
         this.currentTab = 'scenes';
         this.selectedScene = null;
         this.selectedItem = null;
-        
+
         // Initialize managers
         this.dataManager = new DataManager(this);
         this.uiManager = new UIManager(this);
         this.sceneEditor = new SceneEditor(this);
         this.itemEditor = new ItemEditor(this);
-        
+        this.storageManager = new StorageManager();
+        this.projectManager = new ProjectManager(this, this.storageManager);
+        this.codeEditor = new CodeEditor(this);
+
+        // Make project manager globally accessible for inline onclick handlers
+        window.projectManager = this.projectManager;
+
         this.init();
     }
-    
-    init() {
+
+    async init() {
         console.log('🎮 Game Data Editor initialized');
+
+        // Initialize IndexedDB
+        try {
+            await this.storageManager.init();
+            console.log('✓ IndexedDB ready');
+        } catch (error) {
+            console.error('IndexedDB initialization failed:', error);
+            this.uiManager.setStatus('Warning: Project storage unavailable', 'warning');
+        }
+
         this.setupEventListeners();
         this.uiManager.updateCounts();
     }
@@ -99,24 +118,53 @@ class GameDataEditor {
     }
     
     switchTab(tabName) {
+        // Auto-save current work before switching
+        this.saveCurrentWork();
+
         this.currentTab = tabName;
-        
+
         // Update nav tabs
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.classList.toggle('active', tab.dataset.tab === tabName);
         });
-        
+
         // Update tab content
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.remove('active');
         });
-        
+
         if (tabName === 'scenes') {
             document.getElementById('scenes-list').classList.add('active');
         } else if (tabName === 'items') {
             document.getElementById('items-list').classList.add('active');
+        } else if (tabName === 'code') {
+            document.getElementById('code-list').classList.add('active');
+            this.uiManager.showPanel('code-editor');
         } else if (tabName === 'settings') {
             document.getElementById('settings-panel').classList.add('active');
+        }
+    }
+
+    /**
+     * Save current work (scene, item, or code) if any is being edited
+     */
+    saveCurrentWork() {
+        // Check if scene editor is active
+        const sceneEditor = document.getElementById('scene-editor');
+        if (sceneEditor && sceneEditor.classList.contains('active')) {
+            this.sceneEditor.saveIfValid();
+        }
+
+        // Check if item editor is active
+        const itemEditor = document.getElementById('item-editor');
+        if (itemEditor && itemEditor.classList.contains('active')) {
+            this.itemEditor.saveIfValid();
+        }
+
+        // Check if code editor is active
+        const codeEditor = document.getElementById('code-editor');
+        if (codeEditor && codeEditor.classList.contains('active')) {
+            this.codeEditor.saveIfValid();
         }
     }
     

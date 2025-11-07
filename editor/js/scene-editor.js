@@ -69,7 +69,7 @@ export class SceneEditor {
     renderForm(scene) {
         const form = document.getElementById('scene-form');
         form.innerHTML = '';
-        
+
         // Basic Information Section
         const basicSection = this.createSection('Basic Information');
         basicSection.appendChild(this.editor.uiManager.createFormField('sceneName', sceneSchema.sceneName, scene.sceneName, scene));
@@ -122,15 +122,7 @@ export class SceneEditor {
             puzzleSection.appendChild(puzzleConfigField);
             form.appendChild(puzzleSection);
         }
-        
-        // Save button
-        const saveBtn = document.createElement('button');
-        saveBtn.type = 'button';
-        saveBtn.className = 'btn btn-primary btn-large';
-        saveBtn.textContent = '💾 Save Scene';
-        saveBtn.addEventListener('click', () => this.save());
-        form.appendChild(saveBtn);
-        
+
         // Add change listener for sceneType to re-render form
         const sceneTypeSelect = form.querySelector('[name="sceneType"]');
         if (sceneTypeSelect) {
@@ -262,19 +254,59 @@ export class SceneEditor {
      */
     save() {
         const formData = this.getFormData();
-        
+
         // Validate
         const errors = validateObject(formData, sceneSchema);
         if (errors) {
             console.error('Validation errors:', errors);
             this.editor.uiManager.setStatus('Please fix validation errors', 'danger');
-            return;
+            return false;
         }
-        
+
         // Update or add
         this.editor.updateScene(this.currentScene, formData);
         this.currentScene = formData.sceneName;
         this.editor.uiManager.setStatus('Scene saved successfully', 'success');
+        return true;
+    }
+
+    /**
+     * Save scene if valid (for auto-save)
+     */
+    saveIfValid() {
+        if (!this.currentScene) return;
+
+        const formData = this.getFormData();
+
+        // Validate
+        const errors = validateObject(formData, sceneSchema);
+        if (errors) {
+            // Don't show error for auto-save, just skip
+            console.log('Auto-save skipped: validation errors');
+            return;
+        }
+
+        // Update or add
+        this.editor.updateScene(this.currentScene, formData);
+        this.currentScene = formData.sceneName;
+        console.log('Scene auto-saved');
+
+        // Show subtle feedback
+        this.showAutoSaveFeedback();
+    }
+
+    /**
+     * Show auto-save feedback
+     */
+    showAutoSaveFeedback() {
+        const indicator = document.getElementById('autosave-indicator');
+        if (indicator) {
+            indicator.textContent = '✓ Scene saved';
+            indicator.style.opacity = '1';
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 1500);
+        }
     }
     
     /**

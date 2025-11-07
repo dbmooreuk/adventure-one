@@ -74,7 +74,7 @@ export class ItemEditor {
     renderForm(item) {
         const form = document.getElementById('item-form');
         form.innerHTML = '';
-        
+
         // Basic Information Section
         const basicSection = this.createSection('Basic Information');
         basicSection.appendChild(this.editor.uiManager.createFormField('name', itemSchema.name, item.name, item));
@@ -144,15 +144,7 @@ export class ItemEditor {
         const styleField = this.createStyleField(item.style);
         styleSection.appendChild(styleField);
         form.appendChild(styleSection);
-        
-        // Save button
-        const saveBtn = document.createElement('button');
-        saveBtn.type = 'button';
-        saveBtn.className = 'btn btn-primary btn-large';
-        saveBtn.textContent = '💾 Save Item';
-        saveBtn.addEventListener('click', () => this.save());
-        form.appendChild(saveBtn);
-        
+
         // Add change listener for type to re-render form
         const typeSelect = form.querySelector('[name="type"]');
         if (typeSelect) {
@@ -383,17 +375,56 @@ export class ItemEditor {
      */
     save() {
         const formData = this.getFormData();
-        
+
         // Basic validation
         if (!formData.name || !formData.longName || !formData.type) {
             this.editor.uiManager.setStatus('Please fill in required fields', 'danger');
-            return;
+            return false;
         }
-        
+
         // Update or add
         this.editor.updateItem(this.currentItem, formData);
         this.currentItem = formData.name;
         this.editor.uiManager.setStatus('Item saved successfully', 'success');
+        return true;
+    }
+
+    /**
+     * Save item if valid (for auto-save)
+     */
+    saveIfValid() {
+        if (!this.currentItem) return;
+
+        const formData = this.getFormData();
+
+        // Basic validation
+        if (!formData.name || !formData.longName || !formData.type) {
+            // Don't show error for auto-save, just skip
+            console.log('Auto-save skipped: validation errors');
+            return;
+        }
+
+        // Update or add
+        this.editor.updateItem(this.currentItem, formData);
+        this.currentItem = formData.name;
+        console.log('Item auto-saved');
+
+        // Show subtle feedback
+        this.showAutoSaveFeedback();
+    }
+
+    /**
+     * Show auto-save feedback
+     */
+    showAutoSaveFeedback() {
+        const indicator = document.getElementById('autosave-indicator');
+        if (indicator) {
+            indicator.textContent = '✓ Item saved';
+            indicator.style.opacity = '1';
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+            }, 1500);
+        }
     }
     
     /**

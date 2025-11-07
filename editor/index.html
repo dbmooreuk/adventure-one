@@ -13,13 +13,26 @@
             <div class="header-left">
                 <h1>🎮 Game Data Editor</h1>
                 <span class="version">v2.0.0</span>
+                <div class="current-project">
+                    <span class="current-project-label">Project:</span>
+                    <span id="current-project-name" class="current-project-name">Untitled Project</span>
+                </div>
             </div>
             <div class="header-right">
+                <button id="projects-btn" class="btn btn-secondary">
+                    📁 Projects
+                </button>
+                <button id="save-project-btn" class="btn btn-secondary">
+                    💾 Save Project
+                </button>
+                <button id="new-project-btn" class="btn btn-secondary">
+                    ✨ New Project
+                </button>
                 <button id="import-btn" class="btn btn-secondary">
-                    📂 Import gameData.js
+                    📂 Import File
                 </button>
                 <button id="export-btn" class="btn btn-primary">
-                    💾 Export gameData.js
+                    💾 Export File
                 </button>
             </div>
         </header>
@@ -34,6 +47,9 @@
                     </button>
                     <button class="nav-tab" data-tab="items">
                         📦 Items
+                    </button>
+                    <button class="nav-tab" data-tab="code">
+                        💻 Code
                     </button>
                     <button class="nav-tab" data-tab="settings">
                         ⚙️ Settings
@@ -76,6 +92,18 @@
                     <ul id="items-list-items" class="item-list">
                         <!-- Populated by JS -->
                     </ul>
+                </div>
+
+                <!-- Code View -->
+                <div class="tab-content" id="code-list">
+                    <div class="list-header">
+                        <h3>Code View</h3>
+                    </div>
+                    <div class="code-info">
+                        <p style="font-size: 0.9em; color: var(--text-muted); padding: var(--spacing-md);">
+                            Edit the game data directly as JavaScript code. Changes must be applied to update the visual editor.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Settings -->
@@ -140,6 +168,34 @@
                     </form>
                 </div>
 
+                <!-- Code Editor -->
+                <div id="code-editor" class="editor-panel">
+                    <div class="panel-header">
+                        <h2>💻 Code Editor</h2>
+                        <div class="panel-actions">
+                            <button id="format-code-btn" class="btn btn-sm btn-secondary" title="Format Code">
+                                🎨 Format
+                            </button>
+                            <button id="revert-code-btn" class="btn btn-sm btn-secondary" title="Revert Changes">
+                                ↩️ Revert
+                            </button>
+                            <button id="apply-code-btn" class="btn btn-sm btn-primary" title="Apply Changes">
+                                ✓ Apply Changes
+                            </button>
+                        </div>
+                    </div>
+                    <div id="code-status" class="code-status">
+                        ✓ Code is in sync with editor
+                    </div>
+                    <div id="code-error" class="code-error" style="display: none;">
+                        <!-- Error messages -->
+                    </div>
+                    <div class="code-editor-container">
+                        <div id="line-numbers" class="line-numbers"></div>
+                        <textarea id="code-textarea" class="code-textarea" spellcheck="false"></textarea>
+                    </div>
+                </div>
+
                 <!-- Settings Editor -->
                 <div id="settings-editor" class="editor-panel">
                     <div class="panel-header">
@@ -191,22 +247,25 @@
     <!-- Hidden file input for import -->
     <input type="file" id="file-input" accept=".js" style="display: none;">
 
-    <!-- Modal for confirmations -->
-    <div id="modal-overlay" class="modal-overlay">
-        <div class="modal">
+    <!-- Modal for confirmations and projects -->
+    <div id="modal" class="modal-overlay" style="display: none;">
+        <div class="modal" style="max-width: 700px;">
             <div class="modal-header">
                 <h3 id="modal-title">Confirm</h3>
-                <button id="modal-close" class="btn-icon">✕</button>
+                <button id="modal-close" class="btn-icon" onclick="document.getElementById('modal').style.display='none'">✕</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="modal-body">
                 <p id="modal-message"></p>
             </div>
-            <div class="modal-footer">
-                <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+            <div class="modal-footer" id="modal-actions">
+                <button id="modal-cancel" class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancel</button>
                 <button id="modal-confirm" class="btn btn-primary">Confirm</button>
             </div>
         </div>
     </div>
+
+    <!-- Auto-save indicator -->
+    <div id="autosave-indicator">✓ Auto-saved</div>
 
     <!-- Scripts -->
     <script type="module" src="js/editor.js"></script>

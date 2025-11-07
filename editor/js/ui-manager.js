@@ -17,9 +17,14 @@ export class UIManager {
             panel.classList.remove('active');
         });
         document.getElementById('welcome-screen').classList.remove('active');
-        
+
         // Show selected panel
         document.getElementById(panelId).classList.add('active');
+
+        // If showing code editor, initialize it
+        if (panelId === 'code-editor') {
+            this.editor.codeEditor.show();
+        }
     }
     
     hidePanel(panelId) {
@@ -113,21 +118,27 @@ export class UIManager {
     }
     
     selectScene(sceneName) {
+        // Auto-save current work before switching
+        this.editor.saveCurrentWork();
+
         // Update list selection
         document.querySelectorAll('#scenes-list-items li').forEach(li => {
             li.classList.toggle('active', li.dataset.sceneName === sceneName);
         });
-        
+
         this.editor.selectedScene = sceneName;
         this.editor.sceneEditor.edit(sceneName);
     }
-    
+
     selectItem(itemName) {
+        // Auto-save current work before switching
+        this.editor.saveCurrentWork();
+
         // Update list selection
         document.querySelectorAll('#items-list-items li').forEach(li => {
             li.classList.toggle('active', li.dataset.itemName === itemName);
         });
-        
+
         this.editor.selectedItem = itemName;
         this.editor.itemEditor.edit(itemName);
     }
@@ -156,22 +167,28 @@ export class UIManager {
     }
     
     showModal(title, message, onConfirm) {
+        const modal = document.getElementById('modal');
         document.getElementById('modal-title').textContent = title;
-        document.getElementById('modal-message').textContent = message;
-        document.getElementById('modal-overlay').classList.add('active');
-        
-        const confirmBtn = document.getElementById('modal-confirm');
-        const newConfirmBtn = confirmBtn.cloneNode(true);
-        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-        
-        newConfirmBtn.addEventListener('click', () => {
+
+        const modalBody = document.getElementById('modal-body');
+        modalBody.innerHTML = `<p>${message}</p>`;
+
+        const modalActions = document.getElementById('modal-actions');
+        modalActions.innerHTML = `
+            <button class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancel</button>
+            <button id="modal-confirm-btn" class="btn btn-primary">Confirm</button>
+        `;
+
+        modal.style.display = 'flex';
+
+        document.getElementById('modal-confirm-btn').addEventListener('click', () => {
             this.hideModal();
             if (onConfirm) onConfirm();
         });
     }
-    
+
     hideModal() {
-        document.getElementById('modal-overlay').classList.remove('active');
+        document.getElementById('modal').style.display = 'none';
     }
     
     /**
