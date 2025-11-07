@@ -193,6 +193,15 @@ export const gameData = {
             image: "torch.png", // Item image filename
             position: [100, 150],
             size: [50, 80],
+            animation: {
+                type: "bob",
+                amplitude: 5,
+                speed: 1
+            },
+            onClickEffect: "flash",
+            onClickSound: "pickup",
+            hitW: 80,
+            hitH: 100,
             style: {
                 className: "item--torch",
                 hoverEffect: "glow"
@@ -245,6 +254,13 @@ export const gameData = {
             image: "rope.png",
             position: [200, 180],
             size: [60, 40],
+            animation: {
+                type: "pulse",
+                amplitude: 8,
+                speed: 0.8
+            },
+            onClickEffect: "bounce",
+            onClickSound: "pickup",
             style: {
                 className: "item--rope",
                 hoverEffect: "swing"
@@ -349,8 +365,15 @@ export const gameData = {
             useResult: "revelation",
             outcome: "keep",
             points: 40,
+            image: "crystal.png",
             position: [200, 150],
-            size: [40, 60]
+            size: [40, 60],
+            animation: {
+                type: "fade",
+                speed: 1.5
+            },
+            onClickEffect: "flash",
+            onClickSound: "success"
         },
         {
             name: "treasure",
@@ -399,6 +422,99 @@ export const gameData = {
             position: [60, 110],
             size: [100, 140]
         }
+
+        /* ========================================
+         * ANIMATION EXAMPLES
+         * ========================================
+         * Below are example items showing different animation types.
+         * Add these to scene items arrays to use them in your game.
+         *
+         * SPRITE FRAME ANIMATION EXAMPLE:
+         * {
+         *     name: "butterfly",
+         *     longName: "Butterfly",
+         *     type: "decor",
+         *     lookAt: "A beautiful butterfly fluttering around.",
+         *     position: [300, 100],
+         *     size: [64, 64],
+         *     animation: {
+         *         type: "sprite",
+         *         fps: 12,
+         *         frames: [
+         *             "butterfly-frame-1.png",
+         *             "butterfly-frame-2.png",
+         *             "butterfly-frame-3.png",
+         *             "butterfly-frame-4.png"
+         *         ]
+         *     },
+         *     onClickEffect: "bounce",
+         *     onClickSound: "success"
+         * }
+         *
+         * SPRITE SHEET ANIMATION EXAMPLE:
+         * {
+         *     name: "fan_blade",
+         *     longName: "Spinning Fan",
+         *     type: "decor",
+         *     lookAt: "An old ceiling fan spinning slowly.",
+         *     position: [500, 200],
+         *     size: [128, 128],
+         *     animation: {
+         *         type: "sprite",
+         *         spriteSheet: "fan-sprite-sheet.png",
+         *         frameWidth: 128,
+         *         frameHeight: 128,
+         *         frameCount: 8,
+         *         fps: 10
+         *     },
+         *     onClickSound: "useItem"
+         * }
+         *
+         * SPIN ANIMATION EXAMPLE:
+         * {
+         *     name: "gear",
+         *     longName: "Mechanical Gear",
+         *     type: "item",
+         *     lookAt: "A brass gear that's constantly rotating.",
+         *     pickUpMessage: "You pick up the spinning gear.",
+         *     position: [400, 300],
+         *     size: [60, 60],
+         *     image: "gear.png",
+         *     animation: {
+         *         type: "spin",
+         *         speed: 0.5
+         *     },
+         *     onClickEffect: "shake",
+         *     onClickSound: "pickup"
+         * }
+         *
+         * PUZZLE TRIGGER EXAMPLE:
+         * {
+         *     name: "locked_chest",
+         *     longName: "Locked Chest",
+         *     type: "target",
+         *     lookAt: "A mysterious chest with a combination lock.",
+         *     position: [600, 350],
+         *     size: [120, 100],
+         *     image: "chest-locked.png",
+         *     animation: {
+         *         type: "pulse",
+         *         amplitude: 5,
+         *         speed: 0.5
+         *     },
+         *     onClickEffect: "shake",
+         *     onClickSound: "useItem",
+         *     triggerPuzzle: {
+         *         module: "ChestPuzzle",
+         *         config: {
+         *             solution: [1, 2, 3],
+         *             reward: "treasure_key"
+         *         }
+         *     },
+         *     hitW: 150,
+         *     hitH: 130
+         * }
+         */
     ],
     
     // Audio configuration

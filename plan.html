@@ -441,6 +441,58 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="legend-card">
+                    <h3 class="legend-heading">Animation System</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-label">Transform:</span>
+                            <span class="legend-desc">CSS transform animations: bob (vertical), pulse (scale), spin (rotate), fade (opacity).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Sprite Frames:</span>
+                            <span class="legend-desc">Array of image filenames that cycle through for frame-by-frame animation.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Sprite Sheet:</span>
+                            <span class="legend-desc">Single image with multiple frames arranged horizontally, animated via background-position.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">FPS:</span>
+                            <span class="legend-desc">Frames per second for sprite animations (default: 12).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Amplitude:</span>
+                            <span class="legend-desc">Intensity of transform animations in pixels or percentage (default: 10).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Speed:</span>
+                            <span class="legend-desc">Speed multiplier for animations (default: 1).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3 class="legend-heading">Click Interactions</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-label">onClickEffect:</span>
+                            <span class="legend-desc">Visual effect when clicked: flash (brightness), bounce (jump), shake (horizontal).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">onClickSound:</span>
+                            <span class="legend-desc">Sound effect to play: useItem, pickup, success, error, etc.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">triggerPuzzle:</span>
+                            <span class="legend-desc">Object with {module, config} to launch a puzzle when clicked.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">hitW / hitH:</span>
+                            <span class="legend-desc">Larger touch hitbox dimensions for mobile (visual size stays same).</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -636,6 +688,66 @@
                             <div class="item-detail-row">
                                 <span class="item-detail-label">Image:</span>
                                 <span class="item-detail-value">${item.image}</span>
+                            </div>
+                        ` : ''}
+                        ${item.animation ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Animation:</span>
+                                <span class="item-detail-value"><strong>${item.animation.type}</strong></span>
+                            </div>
+                            ${item.animation.fps ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">FPS:</span>
+                                    <span class="item-detail-value">${item.animation.fps}</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.amplitude ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Amplitude:</span>
+                                    <span class="item-detail-value">${item.animation.amplitude}</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.speed ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Speed:</span>
+                                    <span class="item-detail-value">${item.animation.speed}x</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.frames ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Frames:</span>
+                                    <span class="item-detail-value">${item.animation.frames.length} frames</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.spriteSheet ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Sprite Sheet:</span>
+                                    <span class="item-detail-value">${item.animation.spriteSheet}</span>
+                                </div>
+                            ` : ''}
+                        ` : ''}
+                        ${item.onClickEffect ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Click Effect:</span>
+                                <span class="item-detail-value">${item.onClickEffect}</span>
+                            </div>
+                        ` : ''}
+                        ${item.onClickSound ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Click Sound:</span>
+                                <span class="item-detail-value">${item.onClickSound}</span>
+                            </div>
+                        ` : ''}
+                        ${item.triggerPuzzle ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Trigger Puzzle:</span>
+                                <span class="item-detail-value">${item.triggerPuzzle.module}</span>
+                            </div>
+                        ` : ''}
+                        ${item.hitW || item.hitH ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Touch Hitbox:</span>
+                                <span class="item-detail-value">${item.hitW || item.size[0]} x ${item.hitH || item.size[1]}</span>
                             </div>
                         ` : ''}
                     </div>

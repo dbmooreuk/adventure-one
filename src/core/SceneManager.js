@@ -4,6 +4,7 @@
  */
 
 import { EventEmitter } from './EventEmitter.js'
+import { SceneObject } from './SceneObject.js'
 
 export class SceneManager extends EventEmitter {
     constructor(game) {
@@ -14,6 +15,7 @@ export class SceneManager extends EventEmitter {
         this.scenes = []
         this.sceneStates = new Map()
         this.stagesIntroStatus = false
+        this.sceneObjects = new Map() // Track SceneObject instances
     }
 
     /**
@@ -349,9 +351,74 @@ export class SceneManager extends EventEmitter {
     }
 
     /**
+     * Create SceneObject instances for items with animation config
+     * This is called when a scene loads to create animated objects
+     * @param {HTMLElement} sceneContainer - The scene container element
+     */
+    createSceneObjects(sceneContainer) {
+        if (!this.currentScene || !sceneContainer) return
+
+        // Clean up any existing scene objects first
+        this.destroySceneObjects()
+
+        const sceneItems = this.getCurrentSceneItems()
+        const gameData = this.game.gameData
+
+        sceneItems.forEach(itemName => {
+            const itemData = gameData.sceneItems?.find(item => item.name === itemName)
+
+            // Only create SceneObject if item has animation config
+            if (itemData && itemData.animation) {
+                const sceneObject = new SceneObject(itemData, sceneContainer, this.game)
+                sceneObject.init()
+                this.sceneObjects.set(itemName, sceneObject)
+
+                console.log(`🎨 Created animated SceneObject: ${itemName}`)
+            }
+        })
+    }
+
+    /**
+     * Destroy all SceneObject instances
+     * Called when changing scenes or cleaning up
+     */
+    destroySceneObjects() {
+        this.sceneObjects.forEach((sceneObject, itemName) => {
+            sceneObject.destroy()
+            console.log(`🗑️ Destroyed SceneObject: ${itemName}`)
+        })
+        this.sceneObjects.clear()
+    }
+
+    /**
+     * Get a specific SceneObject by item name
+     * @param {string} itemName - Name of the item
+     * @returns {SceneObject|null} The SceneObject instance or null
+     */
+    getSceneObject(itemName) {
+        return this.sceneObjects.get(itemName) || null
+    }
+
+    /**
+     * Remove a specific SceneObject
+     * @param {string} itemName - Name of the item to remove
+     */
+    removeSceneObject(itemName) {
+        const sceneObject = this.sceneObjects.get(itemName)
+        if (sceneObject) {
+            sceneObject.destroy()
+            this.sceneObjects.delete(itemName)
+            console.log(`🗑️ Removed SceneObject: ${itemName}`)
+        }
+    }
+
+    /**
      * Destroy the scene manager
      */
     destroy() {
+        // Clean up all scene objects
+        this.destroySceneObjects()
+
         this.currentScene = null
         this.scenes = []
         this.sceneStates.clear()

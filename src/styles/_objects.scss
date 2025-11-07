@@ -1,0 +1,310 @@
+/**
+ * Scene Objects Styles
+ * Styles for animated, interactive scene objects
+ */
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+/* Base Scene Object */
+.scene-object {
+    position: absolute;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    will-change: transform, opacity;
+    
+    /* Ensure objects are above background but below UI */
+    z-index: 5;
+
+    &:hover {
+        filter: brightness(1.2);
+        z-index: 10;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    /* Focus styles for keyboard navigation */
+    &:focus {
+        outline: 2px solid $main-yellow;
+        outline-offset: 4px;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+    }
+}
+
+/* Mobile Touch Hitbox Enhancement */
+/* Creates larger invisible clickable area for better mobile UX */
+.scene-object[data-hit-w]::before {
+    content: '';
+    position: absolute;
+    width: attr(data-hit-w px);
+    height: attr(data-hit-h px);
+    top: calc(var(--hit-offset-y, 0) * -1px);
+    left: calc(var(--hit-offset-x, 0) * -1px);
+    cursor: pointer;
+    /* Debug: uncomment to visualize hit area */
+    /* background: rgba(255, 0, 0, 0.2); */
+}
+
+/* Type-specific styling */
+.scene-object-type-item {
+    border: 2px solid transparent;
+    
+    &:hover {
+        border-color: $main-yellow;
+    }
+}
+
+.scene-object-type-target {
+    border: 2px solid transparent;
+    
+    &:hover {
+        border-color: $main-pink;
+    }
+}
+
+.scene-object-type-link {
+    border: 2px solid transparent;
+    
+    &:hover {
+        border-color: $main-marine;
+    }
+}
+
+.scene-object-type-decor {
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Click Effect Animations */
+.scene-object.flash {
+    filter: brightness(2);
+    animation: flash-effect 0.4s ease;
+}
+
+.scene-object.bounce {
+    animation: bounce-effect 0.4s ease;
+}
+
+.scene-object.shake {
+    animation: shake-effect 0.4s ease;
+}
+
+@keyframes flash-effect {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(2.5);
+    }
+}
+
+@keyframes bounce-effect {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-15px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    75% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes shake-effect {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* Idle Animation States */
+/* These are applied via CSS classes for objects that don't use JS animations */
+.scene-object-idle-bob {
+    animation: idle-bob 2s ease-in-out infinite;
+}
+
+.scene-object-idle-pulse {
+    animation: idle-pulse 2s ease-in-out infinite;
+}
+
+.scene-object-idle-spin {
+    animation: idle-spin 4s linear infinite;
+}
+
+.scene-object-idle-fade {
+    animation: idle-fade 2s ease-in-out infinite;
+}
+
+@keyframes idle-bob {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes idle-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes idle-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes idle-fade {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Sprite Animation Support */
+.scene-object-sprite {
+    /* Sprite sheets use background-position animation */
+    background-size: auto 100%;
+    image-rendering: pixelated; /* For pixel art sprites */
+    image-rendering: crisp-edges;
+}
+
+/* Appear/Disappear Animations */
+.scene-object-appearing {
+    animation: object-appear 0.5s ease-out;
+}
+
+.scene-object-disappearing {
+    animation: object-disappear 0.5s ease-in;
+}
+
+@keyframes object-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes object-disappear {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
+/* Glow Effects for Special Objects */
+.scene-object-glow {
+    filter: drop-shadow(0 0 10px currentColor);
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px currentColor);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px currentColor);
+    }
+}
+
+/* Disabled State */
+.scene-object-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+/* Loading State */
+.scene-object-loading {
+    opacity: 0.7;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .scene-object {
+        /* Slightly larger touch targets on mobile */
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .scene-object {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .scene-object,
+    .scene-object-idle-bob,
+    .scene-object-idle-pulse,
+    .scene-object-idle-spin,
+    .scene-object-idle-fade {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .scene-object.flash,
+    .scene-object.bounce,
+    .scene-object.shake {
+        animation: none !important;
+    }
+}
+
+/* Performance optimization for animations */
+.scene-object {
+    /* Use GPU acceleration for better performance */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+

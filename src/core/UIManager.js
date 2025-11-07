@@ -553,9 +553,16 @@ export class UIManager extends EventEmitter {
         sceneItems.forEach(itemName => {
             const itemData = gameData.sceneItems?.find(item => item.name === itemName)
             if (itemData) {
-                this.createSceneItemElement(itemData)
+                // Only create SceneItem component if item does NOT have animation
+                // Items with animation are handled by SceneObject in SceneManager
+                if (!itemData.animation) {
+                    this.createSceneItemElement(itemData)
+                }
             }
         })
+
+        // Create SceneObject instances for animated items
+        this.game.sceneManager?.createSceneObjects(this.elements.sceneItemsOverlay)
     }
 
     /**
