@@ -539,6 +539,48 @@ body {
     margin-top: var(--spacing-xs);
 }
 
+/* Image Field with Preview */
+.image-field-container {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.image-field-container input {
+    flex: 1;
+}
+
+.image-preview {
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    background: var(--editor-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.image-preview .preview-placeholder,
+.image-preview .preview-error {
+    font-size: 0.75rem;
+    color: var(--editor-text-dim);
+    text-align: center;
+    padding: var(--spacing-xs);
+}
+
+.image-preview .preview-error {
+    color: var(--editor-danger);
+}
+
 /* Form Row */
 .form-row {
     display: grid;

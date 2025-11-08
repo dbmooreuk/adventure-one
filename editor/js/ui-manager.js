@@ -390,12 +390,76 @@ export class UIManager {
                 if (fieldDef.step !== undefined) input.step = fieldDef.step;
                 break;
 
+            case 'image':
+                // Create a container for input and preview
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'image-field-container';
+
+                input = document.createElement('input');
+                input.type = 'text';
+                input.value = value || '';
+                input.placeholder = 'e.g., item-name.png';
+                imageContainer.appendChild(input);
+
+                // Create preview element
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                if (value) {
+                    const img = document.createElement('img');
+                    // Determine path based on field name
+                    const imagePath = fieldName === 'backgroundImage'
+                        ? `../src/assets/images/backgrounds/${value}`
+                        : `../src/assets/images/items/${value}`;
+                    img.src = imagePath;
+                    img.alt = 'Preview';
+                    img.onerror = () => {
+                        preview.innerHTML = '<span class="preview-error">Image not found</span>';
+                    };
+                    preview.appendChild(img);
+                } else {
+                    preview.innerHTML = '<span class="preview-placeholder">No image</span>';
+                }
+                imageContainer.appendChild(preview);
+
+                // Update preview when input changes
+                input.addEventListener('input', (e) => {
+                    const newValue = e.target.value.trim();
+                    preview.innerHTML = '';
+
+                    if (newValue) {
+                        const img = document.createElement('img');
+                        const imagePath = fieldName === 'backgroundImage'
+                            ? `../src/assets/images/backgrounds/${newValue}`
+                            : `../src/assets/images/items/${newValue}`;
+                        img.src = imagePath;
+                        img.alt = 'Preview';
+                        img.onerror = () => {
+                            preview.innerHTML = '<span class="preview-error">Image not found</span>';
+                        };
+                        preview.appendChild(img);
+                    } else {
+                        preview.innerHTML = '<span class="preview-placeholder">No image</span>';
+                    }
+                });
+
+                // Append the container instead of just the input
+                formGroup.appendChild(imageContainer);
+
+                if (fieldDef.help) {
+                    const help = document.createElement('div');
+                    help.className = 'form-help';
+                    help.textContent = fieldDef.help;
+                    formGroup.appendChild(help);
+                }
+
+                return formGroup;
+
             default:
                 input = document.createElement('input');
                 input.type = 'text';
                 input.value = value || '';
         }
-        
+
         input.name = fieldName;
         input.id = `field-${fieldName}`;
         formGroup.appendChild(input);
