@@ -215,13 +215,13 @@ export class UIManager {
         formGroup.appendChild(label);
         
         let input;
-        
+
         switch (fieldDef.type) {
             case 'textarea':
                 input = document.createElement('textarea');
                 input.value = value || '';
                 break;
-                
+
             case 'select':
                 input = document.createElement('select');
                 fieldDef.options.forEach(opt => {
@@ -232,13 +232,115 @@ export class UIManager {
                     input.appendChild(option);
                 });
                 break;
-                
+
+            case 'multi-select-dropdown':
+                // Create custom multi-select dropdown with checkboxes
+                input = document.createElement('div');
+                input.className = 'multi-select-dropdown';
+                input.dataset.fieldName = fieldName;
+
+                // Normalize value to array
+                const selectedValues = Array.isArray(value) ? value : (value ? [value] : []);
+
+                // Create display button
+                const displayBtn = document.createElement('button');
+                displayBtn.type = 'button';
+                displayBtn.className = 'multi-select-display';
+                displayBtn.textContent = selectedValues.length > 0 ? selectedValues.join(', ') : 'Select options...';
+                input.appendChild(displayBtn);
+
+                // Create dropdown options container
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'multi-select-options';
+                optionsContainer.style.display = 'none';
+
+                fieldDef.options.forEach(opt => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'multi-select-option';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = opt;
+                    checkbox.checked = selectedValues.includes(opt);
+
+                    const span = document.createElement('span');
+                    span.textContent = opt;
+
+                    optionLabel.appendChild(checkbox);
+                    optionLabel.appendChild(span);
+                    optionsContainer.appendChild(optionLabel);
+
+                    // Update display when checkbox changes
+                    checkbox.addEventListener('change', () => {
+                        const checked = Array.from(optionsContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                            .map(cb => cb.value);
+                        displayBtn.textContent = checked.length > 0 ? checked.join(', ') : 'Select options...';
+                    });
+                });
+
+                input.appendChild(optionsContainer);
+
+                // Toggle dropdown on button click
+                displayBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isVisible = optionsContainer.style.display === 'block';
+                    // Close all other dropdowns
+                    document.querySelectorAll('.multi-select-options').forEach(el => el.style.display = 'none');
+                    optionsContainer.style.display = isVisible ? 'none' : 'block';
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!input.contains(e.target)) {
+                        optionsContainer.style.display = 'none';
+                    }
+                });
+
+                break;
+
+            case 'multi-select':
+                input = document.createElement('select');
+                input.multiple = true;
+                input.size = Math.min(fieldDef.options.length, 4);
+
+                // Normalize value to array
+                const selectedVals = Array.isArray(value) ? value : (value ? [value] : []);
+
+                fieldDef.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (selectedVals.includes(opt)) option.selected = true;
+                    input.appendChild(option);
+                });
+                break;
+
+            case 'item-select':
+                input = document.createElement('select');
+
+                // Add empty option
+                const emptyOption = document.createElement('option');
+                emptyOption.value = '';
+                emptyOption.textContent = '-- None --';
+                if (!value) emptyOption.selected = true;
+                input.appendChild(emptyOption);
+
+                // Add all items from game data
+                this.editor.data.sceneItems.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.name;
+                    option.textContent = `${item.longName || item.name} (${item.name})`;
+                    if (value === item.name) option.selected = true;
+                    input.appendChild(option);
+                });
+                break;
+
             case 'boolean':
                 input = document.createElement('input');
                 input.type = 'checkbox';
                 input.checked = value || false;
                 break;
-                
+
             case 'number':
                 input = document.createElement('input');
                 input.type = 'number';
@@ -247,7 +349,7 @@ export class UIManager {
                 if (fieldDef.max !== undefined) input.max = fieldDef.max;
                 if (fieldDef.step !== undefined) input.step = fieldDef.step;
                 break;
-                
+
             default:
                 input = document.createElement('input');
                 input.type = 'text';

@@ -318,20 +318,34 @@ export class ItemEditor {
         form.querySelectorAll('input, select, textarea').forEach(input => {
             const name = input.name;
             if (!name) return;
-            
+
             // Handle special fields
-            if (name === 'position-x' || name === 'position-y' || 
+            if (name === 'position-x' || name === 'position-y' ||
                 name === 'size-w' || name === 'size-h') {
                 return; // Handle separately
             }
-            
+
             if (input.type === 'checkbox') {
                 formData[name] = input.checked;
             } else if (input.type === 'number') {
                 formData[name] = input.value ? Number(input.value) : null;
+            } else if (input.tagName === 'SELECT' && input.multiple) {
+                // Handle multi-select - get array of selected values
+                const selected = Array.from(input.selectedOptions).map(opt => opt.value);
+                // If only one value selected, store as string; if multiple, store as array
+                formData[name] = selected.length === 1 ? selected[0] : (selected.length > 1 ? selected : null);
             } else {
                 formData[name] = input.value || null;
             }
+        });
+
+        // Handle multi-select-dropdown fields
+        form.querySelectorAll('.multi-select-dropdown').forEach(dropdown => {
+            const fieldName = dropdown.dataset.fieldName;
+            const selected = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+            // If only one value selected, store as string; if multiple, store as array
+            formData[fieldName] = selected.length === 1 ? selected[0] : (selected.length > 1 ? selected : null);
         });
         
         // Handle position

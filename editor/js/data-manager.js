@@ -220,7 +220,16 @@ export class DataManager {
         if (item.useWith) output += `            useWith: "${item.useWith}",\n`;
         if (item.useMessage) output += `            useMessage: "${this.escapeString(item.useMessage)}",\n`;
         if (item.useResult) output += `            useResult: "${item.useResult}",\n`;
-        if (item.outcome) output += `            outcome: "${item.outcome}",\n`;
+
+        // Handle outcome - can be string or array
+        if (item.outcome) {
+            if (Array.isArray(item.outcome)) {
+                output += `            outcome: [${item.outcome.map(o => `"${o}"`).join(', ')}],\n`;
+            } else {
+                output += `            outcome: "${item.outcome}",\n`;
+            }
+        }
+
         if (item.linkToScene) output += `            linkToScene: "${item.linkToScene}",\n`;
         if (item.nextScene) output += `            nextScene: "${item.nextScene}",\n`;
         if (item.lockedMessage) output += `            lockedMessage: "${this.escapeString(item.lockedMessage)}",\n`;

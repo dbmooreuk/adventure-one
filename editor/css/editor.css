@@ -428,6 +428,94 @@ body {
     border-color: var(--editor-accent);
 }
 
+.form-group select[multiple] {
+    min-height: 100px;
+    padding: var(--spacing-xs);
+}
+
+.form-group select[multiple] option {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 3px;
+    margin-bottom: 2px;
+}
+
+.form-group select[multiple] option:checked {
+    background: var(--editor-accent);
+    color: white;
+}
+
+/* Multi-select dropdown with checkboxes */
+.multi-select-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.multi-select-display {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: var(--editor-bg-light);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    color: var(--editor-text);
+    font-size: 0.875rem;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.multi-select-display:hover {
+    border-color: var(--editor-accent);
+}
+
+.multi-select-display::after {
+    content: '▼';
+    font-size: 0.7em;
+    color: var(--editor-text-dim);
+    margin-left: var(--spacing-sm);
+}
+
+.multi-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: var(--editor-bg-light);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.multi-select-option {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.multi-select-option:hover {
+    background: var(--editor-bg);
+}
+
+.multi-select-option input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    margin-right: var(--spacing-sm);
+    cursor: pointer;
+}
+
+.multi-select-option span {
+    flex: 1;
+    user-select: none;
+}
+
 .form-help {
     font-size: 0.75rem;
     color: var(--editor-text-dim);

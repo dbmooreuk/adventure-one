@@ -8,7 +8,7 @@ export const SCENE_TYPES = ['scene', 'puzzle'];
 export const ANIMATION_TYPES = ['bob', 'pulse', 'spin', 'fade', 'sprite'];
 export const HOVER_EFFECTS = ['glow', 'pulse', 'shine', 'swing'];
 export const CLICK_EFFECTS = ['flash', 'bounce', 'shake'];
-export const OUTCOMES = ['keep', 'remove', 'scene'];
+export const OUTCOMES = ['keep', 'remove', 'scene', 'removeTarget'];
 
 /**
  * Scene Schema Definition
@@ -155,10 +155,10 @@ export const itemSchema = {
         condition: (data) => data.type === 'item'
     },
     useWith: {
-        type: 'string',
+        type: 'item-select',
         required: false,
         label: 'Use With',
-        help: 'Name of item this can be used with'
+        help: 'Item this can be used with'
     },
     useMessage: {
         type: 'string',
@@ -167,17 +167,17 @@ export const itemSchema = {
         help: 'Message shown when using the item'
     },
     useResult: {
-        type: 'string',
+        type: 'item-select',
         required: false,
         label: 'Use Result',
-        help: 'Result identifier when item is used'
+        help: 'Item to add when used (appears on scene or in inventory based on outcome)'
     },
     outcome: {
-        type: 'select',
+        type: 'multi-select-dropdown',
         required: false,
         label: 'Outcome',
         options: OUTCOMES,
-        help: 'What happens after using the item'
+        help: 'What happens after using the item (can select multiple)'
     },
     linkToScene: {
         type: 'string',
