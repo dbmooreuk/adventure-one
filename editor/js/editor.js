@@ -11,6 +11,7 @@ import { StorageManager } from './storage-manager.js';
 import { ProjectManager } from './project-manager.js';
 import { CodeEditor } from './code-editor.js';
 import { AudioEditor } from './audio-editor.js';
+import { AssetsManager } from './assets-manager.js';
 
 class GameDataEditor {
     constructor() {
@@ -31,6 +32,7 @@ class GameDataEditor {
         this.sceneEditor = new SceneEditor(this);
         this.itemEditor = new ItemEditor(this);
         this.audioEditor = new AudioEditor(this);
+        this.assetsManager = new AssetsManager(this);
         this.storageManager = new StorageManager();
         this.projectManager = new ProjectManager(this, this.storageManager);
         this.codeEditor = new CodeEditor(this);
@@ -201,6 +203,10 @@ class GameDataEditor {
             document.getElementById('preview-content').classList.add('active');
         } else if (tabName === 'settings') {
             document.getElementById('settings-tab-content').classList.add('active');
+        } else if (tabName === 'assets') {
+            document.getElementById('assets-tab-content').classList.add('active');
+            // Reload assets when tab is shown
+            this.assetsManager.loadAssets();
         }
     }
 

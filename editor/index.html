@@ -214,6 +214,9 @@
                     <button class="preview-tab" data-preview-tab="settings">
                         ⚙️ Settings
                     </button>
+                    <button class="preview-tab" data-preview-tab="assets">
+                        🖼️ Assets
+                    </button>
                 </nav>
 
                 <!-- Preview Tab -->
@@ -241,6 +244,19 @@
                     <form id="settings-form" class="editor-form">
                         <!-- Settings form fields will be populated by JS -->
                     </form>
+                </div>
+
+                <!-- Assets Tab -->
+                <div class="preview-tab-content" id="assets-tab-content">
+                    <div class="assets-tab-header">
+                        <h3>Project Assets</h3>
+                        <button id="refresh-assets-btn" class="btn btn-secondary btn-sm">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    <div id="assets-container" class="assets-container">
+                        <p class="loading-message">Loading assets...</p>
+                    </div>
                 </div>
             </aside>
         </div>
