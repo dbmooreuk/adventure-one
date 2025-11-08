@@ -65,6 +65,11 @@ export class SceneObject {
             el.style.height = `${this.itemData.size[1]}px`
         }
 
+        // Apply z-index if specified
+        if (this.itemData.zIndex !== undefined) {
+            el.style.zIndex = this.itemData.zIndex
+        }
+
         // Apply image
         if (this.itemData.image) {
             const imagePath = `/src/assets/images/items/${this.itemData.image}`

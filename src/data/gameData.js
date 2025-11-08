@@ -190,6 +190,7 @@ export const gameData = {
             outcome: "keep",
             points: 10,
             image: "butterfly1.png",
+            zIndex: 5,
             position: [107, 207],
             size: [50, 80],
             hitW: 80,
@@ -214,6 +215,7 @@ export const gameData = {
             lookAt: "A heavy safe with a combination lock. Maybe you can crack the code? (Hint: 3-7-2)",
             linkToScene: "safe_puzzle",
             image: "safe-small.png",
+            zIndex: 5,
             position: [800, 250],
             size: [150, 200],
             onClickEffect: "flash",
@@ -230,6 +232,7 @@ export const gameData = {
             lookAt: "Shiny gold bars! These must be worth a fortune.",
             pickUpMessage: "You obtained the gold bars from the safe!",
             image: "gold-bars.png",
+            zIndex: 5,
             position: [0, 0],
             size: [0, 0],
             style: {
@@ -250,6 +253,7 @@ export const gameData = {
             outcome: "remove",
             points: 15,
             image: "rope.png",
+            zIndex: 5,
             position: [1022, 126],
             size: [60, 40],
             animation: {
@@ -272,6 +276,7 @@ export const gameData = {
             lookAt: "A beautiful butterfly fluttering around the chamber.",
             points: 0,
             image: "butterfly1.png",
+            zIndex: 5,
             position: [460, 215],
             size: [64, 64],
             hitW: 90,
@@ -302,6 +307,7 @@ export const gameData = {
             outcome: "remove",
             points: 20,
             image: "gear.png",
+            zIndex: 5,
             position: [1050, 400],
             size: [60, 60],
             hitW: 90,
@@ -328,6 +334,7 @@ export const gameData = {
             outcome: "remove",
             points: 20,
             image: "karibiner.png",
+            zIndex: 5,
             position: [623, 284],
             size: [30, 60],
             onClickEffect: "flash",
@@ -348,6 +355,7 @@ export const gameData = {
             useResult: "direction",
             outcome: "keep",
             points: 25,
+            zIndex: 5,
             position: [250, 120],
             size: [80, 60],
             style: {
@@ -367,6 +375,7 @@ export const gameData = {
             nextScene: "scene3",
             points: 30,
             image: "boat-without-oar.png",
+            zIndex: 5,
             position: [230, 297],
             size: [120, 80]
         },
@@ -381,6 +390,7 @@ export const gameData = {
             useResult: "crossing",
             outcome: "remove",
             points: 15,
+            zIndex: 5,
             position: [300, 200],
             size: [100, 30],
             style: {
@@ -413,6 +423,7 @@ export const gameData = {
             outcome: "keep",
             points: 40,
             image: "crystal.png",
+            zIndex: 5,
             position: [200, 150],
             size: [40, 60],
             animation: {
@@ -432,6 +443,7 @@ export const gameData = {
             useResult: "victory",
             outcome: "keep",
             points: 100,
+            zIndex: 5,
             position: [250, 200],
             size: [100, 80]
         },
@@ -446,6 +458,7 @@ export const gameData = {
             outcome: "removeTarget",
             points: 50,
             image: "butterfly2.png",
+            zIndex: 5,
             position: [50, 100],
             size: [80, 120],
             onClickEffect: "flash"
@@ -461,6 +474,7 @@ export const gameData = {
             lockedMessage: "The passage is still hidden in darkness.",
             points: 30,
             image: "butterfly5.png",
+            zIndex: 5,
             position: [60, 110],
             size: [100, 140]
         }

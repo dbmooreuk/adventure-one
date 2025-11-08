@@ -214,6 +214,15 @@ export const itemSchema = {
         label: 'Image',
         help: 'Item image filename'
     },
+    zIndex: {
+        type: 'number',
+        required: false,
+        label: 'Z-Index',
+        help: 'Layer order (higher numbers appear on top)',
+        default: 1,
+        min: 0,
+        max: 100
+    },
     position: {
         type: 'position',
         required: false,

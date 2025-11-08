@@ -111,20 +111,21 @@ export class ItemEditor {
         // Visual Section
         const visualSection = this.createSection('Visual Properties');
         visualSection.appendChild(this.editor.uiManager.createFormField('image', itemSchema.image, item.image, item));
-        
+        visualSection.appendChild(this.editor.uiManager.createFormField('zIndex', itemSchema.zIndex, item.zIndex, item));
+
         // Position and Size
         const positionField = this.createPositionField(item.position || [0, 0]);
         visualSection.appendChild(positionField);
-        
+
         const sizeField = this.createSizeField(item.size || [50, 50]);
         visualSection.appendChild(sizeField);
-        
+
         const hitRow = document.createElement('div');
         hitRow.className = 'form-row';
         hitRow.appendChild(this.editor.uiManager.createFormField('hitW', itemSchema.hitW, item.hitW, item));
         hitRow.appendChild(this.editor.uiManager.createFormField('hitH', itemSchema.hitH, item.hitH, item));
         visualSection.appendChild(hitRow);
-        
+
         form.appendChild(visualSection);
         
         // Animation Section

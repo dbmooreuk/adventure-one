@@ -215,6 +215,11 @@ export class SceneComposer {
         itemEl.style.width = `${width}px`;
         itemEl.style.height = `${height}px`;
 
+        // Apply z-index if specified
+        if (item.zIndex !== undefined) {
+            itemEl.style.zIndex = item.zIndex;
+        }
+
         // Background image - handle both 'image' and 'imageSrc' properties
         const imageFile = item.image || item.imageSrc;
         if (imageFile) {
@@ -265,14 +270,6 @@ export class SceneComposer {
         // Calculate offset from mouse to item position
         this.dragOffset.x = mouseCanvasX - currentX;
         this.dragOffset.y = mouseCanvasY - currentY;
-
-        console.log('🎯 Start drag:', {
-            mouseCanvasX, mouseCanvasY,
-            currentX, currentY,
-            offsetX: this.dragOffset.x,
-            offsetY: this.dragOffset.y,
-            scale: this.scale
-        });
 
         element.classList.add('dragging');
 
@@ -535,11 +532,17 @@ export class SceneComposer {
             container.classList.add('active');
         }
 
-        // If a scene is selected in the scenes list, load it
-        const selectedScene = document.querySelector('#scenes-list-items .list-item.active');
-        if (selectedScene) {
-            const sceneId = selectedScene.dataset.sceneId;
-            this.loadScene(sceneId);
+        // Reload current scene to reflect any data changes, or load selected scene
+        if (this.currentScene) {
+            // Reload the current scene to pick up any item changes
+            this.loadScene(this.currentScene.sceneName);
+        } else {
+            // If no scene loaded, try to load the selected scene from the list
+            const selectedScene = document.querySelector('#scenes-list-items .list-item.active');
+            if (selectedScene) {
+                const sceneId = selectedScene.dataset.sceneId;
+                this.loadScene(sceneId);
+            }
         }
     }
 

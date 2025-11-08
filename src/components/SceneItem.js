@@ -56,6 +56,11 @@ export class SceneItem {
         element.style.top = `${this.itemData.position[1]}px`
         element.style.width = `${this.itemData.size[0]}px`
         element.style.height = `${this.itemData.size[1]}px`
+
+        // Apply z-index if specified
+        if (this.itemData.zIndex !== undefined) {
+            element.style.zIndex = this.itemData.zIndex
+        }
     }
 
     /**
