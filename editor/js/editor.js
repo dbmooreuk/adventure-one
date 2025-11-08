@@ -12,6 +12,7 @@ import { ProjectManager } from './project-manager.js';
 import { CodeEditor } from './code-editor.js';
 import { AudioEditor } from './audio-editor.js';
 import { AssetsManager } from './assets-manager.js';
+import { SceneComposer } from './scene-composer.js';
 
 class GameDataEditor {
     constructor() {
@@ -33,6 +34,7 @@ class GameDataEditor {
         this.itemEditor = new ItemEditor(this);
         this.audioEditor = new AudioEditor(this);
         this.assetsManager = new AssetsManager(this);
+        this.sceneComposer = new SceneComposer(this);
         this.storageManager = new StorageManager();
         this.projectManager = new ProjectManager(this, this.storageManager);
         this.codeEditor = new CodeEditor(this);
@@ -95,6 +97,11 @@ class GameDataEditor {
             item.addEventListener('click', () => {
                 menuDropdown.classList.remove('show');
             });
+        });
+
+        // Toggle Composer
+        document.getElementById('toggle-composer-btn').addEventListener('click', () => {
+            this.toggleComposer();
         });
 
         // Toggle Code View
@@ -207,6 +214,27 @@ class GameDataEditor {
             document.getElementById('assets-tab-content').classList.add('active');
             // Reload assets when tab is shown
             this.assetsManager.loadAssets();
+        }
+    }
+
+    /**
+     * Toggle composer view on/off
+     */
+    toggleComposer() {
+        const composer = document.getElementById('composer-container');
+        const toggleBtn = document.getElementById('toggle-composer-btn');
+
+        if (composer.classList.contains('active')) {
+            // Hide composer
+            this.saveCurrentWork();
+            this.sceneComposer.hide();
+            toggleBtn.classList.remove('active');
+        } else {
+            // Show composer
+            this.saveCurrentWork();
+            this.uiManager.showPanel('composer-container');
+            toggleBtn.classList.add('active');
+            this.sceneComposer.show();
         }
     }
 

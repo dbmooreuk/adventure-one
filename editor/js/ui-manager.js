@@ -80,9 +80,10 @@ export class UIManager {
         items.forEach(item => {
             const li = document.createElement('li');
             li.dataset.itemName = item.name;
-            
+            li.draggable = true;
+
             const typeClass = `type-${item.type}`;
-            
+
             li.innerHTML = `
                 <div class="item-list-title">${item.longName || item.name}</div>
                 <div class="item-list-meta">
@@ -90,11 +91,40 @@ export class UIManager {
                     <span>${item.name}</span>
                 </div>
             `;
-            
+
             li.addEventListener('click', () => {
                 this.selectItem(item.name);
             });
-            
+
+            // Drag events for composer
+            li.addEventListener('dragstart', (e) => {
+                const composerActive = document.getElementById('composer-container')?.classList.contains('active');
+                if (composerActive) {
+                    e.dataTransfer.effectAllowed = 'copy';
+                    e.dataTransfer.setData('application/json', JSON.stringify(item));
+                    li.classList.add('dragging');
+
+                    // Setup drop zone
+                    const wrapper = document.querySelector('.composer-canvas-wrapper');
+                    if (wrapper) {
+                        wrapper.addEventListener('dragover', this.editor.sceneComposer.handleCanvasDragOver);
+                        wrapper.addEventListener('drop', this.editor.sceneComposer.handleCanvasDrop);
+                    }
+                } else {
+                    e.preventDefault();
+                }
+            });
+
+            li.addEventListener('dragend', () => {
+                li.classList.remove('dragging');
+
+                const wrapper = document.querySelector('.composer-canvas-wrapper');
+                if (wrapper) {
+                    wrapper.removeEventListener('dragover', this.editor.sceneComposer.handleCanvasDragOver);
+                    wrapper.removeEventListener('drop', this.editor.sceneComposer.handleCanvasDrop);
+                }
+            });
+
             container.appendChild(li);
         });
         
@@ -127,7 +157,17 @@ export class UIManager {
         });
 
         this.editor.selectedScene = sceneName;
-        this.editor.sceneEditor.edit(sceneName);
+
+        // Check if composer is active
+        const composerActive = document.getElementById('composer-container')?.classList.contains('active');
+
+        if (composerActive) {
+            // Load scene into composer instead of scene editor
+            this.editor.sceneComposer.loadScene(sceneName);
+        } else {
+            // Normal scene editor
+            this.editor.sceneEditor.edit(sceneName);
+        }
     }
 
     selectItem(itemName) {

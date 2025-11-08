@@ -16,14 +16,14 @@
     --editor-success: #4caf50;
     --editor-warning: #ff9800;
     --editor-danger: #f44336;
-    
+
     /* Spacing */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
-    
+
     /* Layout */
     --sidebar-width: 280px;
     --preview-width: 350px;
@@ -271,6 +271,11 @@ body {
     border-left: 3px solid var(--editor-accent);
 }
 
+.item-list li.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
 .item-list-title {
     font-weight: 600;
     font-size: 0.875rem;
@@ -305,6 +310,18 @@ body {
     background: var(--editor-bg);
     overflow-y: auto;
     position: relative;
+}
+
+/* Composer Container */
+.composer-container {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    background: var(--editor-bg);
+}
+
+.composer-container.active {
+    display: flex;
 }
 
 .welcome-screen,
@@ -561,7 +578,6 @@ body {
 .btn.active {
     background: var(--editor-accent);
     color: white;
-}
 }
 
 .btn-secondary {
@@ -1241,4 +1257,127 @@ body {
     background: var(--editor-bg-light);
     border-radius: 4px;
     margin-bottom: var(--spacing-md);
+}
+
+
+/* ========================================
+ * Visual Scene Composer Styles
+ * ======================================== */
+
+.composer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--editor-bg-light);
+    border-bottom: 1px solid var(--editor-border);
+}
+
+.composer-title h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.composer-scene-name {
+    font-size: 0.875rem;
+    color: var(--editor-accent);
+    font-weight: 500;
+}
+
+.composer-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.composer-zoom-level {
+    min-width: 50px;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--editor-text-dim);
+}
+
+.composer-workspace {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: var(--editor-bg);
+}
+
+.composer-canvas-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.composer-canvas {
+    display: block;
+    background: #000;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.composer-items-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transform-origin: top left;
+}
+
+.composer-item {
+    position: absolute;
+    cursor: move;
+    pointer-events: all;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.composer-item:hover {
+    border-color: var(--editor-accent);
+}
+
+.composer-item.selected {
+    border-color: var(--editor-warning);
+    box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.3);
+}
+
+.composer-item.dragging {
+    opacity: 0.7;
+    cursor: grabbing;
+}
+
+.composer-item-label {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* Grid overlay */
+.composer-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.composer-grid.hidden {
+    display: none;
 }
