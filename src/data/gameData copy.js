@@ -190,7 +190,7 @@ export const gameData = {
             useResult: "light",
             outcome: "keep",//means stays in inventory after use
             points: 10,
-            image: "torch.png", // Item image filename
+            image: "butterfly1.png", // Item image filename
             position: [100, 150],
             size: [50, 80],
             animation: {
@@ -412,7 +412,7 @@ export const gameData = {
             useMessage: "You board the boat and cross the lake to the other side.",
             useResult: null,
             outcome: "scene",
-            linkToScene: "scene3",  // ← Clicking this link takes you to scene3!
+            linkToScene: "scene5",  // ← Clicking this link takes you to scene3!
             lockedMessage: "The boat isn't ready yet.",  // Message if scene3 is still locked
             points: 20,  // Points for using the crossing
             position: [200, 220],
@@ -465,10 +465,10 @@ export const gameData = {
             useWith: "crystal",
             useMessage: "The crystal's light reveals hidden passages in the darkness!",
             useResult: "revelation",
-            outcome: "scene",
-            nextScene: "scene11",  // Reveals the path to the Guardian's Lair
+            outcome: "removeTarget",
+            nextScene: "scene1",  // Reveals the path to the Guardian's Lair
             points: 50,
-            image: "darkness.png",
+            image: "butterfly2.png",
             position: [50, 100],
             size: [80, 120]
         },
@@ -482,8 +482,9 @@ export const gameData = {
             useMessage: "You step through the revealed passage.",
             useResult: null,
             outcome: "scene",
-            linkToScene: "scene11",  // Links to Guardian's Lair
+            linkToScene: "scene1",  // Links to Guardian's Lair
             lockedMessage: "The passage is still hidden in darkness.",
+            image: "butterfly5.png",
             points: 30,
             position: [60, 110],
             size: [100, 140]

@@ -123,8 +123,9 @@ export class SceneComposer {
                 resolve();
             };
 
-            // Construct path relative to editor
-            img.src = `../src/assets/images/${backgroundPath}`;
+            // Construct path - backgrounds are in backgrounds/ subdirectory
+            // Use relative path from editor directory
+            img.src = `../src/assets/images/backgrounds/${backgroundPath}`;
         });
     }
 
@@ -217,7 +218,9 @@ export class SceneComposer {
         // Background image - handle both 'image' and 'imageSrc' properties
         const imageFile = item.image || item.imageSrc;
         if (imageFile) {
-            itemEl.style.backgroundImage = `url(../src/assets/images/${imageFile})`;
+            // Items are in items/ subdirectory
+            // Use relative path from editor directory
+            itemEl.style.backgroundImage = `url(../src/assets/images/items/${imageFile})`;
             itemEl.style.backgroundSize = 'contain';
             itemEl.style.backgroundRepeat = 'no-repeat';
             itemEl.style.backgroundPosition = 'center';
