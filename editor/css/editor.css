@@ -581,6 +581,83 @@ body {
     color: var(--editor-danger);
 }
 
+/* Animation Editor */
+.animation-editor {
+    padding: var(--spacing-md);
+    background: var(--editor-bg-light);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+}
+
+.animation-fields {
+    margin-top: var(--spacing-md);
+}
+
+.animation-fields .form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Radio Group */
+.radio-group {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xs);
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.radio-label input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+/* Sprite Fields */
+.sprite-fields {
+    margin-top: var(--spacing-md);
+}
+
+.sprite-mode-fields {
+    margin-top: var(--spacing-md);
+}
+
+/* Frames List */
+.frames-list-container {
+    margin-top: var(--spacing-md);
+}
+
+.frames-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.frame-item {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.frame-item input {
+    flex: 1;
+}
+
+.frame-item .btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Form Row */
 .form-row {
     display: grid;

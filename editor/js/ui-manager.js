@@ -397,6 +397,8 @@ export class UIManager {
 
                 input = document.createElement('input');
                 input.type = 'text';
+                input.name = fieldName;
+                input.id = `field-${fieldName}`;
                 input.value = value || '';
                 input.placeholder = 'e.g., item-name.png';
                 imageContainer.appendChild(input);

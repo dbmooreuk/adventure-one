@@ -225,7 +225,7 @@ export class AssetsManager {
                     <div class="asset-info">
                         <div class="asset-name" title="${asset.name}">${asset.name}</div>
                         <button class="btn btn-sm copy-filename-btn" data-filename="${asset.name}">
-                            📋 Copy Name
+                            Copy Name
                         </button>
                     </div>
                 </div>
@@ -240,7 +240,7 @@ export class AssetsManager {
      * Render assets grid
      */
     renderAssets() {
-        console.log('📊 Rendering assets...', this.assets.length);
+        console.log('Rendering assets...', this.assets.length);
 
         if (this.assets.length === 0) {
             this.container.innerHTML = '<p class="empty-message">No assets found in src/assets/images/</p>';
@@ -296,7 +296,7 @@ export class AssetsManager {
                 <div class="asset-info">
                     <div class="asset-name" title="${asset.name}">${asset.name}</div>
                     <button class="btn btn-sm copy-filename-btn" data-filename="${asset.name}">
-                        📋 Copy Name
+                        Copy Name
                     </button>
                 </div>
             </div>
