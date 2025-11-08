@@ -252,10 +252,27 @@ export class SceneComposer {
         this.draggedItem = item;
         this.draggedElement = element;
 
-        // Calculate offset from mouse to item top-left
-        const rect = element.getBoundingClientRect();
-        this.dragOffset.x = e.clientX - rect.left;
-        this.dragOffset.y = e.clientY - rect.top;
+        // Get current item position from the element's style
+        const currentX = parseFloat(element.style.left) || 0;
+        const currentY = parseFloat(element.style.top) || 0;
+
+        // Calculate mouse position in canvas coordinates
+        const wrapper = document.querySelector('.composer-canvas-wrapper');
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const mouseCanvasX = (e.clientX - wrapperRect.left) / this.scale;
+        const mouseCanvasY = (e.clientY - wrapperRect.top) / this.scale;
+
+        // Calculate offset from mouse to item position
+        this.dragOffset.x = mouseCanvasX - currentX;
+        this.dragOffset.y = mouseCanvasY - currentY;
+
+        console.log('🎯 Start drag:', {
+            mouseCanvasX, mouseCanvasY,
+            currentX, currentY,
+            offsetX: this.dragOffset.x,
+            offsetY: this.dragOffset.y,
+            scale: this.scale
+        });
 
         element.classList.add('dragging');
 
@@ -273,9 +290,13 @@ export class SceneComposer {
         const wrapper = document.querySelector('.composer-canvas-wrapper');
         const wrapperRect = wrapper.getBoundingClientRect();
 
-        // Calculate position relative to canvas
-        let x = (e.clientX - wrapperRect.left - this.dragOffset.x) / this.scale;
-        let y = (e.clientY - wrapperRect.top - this.dragOffset.y) / this.scale;
+        // Calculate mouse position in canvas coordinates
+        const mouseCanvasX = (e.clientX - wrapperRect.left) / this.scale;
+        const mouseCanvasY = (e.clientY - wrapperRect.top) / this.scale;
+
+        // Apply the offset (already in canvas coordinates)
+        let x = mouseCanvasX - this.dragOffset.x;
+        let y = mouseCanvasY - this.dragOffset.y;
 
         // Snap to grid if enabled
         if (this.gridEnabled) {
