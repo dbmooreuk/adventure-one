@@ -57,6 +57,9 @@ export class ItemEditor {
      * Edit an existing item
      */
     edit(itemName) {
+        // Stop any running animation preview
+        this.stopAnimationPreview();
+
         const item = this.editor.getItemByName(itemName);
         if (!item) return;
         
@@ -265,6 +268,27 @@ export class ItemEditor {
         const container = document.createElement('div');
         container.className = 'animation-editor';
 
+        // Create a wrapper for fields and preview
+        const editorWrapper = document.createElement('div');
+        editorWrapper.className = 'animation-editor-wrapper';
+        container.appendChild(editorWrapper);
+
+        // Left side: Animation controls
+        const controlsContainer = document.createElement('div');
+        controlsContainer.className = 'animation-controls';
+        editorWrapper.appendChild(controlsContainer);
+
+        // Right side: Preview
+        const previewContainer = document.createElement('div');
+        previewContainer.className = 'animation-preview-container';
+        previewContainer.innerHTML = `
+            <div class="animation-preview-header">Preview</div>
+            <div class="animation-preview-canvas-wrapper">
+                <canvas id="animation-preview-canvas" width="200" height="200"></canvas>
+            </div>
+        `;
+        editorWrapper.appendChild(previewContainer);
+
         // Animation Type dropdown
         const typeGroup = document.createElement('div');
         typeGroup.className = 'form-group';
@@ -293,19 +317,29 @@ export class ItemEditor {
         });
 
         typeGroup.appendChild(typeSelect);
-        container.appendChild(typeGroup);
+        controlsContainer.appendChild(typeGroup);
 
         // Dynamic fields container
         const fieldsContainer = document.createElement('div');
         fieldsContainer.className = 'animation-fields';
-        container.appendChild(fieldsContainer);
+        controlsContainer.appendChild(fieldsContainer);
+
+        // Animation preview manager
+        let animationPreview = null;
 
         // Update fields when type changes
         const updateFields = () => {
             const type = typeSelect.value;
             fieldsContainer.innerHTML = '';
 
-            if (!type) return;
+            if (!type) {
+                // Stop preview
+                if (animationPreview) {
+                    animationPreview.stop();
+                    animationPreview = null;
+                }
+                return;
+            }
 
             // Common fields for bob and pulse
             if (type === 'bob' || type === 'pulse') {
@@ -322,7 +356,18 @@ export class ItemEditor {
             if (type === 'sprite') {
                 fieldsContainer.appendChild(this.createSpriteFields(animation));
             }
+
+            // Start preview
+            this.startAnimationPreview(type, animation);
         };
+
+        // Listen for input changes to update preview
+        container.addEventListener('input', () => {
+            const type = typeSelect.value;
+            if (type) {
+                this.updateAnimationPreview(type);
+            }
+        });
 
         typeSelect.addEventListener('change', updateFields);
 
@@ -791,14 +836,220 @@ export class ItemEditor {
     duplicate(itemName) {
         const item = this.editor.getItemByName(itemName);
         if (!item) return;
-        
+
         const newItem = { ...item };
         newItem.name = `${item.name}_copy`;
         newItem.longName = `${item.longName} (Copy)`;
-        
+
         this.editor.addItem(newItem);
         this.edit(newItem.name);
         this.editor.uiManager.setStatus('Item duplicated', 'success');
+    }
+
+    /**
+     * Start animation preview
+     */
+    startAnimationPreview(type, animationData) {
+        console.log('🎬 startAnimationPreview called with type:', type);
+
+        const canvas = document.getElementById('animation-preview-canvas');
+        if (!canvas) {
+            console.log('❌ Canvas not found!');
+            return;
+        }
+
+        console.log('✓ Canvas found, starting animation');
+
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        // Stop any existing animation
+        if (this.previewAnimationId) {
+            cancelAnimationFrame(this.previewAnimationId);
+        }
+
+        // Get current item image
+        const form = document.getElementById('item-form');
+        const imageInput = form?.querySelector('[name="image"]');
+        const imagePath = imageInput?.value;
+
+        this.previewStartTime = Date.now();
+        this.previewImage = null;
+
+        // Load image if available
+        if (imagePath) {
+            const img = new Image();
+            img.onload = () => {
+                this.previewImage = img;
+            };
+            img.src = `../src/assets/images/items/${imagePath}`;
+        }
+
+        // Animation loop
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Get current animation settings from form
+            const settings = this.getAnimationSettings();
+            const elapsed = (Date.now() - this.previewStartTime) * (settings.speed || 1);
+            const t = elapsed / 1000;
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+
+            // Apply animation transform
+            switch (type) {
+                case 'bob': {
+                    const bobY = Math.sin(t * 2) * (settings.amplitude || 10);
+                    ctx.translate(0, bobY);
+                    break;
+                }
+                case 'pulse': {
+                    const scale = 1 + (Math.sin(t * 2) * (settings.amplitude || 10) / 100);
+                    ctx.scale(scale, scale);
+                    break;
+                }
+                case 'spin': {
+                    const rotation = (t * 60 * (settings.speed || 1)) % 360;
+                    ctx.rotate((rotation * Math.PI) / 180);
+                    break;
+                }
+                case 'fade': {
+                    const opacity = 0.5 + (Math.sin(t * 2) * 0.5);
+                    ctx.globalAlpha = opacity;
+                    break;
+                }
+                case 'sprite': {
+                    // Sprite animation handled separately
+                    this.drawSpriteFrame(ctx, settings, t);
+                    ctx.restore();
+                    this.previewAnimationId = requestAnimationFrame(animate);
+                    return;
+                }
+            }
+
+            // Draw preview box or image
+            if (this.previewImage) {
+                ctx.drawImage(this.previewImage, -40, -40, 80, 80);
+            } else {
+                ctx.fillStyle = '#4a9eff';
+                ctx.fillRect(-40, -40, 80, 80);
+                ctx.strokeStyle = '#6bb0ff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-40, -40, 80, 80);
+            }
+
+            ctx.restore();
+
+            this.previewAnimationId = requestAnimationFrame(animate);
+        };
+
+        animate();
+    }
+
+    /**
+     * Update animation preview with current settings
+     */
+    updateAnimationPreview(type) {
+        // Restart preview with current settings
+        this.startAnimationPreview(type, null);
+    }
+
+    /**
+     * Get current animation settings from form
+     */
+    getAnimationSettings() {
+        const form = document.getElementById('item-form');
+        if (!form) return {};
+
+        return {
+            amplitude: parseFloat(form.querySelector('[name="animation-amplitude"]')?.value) || 10,
+            speed: parseFloat(form.querySelector('[name="animation-speed"]')?.value) || 1,
+            fps: parseFloat(form.querySelector('[name="animation-fps"]')?.value) || 12
+        };
+    }
+
+    /**
+     * Draw sprite animation frame
+     */
+    drawSpriteFrame(ctx, settings, t) {
+        const form = document.getElementById('item-form');
+        const mode = form?.querySelector('input[name="sprite-mode"]:checked')?.value;
+
+        console.log('🎬 drawSpriteFrame - mode:', mode, 'fps:', settings.fps);
+
+        if (mode === 'multiple') {
+            // Get frame inputs - they have name="frame-0", "frame-1", etc.
+            const frameInputs = form?.querySelectorAll('[name^="frame-"]');
+            const frames = Array.from(frameInputs || []).map(input => input.value).filter(v => v);
+
+            console.log('🎬 Frame inputs found:', frameInputs?.length);
+            console.log('🎬 Frames with values:', frames.length, frames);
+
+            if (frames.length > 0) {
+                const fps = settings.fps || 12;
+                const frameIndex = Math.floor(t * fps) % frames.length;
+                const framePath = frames[frameIndex];
+
+                console.log('🎬 Current frame index:', frameIndex, 'path:', framePath);
+
+                // Load and cache frame images
+                if (!this.spriteFrameImages) this.spriteFrameImages = {};
+
+                if (this.spriteFrameImages[framePath]) {
+                    ctx.drawImage(this.spriteFrameImages[framePath], -40, -40, 80, 80);
+                } else {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.spriteFrameImages[framePath] = img;
+                        console.log('✓ Loaded frame image:', framePath);
+                    };
+                    img.onerror = () => {
+                        console.log('❌ Failed to load frame image:', framePath);
+                    };
+                    img.src = `../src/assets/images/items/${framePath}`;
+
+                    // Draw placeholder while loading
+                    ctx.fillStyle = '#4a9eff';
+                    ctx.fillRect(-40, -40, 80, 80);
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '10px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Loading...', 0, 0);
+                }
+            } else {
+                // No frames - draw placeholder
+                ctx.fillStyle = '#4a9eff';
+                ctx.fillRect(-40, -40, 80, 80);
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Add frames', 0, 0);
+            }
+        } else {
+            // Sprite sheet mode - simplified for now
+            ctx.fillStyle = '#4a9eff';
+            ctx.fillRect(-40, -40, 80, 80);
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Sprite Sheet', 0, 0);
+        }
+    }
+
+    /**
+     * Stop animation preview
+     */
+    stopAnimationPreview() {
+        if (this.previewAnimationId) {
+            cancelAnimationFrame(this.previewAnimationId);
+            this.previewAnimationId = null;
+        }
     }
 }
 

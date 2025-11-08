@@ -589,6 +589,48 @@ body {
     border-radius: 4px;
 }
 
+.animation-editor-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: var(--spacing-lg);
+}
+
+.animation-controls {
+    min-width: 0;
+}
+
+.animation-preview-container {
+    background: var(--editor-bg);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    padding: var(--spacing-sm);
+}
+
+.animation-preview-header {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--editor-text-dim);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.animation-preview-canvas-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--editor-bg-lighter);
+    border-radius: 4px;
+    padding: var(--spacing-sm);
+}
+
+#animation-preview-canvas {
+    display: block;
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+}
+
 .animation-fields {
     margin-top: var(--spacing-md);
 }
