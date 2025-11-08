@@ -158,10 +158,47 @@ export class DataManager {
         data.sceneItems.forEach((item, index) => {
             output += this.formatItem(item, index < data.sceneItems.length - 1);
         });
-        output += '    ]\n';
-        
+        output += '    ],\n\n';
+
+        // Audio
+        if (data.audio) {
+            output += '    audio: {\n';
+
+            // Ambient music
+            if (data.audio.ambient && Object.keys(data.audio.ambient).length > 0) {
+                output += '        ambient: {\n';
+                const ambientEntries = Object.entries(data.audio.ambient);
+                ambientEntries.forEach(([key, value], index) => {
+                    const valueStr = value === null ? 'null' : `"${value}"`;
+                    output += `            ${key}: ${valueStr}`;
+                    if (index < ambientEntries.length - 1) output += ',';
+                    output += '\n';
+                });
+                output += '        }';
+                if (data.audio.sounds && Object.keys(data.audio.sounds).length > 0) {
+                    output += ',';
+                }
+                output += '\n';
+            }
+
+            // Sound effects
+            if (data.audio.sounds && Object.keys(data.audio.sounds).length > 0) {
+                output += '        sounds: {\n';
+                const soundEntries = Object.entries(data.audio.sounds);
+                soundEntries.forEach(([key, value], index) => {
+                    const valueStr = value === null ? 'null' : `"${value}"`;
+                    output += `            ${key}: ${valueStr}`;
+                    if (index < soundEntries.length - 1) output += ',';
+                    output += '\n';
+                });
+                output += '        }\n';
+            }
+
+            output += '    }\n';
+        }
+
         output += '};\n';
-        
+
         return output;
     }
     

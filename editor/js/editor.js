@@ -10,6 +10,7 @@ import { UIManager } from './ui-manager.js';
 import { StorageManager } from './storage-manager.js';
 import { ProjectManager } from './project-manager.js';
 import { CodeEditor } from './code-editor.js';
+import { AudioEditor } from './audio-editor.js';
 
 class GameDataEditor {
     constructor() {
@@ -29,6 +30,7 @@ class GameDataEditor {
         this.uiManager = new UIManager(this);
         this.sceneEditor = new SceneEditor(this);
         this.itemEditor = new ItemEditor(this);
+        this.audioEditor = new AudioEditor(this);
         this.storageManager = new StorageManager();
         this.projectManager = new ProjectManager(this, this.storageManager);
         this.codeEditor = new CodeEditor(this);
@@ -56,13 +58,48 @@ class GameDataEditor {
     }
     
     setupEventListeners() {
-        // Tab navigation
+        // Tab navigation (left sidebar)
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
                 this.switchTab(e.target.dataset.tab);
             });
         });
-        
+
+        // Preview tab navigation (right sidebar)
+        document.querySelectorAll('.preview-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                this.switchPreviewTab(e.target.dataset.previewTab);
+            });
+        });
+
+        // Dropdown menu
+        const menuBtn = document.getElementById('menu-btn');
+        const menuDropdown = document.getElementById('menu-dropdown');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuDropdown.contains(e.target) && e.target !== menuBtn) {
+                menuDropdown.classList.remove('show');
+            }
+        });
+
+        // Close dropdown when clicking a menu item
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+                menuDropdown.classList.remove('show');
+            });
+        });
+
+        // Toggle Code View
+        document.getElementById('toggle-code-btn').addEventListener('click', () => {
+            this.toggleCodeView();
+        });
+
         // Import/Export
         document.getElementById('import-btn').addEventListener('click', () => {
             this.dataManager.importData();
@@ -137,16 +174,59 @@ class GameDataEditor {
             document.getElementById('scenes-list').classList.add('active');
         } else if (tabName === 'items') {
             document.getElementById('items-list').classList.add('active');
-        } else if (tabName === 'code') {
-            document.getElementById('code-list').classList.add('active');
-            this.uiManager.showPanel('code-editor');
-        } else if (tabName === 'settings') {
-            document.getElementById('settings-panel').classList.add('active');
+        } else if (tabName === 'audio') {
+            document.getElementById('audio-list').classList.add('active');
+            this.audioEditor.show();
         }
     }
 
     /**
-     * Save current work (scene, item, or code) if any is being edited
+     * Switch preview tab (right sidebar)
+     */
+    switchPreviewTab(tabName) {
+        // Auto-save current work before switching
+        this.saveCurrentWork();
+
+        // Update preview tabs
+        document.querySelectorAll('.preview-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.previewTab === tabName);
+        });
+
+        // Update preview tab content
+        document.querySelectorAll('.preview-tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        if (tabName === 'preview') {
+            document.getElementById('preview-content').classList.add('active');
+        } else if (tabName === 'settings') {
+            document.getElementById('settings-tab-content').classList.add('active');
+        }
+    }
+
+    /**
+     * Toggle code view on/off
+     */
+    toggleCodeView() {
+        const codeEditor = document.getElementById('code-editor');
+        const toggleBtn = document.getElementById('toggle-code-btn');
+
+        if (codeEditor.classList.contains('active')) {
+            // Hide code editor
+            this.saveCurrentWork();
+            codeEditor.classList.remove('active');
+            toggleBtn.classList.remove('active');
+        } else {
+            // Show code editor
+            this.saveCurrentWork();
+            this.uiManager.showPanel('code-editor');
+            toggleBtn.classList.add('active');
+            this.codeEditor.show();
+        }
+    }
+
+    /**
+     * Save current work (scene, item, audio, or code) if any is being edited
      */
     saveCurrentWork() {
         // Check if scene editor is active
@@ -161,7 +241,13 @@ class GameDataEditor {
             this.itemEditor.saveIfValid();
         }
 
-        // Check if code editor is active
+        // Check if audio editor is active
+        const audioEditor = document.getElementById('audio-editor');
+        if (audioEditor && audioEditor.classList.contains('active')) {
+            this.audioEditor.saveIfValid();
+        }
+
+        // Check if code editor is active (in main content area)
         const codeEditor = document.getElementById('code-editor');
         if (codeEditor && codeEditor.classList.contains('active')) {
             this.codeEditor.saveIfValid();

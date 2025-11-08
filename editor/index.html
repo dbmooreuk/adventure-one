@@ -19,20 +19,31 @@
                 </div>
             </div>
             <div class="header-right">
-                <button id="projects-btn" class="btn btn-secondary">
-                    📁 Projects
+                <div class="dropdown">
+                    <button id="menu-btn" class="btn btn-secondary" title="Menu">
+                        ☰
+                    </button>
+                    <div id="menu-dropdown" class="dropdown-menu">
+                        <button id="projects-btn" class="dropdown-item">
+                            📁 Projects
+                        </button>
+                        <button id="new-project-btn" class="dropdown-item">
+                            ✨ New Project
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button id="import-btn" class="dropdown-item">
+                            📂 Import File
+                        </button>
+                        <button id="export-btn" class="dropdown-item">
+                            💾 Export File
+                        </button>
+                    </div>
+                </div>
+                <button id="toggle-code-btn" class="btn btn-secondary" title="Toggle Code View">
+                    💻 Code
                 </button>
-                <button id="save-project-btn" class="btn btn-secondary">
+                <button id="save-project-btn" class="btn btn-primary">
                     💾 Save Project
-                </button>
-                <button id="new-project-btn" class="btn btn-secondary">
-                    ✨ New Project
-                </button>
-                <button id="import-btn" class="btn btn-secondary">
-                    📂 Import File
-                </button>
-                <button id="export-btn" class="btn btn-primary">
-                    💾 Export File
                 </button>
             </div>
         </header>
@@ -48,11 +59,8 @@
                     <button class="nav-tab" data-tab="items">
                         📦 Items
                     </button>
-                    <button class="nav-tab" data-tab="code">
-                        💻 Code
-                    </button>
-                    <button class="nav-tab" data-tab="settings">
-                        ⚙️ Settings
+                    <button class="nav-tab" data-tab="audio">
+                        🔊 Audio
                     </button>
                 </nav>
 
@@ -94,25 +102,15 @@
                     </ul>
                 </div>
 
-                <!-- Code View -->
-                <div class="tab-content" id="code-list">
+                <!-- Audio List -->
+                <div class="tab-content" id="audio-list">
                     <div class="list-header">
-                        <h3>Code View</h3>
+                        <h3>Audio</h3>
                     </div>
-                    <div class="code-info">
+                    <div class="audio-info">
                         <p style="font-size: 0.9em; color: var(--text-muted); padding: var(--spacing-md);">
-                            Edit the game data directly as JavaScript code. Changes must be applied to update the visual editor.
+                            Configure ambient music and sound effects for your game.
                         </p>
-                    </div>
-                </div>
-
-                <!-- Settings -->
-                <div class="tab-content" id="settings-panel">
-                    <div class="list-header">
-                        <h3>Game Settings</h3>
-                    </div>
-                    <div class="settings-content">
-                        <!-- Populated by JS -->
                     </div>
                 </div>
             </aside>
@@ -196,37 +194,53 @@
                     </div>
                 </div>
 
-                <!-- Settings Editor -->
-                <div id="settings-editor" class="editor-panel">
+                <!-- Audio Editor -->
+                <div id="audio-editor" class="editor-panel">
                     <div class="panel-header">
-                        <h2>Game Settings</h2>
+                        <h2>🔊 Audio Configuration</h2>
                     </div>
-                    <form id="settings-form" class="editor-form">
-                        <!-- Settings form fields will be populated by JS -->
+                    <form id="audio-form" class="editor-form">
+                        <!-- Audio form fields will be populated by JS -->
                     </form>
                 </div>
             </main>
 
-            <!-- Right Sidebar - Preview/Canvas -->
+            <!-- Right Sidebar - Preview/Settings -->
             <aside class="editor-preview">
-                <div class="preview-header">
-                    <h3>Preview</h3>
-                    <button id="toggle-preview-btn" class="btn-icon" title="Toggle Preview">👁️</button>
-                </div>
-                <div id="preview-content" class="preview-content">
+                <nav class="preview-nav">
+                    <button class="preview-tab active" data-preview-tab="preview">
+                        👁️ Preview
+                    </button>
+                    <button class="preview-tab" data-preview-tab="settings">
+                        ⚙️ Settings
+                    </button>
+                </nav>
+
+                <!-- Preview Tab -->
+                <div class="preview-tab-content active" id="preview-content">
                     <!-- Canvas for visual positioning -->
                     <div id="scene-canvas" class="scene-canvas">
                         <div class="canvas-info">
                             <p>Select a scene to preview</p>
                         </div>
                     </div>
-                    
+
                     <!-- Item Preview -->
                     <div id="item-preview" class="item-preview">
                         <div class="preview-info">
                             <p>Select an item to preview</p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="preview-tab-content" id="settings-tab-content">
+                    <div class="settings-tab-header">
+                        <h3>Game Settings</h3>
+                    </div>
+                    <form id="settings-form" class="editor-form">
+                        <!-- Settings form fields will be populated by JS -->
+                    </form>
                 </div>
             </aside>
         </div>

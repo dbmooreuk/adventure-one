@@ -11,14 +11,6 @@ export class CodeEditor {
     }
     
     setupEventListeners() {
-        // Code view tab
-        const codeTab = document.querySelector('[data-tab="code"]');
-        if (codeTab) {
-            codeTab.addEventListener('click', () => {
-                this.show();
-            });
-        }
-        
         // Apply changes button
         document.getElementById('apply-code-btn')?.addEventListener('click', () => {
             this.applyChanges();
