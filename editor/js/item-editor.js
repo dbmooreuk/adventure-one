@@ -591,26 +591,70 @@ export class ItemEditor {
      * Create style field
      */
     createStyleField(style) {
-        const formGroup = document.createElement('div');
-        formGroup.className = 'form-group';
-        
-        const label = document.createElement('label');
-        label.textContent = 'Style Configuration';
-        formGroup.appendChild(label);
-        
-        const textarea = document.createElement('textarea');
-        textarea.name = 'style';
-        textarea.rows = 4;
-        textarea.value = style ? JSON.stringify(style, null, 2) : '';
-        textarea.placeholder = 'Leave empty or enter JSON:\n{\n  "className": "item--custom",\n  "hoverEffect": "glow"\n}';
-        formGroup.appendChild(textarea);
-        
-        const help = document.createElement('div');
-        help.className = 'form-help';
-        help.textContent = 'CSS class and hover effect (glow, pulse, shine, swing)';
-        formGroup.appendChild(help);
-        
-        return formGroup;
+        const container = document.createElement('div');
+        container.className = 'style-fields';
+
+        // CSS Class Name field
+        const classGroup = document.createElement('div');
+        classGroup.className = 'form-group';
+
+        const classLabel = document.createElement('label');
+        classLabel.textContent = 'CSS Class Name';
+        classGroup.appendChild(classLabel);
+
+        const classInput = document.createElement('input');
+        classInput.type = 'text';
+        classInput.name = 'style-className';
+        classInput.value = style?.className || '';
+        classInput.placeholder = 'e.g., item--torch';
+        classGroup.appendChild(classInput);
+
+        const classHelp = document.createElement('div');
+        classHelp.className = 'form-help';
+        classHelp.textContent = 'Custom CSS class for styling (optional)';
+        classGroup.appendChild(classHelp);
+
+        container.appendChild(classGroup);
+
+        // Hover Effect dropdown
+        const hoverGroup = document.createElement('div');
+        hoverGroup.className = 'form-group';
+
+        const hoverLabel = document.createElement('label');
+        hoverLabel.textContent = 'Hover Effect';
+        hoverGroup.appendChild(hoverLabel);
+
+        const hoverSelect = document.createElement('select');
+        hoverSelect.name = 'style-hoverEffect';
+
+        // Add empty option
+        const noneOption = document.createElement('option');
+        noneOption.value = '';
+        noneOption.textContent = '-- No Effect --';
+        hoverSelect.appendChild(noneOption);
+
+        // Add hover effect options
+        const hoverEffects = ['glow', 'pulse', 'shine', 'swing'];
+        hoverEffects.forEach(effect => {
+            const option = document.createElement('option');
+            option.value = effect;
+            option.textContent = effect.charAt(0).toUpperCase() + effect.slice(1);
+            if (style?.hoverEffect === effect) {
+                option.selected = true;
+            }
+            hoverSelect.appendChild(option);
+        });
+
+        hoverGroup.appendChild(hoverSelect);
+
+        const hoverHelp = document.createElement('div');
+        hoverHelp.className = 'form-help';
+        hoverHelp.textContent = 'Visual effect when hovering over the item';
+        hoverGroup.appendChild(hoverHelp);
+
+        container.appendChild(hoverGroup);
+
+        return container;
     }
     
     /**
@@ -628,7 +672,8 @@ export class ItemEditor {
             // Handle special fields (skip these, they're handled separately)
             if (name === 'position-x' || name === 'position-y' ||
                 name === 'size-w' || name === 'size-h' ||
-                name.startsWith('frame-') || name === 'sprite-mode') {
+                name.startsWith('frame-') || name === 'sprite-mode' ||
+                name.startsWith('style-')) {
                 return; // Handle separately
             }
 
@@ -746,16 +791,19 @@ export class ItemEditor {
         });
 
         console.log('🎨 Form Data after animation processing:', { ...formData });
-        
-        if (formData.style) {
-            try {
-                formData.style = formData.style.trim() ? JSON.parse(formData.style) : null;
-            } catch (e) {
-                console.error('Invalid style JSON');
-                formData.style = null;
-            }
+
+        // Build style object from separate fields
+        const styleClassName = form.querySelector('[name="style-className"]')?.value;
+        const styleHoverEffect = form.querySelector('[name="style-hoverEffect"]')?.value;
+
+        if (styleClassName || styleHoverEffect) {
+            formData.style = {};
+            if (styleClassName) formData.style.className = styleClassName;
+            if (styleHoverEffect) formData.style.hoverEffect = styleHoverEffect;
+        } else {
+            formData.style = null;
         }
-        
+
         return formData;
     }
     

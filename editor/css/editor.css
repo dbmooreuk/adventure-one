@@ -659,6 +659,13 @@ body {
     margin: 0;
 }
 
+/* Style Fields */
+.style-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
 /* Sprite Fields */
 .sprite-fields {
     margin-top: var(--spacing-md);
