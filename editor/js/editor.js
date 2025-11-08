@@ -13,6 +13,7 @@ import { CodeEditor } from './code-editor.js';
 import { AudioEditor } from './audio-editor.js';
 import { AssetsManager } from './assets-manager.js';
 import { SceneComposer } from './scene-composer.js';
+import { PropertiesPanel } from './properties-panel.js';
 
 class GameDataEditor {
     constructor() {
@@ -35,6 +36,7 @@ class GameDataEditor {
         this.audioEditor = new AudioEditor(this);
         this.assetsManager = new AssetsManager(this);
         this.sceneComposer = new SceneComposer(this);
+        this.propertiesPanel = new PropertiesPanel(this);
         this.storageManager = new StorageManager();
         this.projectManager = new ProjectManager(this, this.storageManager);
         this.codeEditor = new CodeEditor(this);
@@ -206,8 +208,8 @@ class GameDataEditor {
             content.classList.remove('active');
         });
 
-        if (tabName === 'preview') {
-            document.getElementById('preview-content').classList.add('active');
+        if (tabName === 'properties') {
+            document.getElementById('properties-content').classList.add('active');
         } else if (tabName === 'settings') {
             document.getElementById('settings-tab-content').classList.add('active');
         } else if (tabName === 'assets') {

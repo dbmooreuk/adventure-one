@@ -58,10 +58,18 @@ export class SceneComposer {
         document.getElementById('composer-fit')?.addEventListener('click', () => this.fitToView());
         document.getElementById('composer-grid-toggle')?.addEventListener('click', () => this.toggleGrid());
 
-        // Canvas wrapper for panning
+        // Canvas wrapper for panning and deselection
         const wrapper = document.querySelector('.composer-canvas-wrapper');
         if (wrapper) {
             wrapper.addEventListener('wheel', (e) => this.handleWheel(e));
+
+            // Click on canvas background to deselect
+            wrapper.addEventListener('click', (e) => {
+                // Only deselect if clicking directly on wrapper or canvas (not on items)
+                if (e.target === wrapper || e.target === this.canvas) {
+                    this.deselectItem();
+                }
+            });
         }
     }
 
@@ -355,6 +363,14 @@ export class SceneComposer {
         element.classList.add('selected');
 
         console.log('✓ Selected item:', item.name);
+
+        // Show properties in the properties panel
+        if (this.editor.propertiesPanel) {
+            // Switch to properties tab
+            this.editor.switchPreviewTab('properties');
+            // Show item properties
+            this.editor.propertiesPanel.showItemProperties(item);
+        }
     }
 
 
@@ -553,6 +569,30 @@ export class SceneComposer {
         const container = document.getElementById('composer-container');
         if (container) {
             container.classList.remove('active');
+        }
+
+        // Clear properties panel
+        if (this.editor.propertiesPanel) {
+            this.editor.propertiesPanel.clear();
+        }
+
+        // Clear selection
+        this.selectedItem = null;
+    }
+
+    /**
+     * Deselect current item
+     */
+    deselectItem() {
+        if (this.selectedItem) {
+            const prevEl = this.itemsLayer.querySelector(`[data-item-name="${this.selectedItem.name}"]`);
+            if (prevEl) prevEl.classList.remove('selected');
+            this.selectedItem = null;
+
+            // Clear properties panel
+            if (this.editor.propertiesPanel) {
+                this.editor.propertiesPanel.clear();
+            }
         }
     }
 }

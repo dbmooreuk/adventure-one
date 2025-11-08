@@ -1500,3 +1500,136 @@ body {
 .composer-grid.hidden {
     display: none;
 }
+
+/* ========================================
+ * Properties Panel
+ * ======================================== */
+
+.properties-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.properties-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--editor-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--editor-bg-light);
+}
+
+.properties-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--editor-text);
+    margin: 0;
+}
+
+.properties-form-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+.properties-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--editor-text-dim);
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.properties-empty-state p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.properties-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.properties-form .form-section {
+    background: var(--editor-bg-light);
+    border: 1px solid var(--editor-border);
+    border-radius: 6px;
+    padding: var(--spacing-md);
+}
+
+.properties-form .section-header {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--editor-accent);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.properties-form .form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.properties-form .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.properties-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.properties-form label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--editor-text-dim);
+    margin-bottom: var(--spacing-xs);
+}
+
+.properties-form input[type="text"],
+.properties-form input[type="number"],
+.properties-form textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: var(--editor-bg);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    color: var(--editor-text);
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.properties-form input[type="text"]:focus,
+.properties-form input[type="number"]:focus,
+.properties-form textarea:focus {
+    outline: none;
+    border-color: var(--editor-accent);
+}
+
+.properties-form input.readonly {
+    background: var(--editor-bg-lighter);
+    color: var(--editor-text-dim);
+    cursor: not-allowed;
+}
+
+.properties-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* Hit area overlay */
+.hit-area-overlay {
+    box-sizing: border-box;
+}
+
+#toggle-hit-areas-btn.active {
+    background: var(--editor-accent);
+    color: white;
+}
