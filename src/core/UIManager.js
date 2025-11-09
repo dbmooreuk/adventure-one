@@ -720,8 +720,48 @@ export class UIManager extends EventEmitter {
     showSceneText() {
         if (!this.currentSceneText) return
 
+        // Get the scene text with visible items appended
+        const textWithItems = this.getSceneTextWithItems()
+
         this.isSceneTextShowing = true
-        this.showMessage(this.currentSceneText, 0, true) // 0 duration = no auto-dismiss
+        this.showMessage(textWithItems, 0, true) // 0 duration = no auto-dismiss
+    }
+
+    /**
+     * Get scene text with visible items appended
+     * @returns {string} Scene text with "You see: item1, item2" appended
+     */
+    getSceneTextWithItems() {
+        let text = this.currentSceneText
+
+        // Get visible items (non-decor items in current scene)
+        const visibleItems = this.getVisibleSceneItems()
+
+        if (visibleItems.length > 0) {
+            const itemNames = visibleItems.map(item => item.longName || item.name)
+            text += ` You see: ${itemNames.join(', ')}.`
+        }
+
+        return text
+    }
+
+    /**
+     * Get visible scene items (excluding decor type)
+     * @returns {Array} Array of item data objects
+     */
+    getVisibleSceneItems() {
+        const sceneItems = this.game.sceneManager?.getCurrentSceneItems() || []
+        const gameData = this.game.gameData
+        const visibleItems = []
+
+        sceneItems.forEach(itemName => {
+            const itemData = gameData.sceneItems?.find(item => item.name === itemName)
+            if (itemData && itemData.type !== 'decor') {
+                visibleItems.push(itemData)
+            }
+        })
+
+        return visibleItems
     }
 
     /**
