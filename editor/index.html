@@ -39,6 +39,9 @@
                         </button>
                     </div>
                 </div>
+                <button id="toggle-flows-btn" class="btn btn-secondary" title="Toggle Flows Visualizer">
+                    Flows
+                </button>
                 <button id="toggle-composer-btn" class="btn btn-secondary" title="Toggle Visual Scene Composer">
                     Composer
                 </button>
@@ -205,6 +208,72 @@
                     <form id="audio-form" class="editor-form">
                         <!-- Audio form fields will be populated by JS -->
                     </form>
+                </div>
+
+                <!-- Flows Visualizer -->
+                <div id="flows-container" class="flows-container">
+                    <div class="flows-header">
+                        <h2>📊 Flows Visualizer</h2>
+                        <nav class="flows-tabs">
+                            <button class="flows-tab active" data-flows-tab="flowchart">
+                                Flows
+                            </button>
+                            <button class="flows-tab" data-flows-tab="graph">
+                                Graph
+                            </button>
+                            <button class="flows-tab" data-flows-tab="tree">
+                                Tree
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="flows-content">
+                        <!-- Flowchart Tab -->
+                        <div id="flowchart-view" class="flows-view active">
+                            <div class="flows-view-header">
+                                <h3>Scene Flow Chart</h3>
+                                <p class="flows-description">Visual representation of scene connections and navigation paths</p>
+                                <div class="flows-legend">
+                                    <span class="legend-item"><span class="legend-box" style="background: #4a9eff;"></span> Scene</span>
+                                    <span class="legend-item"><span class="legend-box" style="background: #f9f;"></span> Puzzle</span>
+                                    <span class="legend-item"><span class="legend-line"></span> Sequential</span>
+                                    <span class="legend-item"><span class="legend-line legend-dashed"></span> Link</span>
+                                </div>
+                            </div>
+                            <div id="flowchart-canvas" class="flows-canvas">
+                                <!-- Flowchart will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Graph Tab -->
+                        <div id="graph-view" class="flows-view">
+                            <div class="flows-view-header">
+                                <h3>Item Dependency Graph</h3>
+                                <p class="flows-description">Shows relationships between items (useWith, combineWith, results)</p>
+                                <div class="flows-legend">
+                                    <span class="legend-item"><span class="legend-box" style="background: #ffd700;"></span> Item</span>
+                                    <span class="legend-item"><span class="legend-box" style="background: #ff69b4;"></span> Target</span>
+                                    <span class="legend-item"><span class="legend-box" style="background: #20b2aa;"></span> Link</span>
+                                    <span class="legend-item"><span class="legend-line" style="background: #4a9eff;"></span> Use</span>
+                                    <span class="legend-item"><span class="legend-line legend-dashed" style="background: #ff9800;"></span> Combine</span>
+                                    <span class="legend-item"><span class="legend-line legend-thick" style="background: #4caf50;"></span> Creates</span>
+                                </div>
+                            </div>
+                            <div id="graph-canvas" class="flows-canvas">
+                                <!-- Graph will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Tree Tab -->
+                        <div id="tree-view" class="flows-view">
+                            <div class="flows-view-header">
+                                <h3>Scene Tree Map</h3>
+                                <p class="flows-description">Hierarchical view of scenes and their items</p>
+                            </div>
+                            <div id="tree-canvas" class="flows-canvas">
+                                <!-- Tree will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Visual Scene Composer -->

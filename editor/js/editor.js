@@ -14,6 +14,7 @@ import { AudioEditor } from './audio-editor.js';
 import { AssetsManager } from './assets-manager.js';
 import { SceneComposer } from './scene-composer.js';
 import { PropertiesPanel } from './properties-panel.js';
+import { FlowsVisualizer } from './flows-visualizer.js';
 
 class GameDataEditor {
     constructor() {
@@ -37,6 +38,7 @@ class GameDataEditor {
         this.assetsManager = new AssetsManager(this);
         this.sceneComposer = new SceneComposer(this);
         this.propertiesPanel = new PropertiesPanel(this);
+        this.flowsVisualizer = new FlowsVisualizer(this);
         this.storageManager = new StorageManager();
         this.projectManager = new ProjectManager(this, this.storageManager);
         this.codeEditor = new CodeEditor(this);
@@ -99,6 +101,11 @@ class GameDataEditor {
             item.addEventListener('click', () => {
                 menuDropdown.classList.remove('show');
             });
+        });
+
+        // Toggle Flows
+        document.getElementById('toggle-flows-btn').addEventListener('click', () => {
+            this.toggleFlows();
         });
 
         // Toggle Composer
@@ -216,6 +223,27 @@ class GameDataEditor {
             document.getElementById('assets-tab-content').classList.add('active');
             // Reload assets when tab is shown
             this.assetsManager.loadAssets();
+        }
+    }
+
+    /**
+     * Toggle flows visualizer on/off
+     */
+    toggleFlows() {
+        const flows = document.getElementById('flows-container');
+        const toggleBtn = document.getElementById('toggle-flows-btn');
+
+        if (flows.classList.contains('active')) {
+            // Hide flows
+            this.saveCurrentWork();
+            this.flowsVisualizer.hide();
+            toggleBtn.classList.remove('active');
+        } else {
+            // Show flows
+            this.saveCurrentWork();
+            this.uiManager.showPanel('flows-container');
+            toggleBtn.classList.add('active');
+            this.flowsVisualizer.show();
         }
     }
 
