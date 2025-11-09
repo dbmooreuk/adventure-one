@@ -60,6 +60,7 @@ export class UIManager extends EventEmitter {
             btnExamine: document.querySelector('.btn-examine'),
             btnGet: document.querySelector('.btn-get'),
             btnUse: document.querySelector('.btn-use'),
+            btnCombine: document.querySelector('.btn-combine'),
             btnLook: document.querySelector('.btn-look'),
 
             // Navigation buttons
@@ -92,6 +93,7 @@ export class UIManager extends EventEmitter {
         this.elements.btnExamine?.addEventListener('click', () => this.setAction('examine'))
         this.elements.btnGet?.addEventListener('click', () => this.setAction('get'))
         this.elements.btnUse?.addEventListener('click', () => this.setAction('use'))
+        this.elements.btnCombine?.addEventListener('click', () => this.setAction('combine'))
         this.elements.btnLook?.addEventListener('click', () => this.showSceneText())
 
         // Navigation buttons
@@ -149,27 +151,27 @@ export class UIManager extends EventEmitter {
 
     /**
      * Set current action
-     * @param {string} action - Action name ('examine', 'get', 'use')
+     * @param {string} action - Action name ('examine', 'get', 'use', 'combine')
      */
     setAction(action) {
         this.currentAction = action
-        
+
         // Update button states
         document.querySelectorAll('.btn-action').forEach(btn => {
             btn.classList.remove('active', 'inactive')
             btn.classList.add('inactive')
         })
-        
+
         const activeButton = document.querySelector(`.btn-${action}`)
         if (activeButton) {
             activeButton.classList.remove('inactive')
             activeButton.classList.add('active')
         }
-        
+
         // Update body class for cursor changes
-        document.body.className = document.body.className.replace(/\b(examine|get|use)\b/g, '')
+        document.body.className = document.body.className.replace(/\b(examine|get|use|combine)\b/g, '')
         document.body.classList.add(action)
-        
+
         this.emit('actionSelected', action)
     }
 

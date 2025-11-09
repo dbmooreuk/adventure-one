@@ -179,6 +179,32 @@ export const itemSchema = {
         options: OUTCOMES,
         help: 'What happens after using the item (can select multiple)'
     },
+    combineWith: {
+        type: 'item-select',
+        required: false,
+        label: 'Combine With',
+        help: 'Item this can be combined with (inventory only)'
+    },
+    combineResult: {
+        type: 'item-select',
+        required: false,
+        label: 'Combine Result',
+        help: 'Item created when combined'
+    },
+    combineMessage: {
+        type: 'string',
+        required: false,
+        label: 'Combine Message',
+        help: 'Message shown when items are combined'
+    },
+    combinePoints: {
+        type: 'number',
+        required: false,
+        label: 'Combine Points',
+        help: 'Points awarded for combining',
+        default: 0,
+        min: 0
+    },
     linkToScene: {
         type: 'string',
         required: false,

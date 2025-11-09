@@ -110,7 +110,15 @@ export class ItemEditor {
         
         interactionSection.appendChild(this.editor.uiManager.createFormField('points', itemSchema.points, item.points, item));
         form.appendChild(interactionSection);
-        
+
+        // Combine Section
+        const combineSection = this.createSection('Combine Properties (Optional)');
+        combineSection.appendChild(this.editor.uiManager.createFormField('combineWith', itemSchema.combineWith, item.combineWith, item));
+        combineSection.appendChild(this.editor.uiManager.createFormField('combineResult', itemSchema.combineResult, item.combineResult, item));
+        combineSection.appendChild(this.editor.uiManager.createFormField('combineMessage', itemSchema.combineMessage, item.combineMessage, item));
+        combineSection.appendChild(this.editor.uiManager.createFormField('combinePoints', itemSchema.combinePoints, item.combinePoints, item));
+        form.appendChild(combineSection);
+
         // Visual Section
         const visualSection = this.createSection('Visual Properties');
         visualSection.appendChild(this.editor.uiManager.createFormField('image', itemSchema.image, item.image, item));

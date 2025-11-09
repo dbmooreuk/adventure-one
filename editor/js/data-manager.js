@@ -221,6 +221,14 @@ export class DataManager {
         if (item.useMessage) output += `            useMessage: "${this.escapeString(item.useMessage)}",\n`;
         if (item.useResult) output += `            useResult: "${item.useResult}",\n`;
 
+        // Combine properties
+        if (item.combineWith) output += `            combineWith: "${item.combineWith}",\n`;
+        if (item.combineResult) output += `            combineResult: "${item.combineResult}",\n`;
+        if (item.combineMessage) output += `            combineMessage: "${this.escapeString(item.combineMessage)}",\n`;
+        if (item.combinePoints !== undefined && item.combinePoints !== null) {
+            output += `            combinePoints: ${item.combinePoints},\n`;
+        }
+
         // Handle outcome - can be string or array
         if (item.outcome) {
             if (Array.isArray(item.outcome)) {

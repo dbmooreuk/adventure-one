@@ -168,6 +168,9 @@ export class InventoryManager extends EventEmitter {
             case 'use':
                 this.selectItemForUse(itemName)
                 break
+            case 'combine':
+                this.selectItemForCombine(itemName)
+                break
             case 'get':
                 // Can't get items already in inventory
                 this.game.uiManager?.showMessage("You already have this!")
@@ -203,11 +206,27 @@ export class InventoryManager extends EventEmitter {
         if (this.selectedItems.includes(itemName)) {
             // Deselect if already selected
             this.deselectItem(itemName)
+        } else {
+            // For use mode, only allow one item selection
+            this.clearSelection()
+            this.selectedItems.push(itemName)
+            this.emit('itemSelected', itemName)
+        }
+    }
+
+    /**
+     * Select an item for combining
+     * @param {string} itemName - Name of the item to select
+     */
+    selectItemForCombine(itemName) {
+        if (this.selectedItems.includes(itemName)) {
+            // Deselect if already selected
+            this.deselectItem(itemName)
         } else if (this.selectedItems.length < 2) {
             // Select item (max 2 for combinations)
             this.selectedItems.push(itemName)
             this.emit('itemSelected', itemName)
-            
+
             // If two items selected, try to combine them
             if (this.selectedItems.length === 2) {
                 this.attemptItemCombination()
@@ -264,8 +283,11 @@ export class InventoryManager extends EventEmitter {
         if (combination) {
             this.performItemCombination(combination)
         } else {
-            this.game.uiManager?.showMessage("These items can't be combined.")
+            // Show random failure message
+            this.game.uiManager?.showMessage(getRandomFailureMessage())
+            // Clear selection and exit combine mode
             this.clearSelection()
+            this.game.uiManager?.setAction(null)
         }
     }
 
@@ -279,10 +301,10 @@ export class InventoryManager extends EventEmitter {
         const gameData = this.game.gameData
         const sceneItems = gameData.sceneItems || []
 
-        // Check both orders of combination
+        // Check both orders of combination using combineWith property
         for (const itemData of sceneItems) {
-            if ((itemData.name === item1 && itemData.useWith === item2) ||
-                (itemData.name === item2 && itemData.useWith === item1)) {
+            if ((itemData.name === item1 && itemData.combineWith === item2) ||
+                (itemData.name === item2 && itemData.combineWith === item1)) {
                 return itemData
             }
         }
@@ -296,7 +318,12 @@ export class InventoryManager extends EventEmitter {
      */
     performItemCombination(combination) {
         const [item1, item2] = this.selectedItems
-        const resultItem = combination.useResult
+        const resultItem = combination.combineResult
+
+        // Get item data for message formatting
+        const item1Data = this.getItemData(item1)
+        const item2Data = this.getItemData(item2)
+        const resultData = this.getItemData(resultItem)
 
         // Remove the combined items
         this.removeItem(item1)
@@ -307,18 +334,21 @@ export class InventoryManager extends EventEmitter {
             this.addItem(resultItem)
         }
 
-        // Show message
-        const message = combination.useMessage || `You combine the items and create ${resultItem}.`
+        // Show message with item names
+        const defaultMessage = `You combine the ${item1Data?.longName || item1} and the ${item2Data?.longName || item2} to create ${resultData?.longName || resultItem}!`
+        const message = combination.combineMessage || defaultMessage
         this.game.uiManager?.showMessage(message)
 
         // Add score if specified (use combination as achievement ID)
-        if (combination.points) {
+        const points = combination.combinePoints || 0
+        if (points > 0) {
             const achievementId = `combine_${item1}_${item2}`
-            this.game.addScore(combination.points, achievementId)
+            this.game.addScore(points, achievementId)
         }
 
-        // Clear selection
+        // Clear selection and exit combine mode
         this.clearSelection()
+        this.game.uiManager?.setAction(null)
 
         this.emit('itemsCombined', { item1, item2, result: resultItem })
     }

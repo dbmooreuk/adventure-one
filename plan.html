@@ -340,6 +340,88 @@
             flex: 1;
         }
 
+        /* Combinations Styles */
+        .combinations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .combination-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: auto 60px auto 1fr;
+            gap: 20px;
+            align-items: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.2s;
+        }
+
+        .combination-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .combo-ingredients {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .combo-arrow {
+            font-size: 24px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .combo-result {
+            display: flex;
+            align-items: center;
+        }
+
+        .combo-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .combo-message {
+            color: #666;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .combo-points {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .item-badge {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .item-badge.result {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .no-combinations {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .items-grid {
                 grid-template-columns: 1fr;
@@ -347,6 +429,16 @@
 
             .legend-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .combination-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .combo-arrow {
+                transform: rotate(90deg);
+                text-align: center;
             }
         }
     </style>
@@ -508,6 +600,19 @@
         <div id="scenes-container">
             <!-- Scenes will be dynamically inserted here -->
         </div>
+
+        <!-- Item Combinations Section -->
+        <div class="scene-card" style="margin-top: 30px;">
+            <div class="scene-header">
+                <div class="scene-title">🔧 Item Combinations</div>
+                <div class="scene-meta">
+                    <span class="badge badge-puzzle" id="total-combinations">0</span>
+                </div>
+            </div>
+            <div id="combinations-container">
+                <!-- Combinations will be dynamically inserted here -->
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -529,6 +634,9 @@
                 const sceneCard = createSceneCard(scene);
                 container.appendChild(sceneCard);
             });
+
+            // Render combinations
+            renderCombinations();
         }
 
         function createSceneCard(scene) {
@@ -762,6 +870,57 @@
                     </div>
                 </div>
             `;
+        }
+
+        function renderCombinations() {
+            const container = document.getElementById('combinations-container');
+
+            // Find all items with combineWith property
+            const combinations = gameData.sceneItems.filter(item => item.combineWith);
+
+            // Update count badge
+            document.getElementById('total-combinations').textContent = combinations.length;
+
+            if (combinations.length === 0) {
+                container.innerHTML = '<div class="no-combinations">No item combinations defined yet.</div>';
+                return;
+            }
+
+            const listDiv = document.createElement('div');
+            listDiv.className = 'combinations-list';
+
+            combinations.forEach(item => {
+                const item2 = gameData.sceneItems.find(i => i.name === item.combineWith);
+                const resultItem = gameData.sceneItems.find(i => i.name === item.combineResult);
+
+                const comboDiv = document.createElement('div');
+                comboDiv.className = 'combination-item';
+
+                const item1Name = item.longName || item.name;
+                const item2Name = item2?.longName || item.combineWith;
+                const resultName = resultItem?.longName || item.combineResult;
+
+                comboDiv.innerHTML = `
+                    <div class="combo-ingredients">
+                        <span class="item-badge">${item1Name}</span>
+                        <span style="font-weight: bold; color: #999;">+</span>
+                        <span class="item-badge">${item2Name}</span>
+                    </div>
+                    <div class="combo-arrow">→</div>
+                    <div class="combo-result">
+                        <span class="item-badge result">${resultName}</span>
+                    </div>
+                    <div class="combo-details">
+                        ${item.combineMessage ? `<div class="combo-message">"${item.combineMessage}"</div>` : ''}
+                        ${item.combinePoints ? `<div class="combo-points">+${item.combinePoints} points</div>` : ''}
+                    </div>
+                `;
+
+                listDiv.appendChild(comboDiv);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(listDiv);
         }
 
         // Initial render
