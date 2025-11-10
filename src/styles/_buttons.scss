@@ -15,7 +15,7 @@
     text-transform: uppercase;
     border: 2px solid $main-yellow;
     border-radius: 4px;
-    background: $dark-blue;
+    background: $darkest-marine;
     color: $main-yellow;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -24,7 +24,7 @@
 
     &:hover:not(:disabled) {
         background: $main-yellow;
-        color: $dark-blue;
+        color: $darkest-marine;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
@@ -48,7 +48,7 @@
 /* Button Variants */
 .btn--primary {
     background: $main-yellow;
-    color: $dark-blue;
+    color: $darkest-marine;
     border-color: $main-yellow;
 
     &:hover:not(:disabled) {
@@ -65,14 +65,14 @@
     &:hover:not(:disabled) {
         background: $main-yellow;
         border-color: $main-yellow;
-        color: $dark-blue;
+        color: $darkest-marine;
     }
 }
 
 .btn--action {
     background: linear-gradient(135deg, $main-yellow, $main-pink);
     border: none;
-    color: $dark-blue;
+    color: $darkest-marine;
     font-size: 1.1rem;
     padding: 1rem 2rem;
 

@@ -128,7 +128,7 @@
     &--selected {
         background: $main-pink;
         border-color: $main-pink;
-        color: $dark-blue;
+        color: $darkest-marine;
         box-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
 
         &::after {
@@ -144,7 +144,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.8rem;
-            color: $dark-blue;
+            color: $darkest-marine;
             font-weight: bold;
         }
     }

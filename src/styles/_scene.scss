@@ -32,7 +32,7 @@
     text-align: center;
     max-width: 600px;
     padding: $spacing-xxl;
-    background: rgba($dark-blue, 0.8);
+    background: rgba($darkest-marine, 0.8);
     border-radius: $border-radius-lg;
     @include shadow-xl;
 }
@@ -101,7 +101,7 @@
   bottom: $spacing-lg;
   left: $spacing-lg;
   font-size: 1rem;
-  background: rgba($dark-blue, 0.9);
+  background: rgba($darkest-marine, 0.9);
   padding: $spacing-md $spacing-lg;
   border-radius: $border-radius-md;
   backdrop-filter: blur(10px);
