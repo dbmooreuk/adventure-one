@@ -357,6 +357,8 @@ button.prop {
   top: calc(var(--hit-offset-y, 0px) * -1);
   left: calc(var(--hit-offset-x, 0px) * -1);
   cursor: pointer;
+  pointer-events: auto;
+  z-index: -1;
   /* Debug: uncomment to visualize hit area */
   /* background: rgba(255, 0, 0, 0.2); */
 }
@@ -663,6 +665,8 @@ button.prop {
   top: calc(var(--hit-offset-y, 0px) * -1);
   left: calc(var(--hit-offset-x, 0px) * -1);
   cursor: pointer;
+  pointer-events: auto;
+  z-index: -1;
   /* Debug: uncomment to visualize hit area */
   /* background: rgba(255, 0, 0, 0.2); */
 }
