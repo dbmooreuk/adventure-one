@@ -2281,7 +2281,6 @@ body {
   transform-origin: top left;
   display: flex;
   flex-direction: column;
-  background-color: #F4FED3;
   overflow: hidden;
 }
 

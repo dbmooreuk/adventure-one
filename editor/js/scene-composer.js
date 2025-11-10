@@ -119,9 +119,12 @@ export class SceneComposer {
      */
     async loadBackground(backgroundPath) {
         return new Promise((resolve) => {
+            // Get background color from current scene
+            const bgColor = this.currentScene?.backgroundColor || '#000000';
+
             if (!backgroundPath) {
-                console.log('No background image specified, using black background');
-                this.ctx.fillStyle = '#000';
+                console.log('No background image specified, using background color:', bgColor);
+                this.ctx.fillStyle = bgColor;
                 this.ctx.fillRect(0, 0, this.baseWidth, this.baseHeight);
                 resolve();
                 return;
@@ -135,8 +138,8 @@ export class SceneComposer {
                 resolve();
             };
             img.onerror = () => {
-                console.warn('Failed to load background:', backgroundPath, '- using black background');
-                this.ctx.fillStyle = '#000';
+                console.warn('Failed to load background:', backgroundPath, '- using background color:', bgColor);
+                this.ctx.fillStyle = bgColor;
                 this.ctx.fillRect(0, 0, this.baseWidth, this.baseHeight);
                 // Still resolve (don't reject) so the scene can load
                 resolve();
@@ -154,11 +157,16 @@ export class SceneComposer {
     drawBackground() {
         this.ctx.clearRect(0, 0, this.baseWidth, this.baseHeight);
 
+        // Get background color from current scene
+        const bgColor = this.currentScene?.backgroundColor || '#000000';
+
+        // Fill with background color first
+        this.ctx.fillStyle = bgColor;
+        this.ctx.fillRect(0, 0, this.baseWidth, this.baseHeight);
+
+        // Draw image on top if available
         if (this.backgroundImage) {
             this.ctx.drawImage(this.backgroundImage, 0, 0, this.baseWidth, this.baseHeight);
-        } else {
-            this.ctx.fillStyle = '#000';
-            this.ctx.fillRect(0, 0, this.baseWidth, this.baseHeight);
         }
 
         // Draw grid if enabled

@@ -537,21 +537,30 @@ export class UIManager extends EventEmitter {
     }
 
     /**
-     * Update scene background image
+     * Update scene background image and color
      * @param {Object} sceneData - Scene data
      */
     updateSceneBackground(sceneData) {
         const sceneContainer = this.elements.sceneContainer
         if (!sceneContainer) return
 
+        // Set background color (shown behind image or when no image)
+        if (sceneData.backgroundColor) {
+            sceneContainer.style.backgroundColor = sceneData.backgroundColor
+            console.log(`🎨 Set background color: ${sceneData.backgroundColor}`)
+        } else {
+            sceneContainer.style.backgroundColor = '#000000'
+        }
+
+        // Set background image (if specified)
         if (sceneData.backgroundImage) {
             const imagePath = `/src/assets/images/backgrounds/${sceneData.backgroundImage}`
             sceneContainer.style.backgroundImage = `url('${imagePath}')`
             console.log(`🖼️ Set background image: ${imagePath}`)
         } else {
-            // Use default gradient if no image specified
+            // Clear background image if not specified
             sceneContainer.style.backgroundImage = ''
-            console.log(`🖼️ Using default background (no image specified)`)
+            console.log(`🖼️ No background image (using color only)`)
         }
     }
 

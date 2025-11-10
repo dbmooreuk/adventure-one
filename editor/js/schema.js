@@ -70,6 +70,13 @@ export const sceneSchema = {
         label: 'Background Image',
         help: 'Background image filename'
     },
+    backgroundColor: {
+        type: 'color',
+        required: false,
+        label: 'Background Color',
+        help: 'Hex color value (e.g., #1a0a00) - shown behind image or when no image is set',
+        default: '#000000'
+    },
     items: {
         type: 'multiselect',
         required: false,

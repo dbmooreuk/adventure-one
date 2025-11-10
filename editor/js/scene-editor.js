@@ -88,6 +88,7 @@ export class SceneEditor {
         // Assets Section
         const assetsSection = this.createSection('Assets');
         assetsSection.appendChild(this.editor.uiManager.createFormField('backgroundImage', sceneSchema.backgroundImage, scene.backgroundImage, scene));
+        assetsSection.appendChild(this.editor.uiManager.createFormField('backgroundColor', sceneSchema.backgroundColor, scene.backgroundColor, scene));
         assetsSection.appendChild(this.editor.uiManager.createFormField('sceneMusic', sceneSchema.sceneMusic, scene.sceneMusic, scene));
         form.appendChild(assetsSection);
         

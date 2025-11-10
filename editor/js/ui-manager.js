@@ -390,6 +390,13 @@ export class UIManager {
                 if (fieldDef.step !== undefined) input.step = fieldDef.step;
                 break;
 
+            case 'color':
+                input = document.createElement('input');
+                input.type = 'text';
+                input.value = value || fieldDef.default || '';
+                input.placeholder = '#000000';
+                break;
+
             case 'image':
                 // Create a container for input and preview
                 const imageContainer = document.createElement('div');

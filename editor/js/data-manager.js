@@ -120,9 +120,13 @@ export class DataManager {
             if (scene.sceneMusic) {
                 output += `            sceneMusic: "${scene.sceneMusic}",\n`;
             }
-            
+
             if (scene.backgroundImage) {
                 output += `            backgroundImage: "${scene.backgroundImage}",\n`;
+            }
+
+            if (scene.backgroundColor) {
+                output += `            backgroundColor: "${scene.backgroundColor}",\n`;
             }
             
             if (scene.items && scene.items.length > 0) {
