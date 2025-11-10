@@ -53,13 +53,13 @@
 
 /* Mobile Touch Hitbox Enhancement */
 /* Creates larger invisible clickable area for better mobile UX */
-.scene-object[data-hit-w]::before {
+.scene-object[data-has-hit-area]::before {
     content: '';
     position: absolute;
-    width: attr(data-hit-w px);
-    height: attr(data-hit-h px);
-    top: calc(var(--hit-offset-y, 0) * -1px);
-    left: calc(var(--hit-offset-x, 0) * -1px);
+    width: var(--hit-w, 100%);
+    height: var(--hit-h, 100%);
+    top: calc(var(--hit-offset-y, 0px) * -1);
+    left: calc(var(--hit-offset-x, 0px) * -1);
     cursor: pointer;
     /* Debug: uncomment to visualize hit area */
     /* background: rgba(255, 0, 0, 0.2); */

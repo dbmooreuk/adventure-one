@@ -62,6 +62,21 @@ export class SceneItem {
             element.style.zIndex = this.itemData.zIndex
         }
 
+        // Apply larger hit area if specified (for better touch/click targets)
+        if (this.itemData.hitW || this.itemData.hitH) {
+            const hitW = this.itemData.hitW || this.itemData.size[0]
+            const hitH = this.itemData.hitH || this.itemData.size[1]
+            const offsetX = (hitW - this.itemData.size[0]) / 2
+            const offsetY = (hitH - this.itemData.size[1]) / 2
+
+            // Use CSS custom properties for ::before pseudo-element
+            element.style.setProperty('--hit-w', `${hitW}px`)
+            element.style.setProperty('--hit-h', `${hitH}px`)
+            element.style.setProperty('--hit-offset-x', `${offsetX}px`)
+            element.style.setProperty('--hit-offset-y', `${offsetY}px`)
+            element.setAttribute('data-has-hit-area', 'true')
+        }
+
         // Disable pointer events if non-interactive
         if (this.itemData.nonInteractive) {
             element.style.pointerEvents = 'none'

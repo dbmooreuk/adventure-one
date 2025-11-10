@@ -89,12 +89,13 @@ export class SceneObject {
             const hitH = this.itemData.hitH || this.itemData.size[1]
             const offsetX = (hitW - this.itemData.size[0]) / 2
             const offsetY = (hitH - this.itemData.size[1]) / 2
-            
-            // Use ::before pseudo-element for larger hit area
-            el.setAttribute('data-hit-w', hitW)
-            el.setAttribute('data-hit-h', hitH)
-            el.setAttribute('data-hit-offset-x', offsetX)
-            el.setAttribute('data-hit-offset-y', offsetY)
+
+            // Use CSS custom properties for ::before pseudo-element
+            el.style.setProperty('--hit-w', `${hitW}px`)
+            el.style.setProperty('--hit-h', `${hitH}px`)
+            el.style.setProperty('--hit-offset-x', `${offsetX}px`)
+            el.style.setProperty('--hit-offset-y', `${offsetY}px`)
+            el.setAttribute('data-has-hit-area', 'true')
         }
 
         // Add accessibility attributes

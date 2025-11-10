@@ -32,28 +32,42 @@
     &:active {
         filter: brightness(0.9);
     }
+}
 
-    /* Item with image */
-    &--with-image {
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        font-size: 0.7rem;
-        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-    }
+/* Hit Area Enhancement for Scene Items */
+/* Creates larger invisible clickable area for better touch/click targets */
+.scene-item[data-has-hit-area]::before {
+    content: '';
+    position: absolute;
+    width: var(--hit-w, 100%);
+    height: var(--hit-h, 100%);
+    top: calc(var(--hit-offset-y, 0px) * -1);
+    left: calc(var(--hit-offset-x, 0px) * -1);
+    cursor: pointer;
+    /* Debug: uncomment to visualize hit area */
+    /* background: rgba(255, 0, 0, 0.2); */
+}
 
-    /* Item types - base border colors */
-    &--item {
-        border-color: $main-yellow;
-    }
+/* Item with image */
+.scene-item--with-image {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0.7rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
 
-    &--target {
-        border-color: $main-pink;
-    }
+/* Item types - base border colors */
+.scene-item--item {
+    border-color: $main-yellow;
+}
 
-    &--link {
-        border-color: $main-marine;
-    }
+.scene-item--target {
+    border-color: $main-pink;
+}
+
+.scene-item--link {
+    border-color: $main-marine;
 }
 
 /* Type-specific hover borders for scene items (matching SceneObject behavior) */

@@ -50,9 +50,10 @@ export class PropertiesPanel {
 
         // Visual Properties Section
         const visualSection = this.createSection('Visual Properties');
-        
-        // Z-Index
-        visualSection.appendChild(this.createField('zIndex', 'Layer (Z-Index)', item.zIndex || 1, 'number', false, { min: 0, max: 100 }));
+
+        // Z-Index - show actual value or empty string if not set
+        const zIndexValue = item.zIndex !== undefined && item.zIndex !== null ? item.zIndex : '';
+        visualSection.appendChild(this.createField('zIndex', 'Layer (Z-Index)', zIndexValue, 'number', false, { min: 0, max: 100, placeholder: 'auto' }));
         
         // Size (width and height)
         const sizeRow = document.createElement('div');
@@ -148,6 +149,11 @@ export class PropertiesPanel {
         const formData = new FormData(form);
         const updates = {};
 
+        console.log('📝 Properties Panel - Form Data Entries:');
+        for (const [key, value] of formData.entries()) {
+            console.log(`  ${key}: ${value}`);
+        }
+
         // Collect all values
         for (const [key, value] of formData.entries()) {
             if (key === 'name') {
@@ -166,15 +172,22 @@ export class PropertiesPanel {
                 if (key === 'hitH') updates.hitH = Number(value);
             } else if (key === 'zIndex') {
                 updates[key] = Number(value);
+                console.log(`🎨 Z-Index in updates object:`, updates[key]);
             } else {
                 updates[key] = value;
             }
         }
 
+        console.log('📝 Updates object:', updates);
+
         // Update the item in the data
         const itemIndex = this.editor.data.sceneItems.findIndex(i => i.name === this.currentItem.name);
         if (itemIndex !== -1) {
+            console.log(`📝 Before update - item data:`, JSON.parse(JSON.stringify(this.editor.data.sceneItems[itemIndex])));
+
             Object.assign(this.editor.data.sceneItems[itemIndex], updates);
+
+            console.log(`📝 After update - item data:`, JSON.parse(JSON.stringify(this.editor.data.sceneItems[itemIndex])));
 
             // Debug log for z-index changes
             if (updates.zIndex !== undefined) {

@@ -36,6 +36,9 @@ export class SceneComposer {
         this.gridEnabled = false;
         this.gridSize = 10;
 
+        // Hit area visualization
+        this.hitAreaVisible = false;
+
         this.init();
     }
 
@@ -64,6 +67,7 @@ export class SceneComposer {
         document.getElementById('composer-zoom-out')?.addEventListener('click', () => this.zoomOut());
         document.getElementById('composer-fit')?.addEventListener('click', () => this.fitToView());
         document.getElementById('composer-grid-toggle')?.addEventListener('click', () => this.toggleGrid());
+        document.getElementById('composer-hitarea-toggle')?.addEventListener('click', () => this.toggleHitAreas());
 
         // Canvas wrapper for panning and deselection
         const wrapper = document.querySelector('.composer-canvas-wrapper');
@@ -244,6 +248,27 @@ export class SceneComposer {
             itemEl.style.backgroundSize = 'contain';
             itemEl.style.backgroundRepeat = 'no-repeat';
             itemEl.style.backgroundPosition = 'center';
+        }
+
+        // Hit area visualization overlay
+        if (item.hitW || item.hitH) {
+            const hitW = item.hitW || width;
+            const hitH = item.hitH || height;
+            const offsetX = (hitW - width) / 2;
+            const offsetY = (hitH - height) / 2;
+
+            const hitArea = document.createElement('div');
+            hitArea.className = 'composer-hit-area';
+            hitArea.style.position = 'absolute';
+            hitArea.style.left = `${-offsetX}px`;
+            hitArea.style.top = `${-offsetY}px`;
+            hitArea.style.width = `${hitW}px`;
+            hitArea.style.height = `${hitH}px`;
+            hitArea.style.border = '2px dashed rgba(255, 0, 0, 0.6)';
+            hitArea.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+            hitArea.style.pointerEvents = 'none';
+            hitArea.style.display = this.hitAreaVisible ? 'block' : 'none';
+            itemEl.appendChild(hitArea);
         }
 
         // Label
@@ -707,6 +732,27 @@ export class SceneComposer {
         const btn = document.getElementById('composer-grid-toggle');
         if (btn) {
             btn.classList.toggle('active', this.gridEnabled);
+        }
+    }
+
+    /**
+     * Toggle hit area visualization
+     */
+    toggleHitAreas() {
+        this.hitAreaVisible = !this.hitAreaVisible;
+
+        // Update all item elements to show/hide hit areas
+        const items = this.itemsLayer.querySelectorAll('.composer-item');
+        items.forEach(itemEl => {
+            const hitAreaOverlay = itemEl.querySelector('.composer-hit-area');
+            if (hitAreaOverlay) {
+                hitAreaOverlay.style.display = this.hitAreaVisible ? 'block' : 'none';
+            }
+        });
+
+        const btn = document.getElementById('composer-hitarea-toggle');
+        if (btn) {
+            btn.classList.toggle('active', this.hitAreaVisible);
         }
     }
 

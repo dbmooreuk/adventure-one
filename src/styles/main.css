@@ -346,9 +346,22 @@ button.prop {
 .scene-item:active {
   filter: brightness(0.9);
 }
-.scene-item {
-  /* Item with image */
+
+/* Hit Area Enhancement for Scene Items */
+/* Creates larger invisible clickable area for better touch/click targets */
+.scene-item[data-has-hit-area]::before {
+  content: "";
+  position: absolute;
+  width: var(--hit-w, 100%);
+  height: var(--hit-h, 100%);
+  top: calc(var(--hit-offset-y, 0px) * -1);
+  left: calc(var(--hit-offset-x, 0px) * -1);
+  cursor: pointer;
+  /* Debug: uncomment to visualize hit area */
+  /* background: rgba(255, 0, 0, 0.2); */
 }
+
+/* Item with image */
 .scene-item--with-image {
   background-size: contain;
   background-repeat: no-repeat;
@@ -356,15 +369,16 @@ button.prop {
   font-size: 0.7rem;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
-.scene-item {
-  /* Item types - base border colors */
-}
+
+/* Item types - base border colors */
 .scene-item--item {
   border-color: #F4FED3;
 }
+
 .scene-item--target {
   border-color: #BB067E;
 }
+
 .scene-item--link {
   border-color: #508D8E;
 }
@@ -641,13 +655,13 @@ button.prop {
 
 /* Mobile Touch Hitbox Enhancement */
 /* Creates larger invisible clickable area for better mobile UX */
-.scene-object[data-hit-w]::before {
+.scene-object[data-has-hit-area]::before {
   content: "";
   position: absolute;
-  width: attr(data-hit-w px);
-  height: attr(data-hit-h px);
-  top: calc(var(--hit-offset-y, 0) * -1px);
-  left: calc(var(--hit-offset-x, 0) * -1px);
+  width: var(--hit-w, 100%);
+  height: var(--hit-h, 100%);
+  top: calc(var(--hit-offset-y, 0px) * -1);
+  left: calc(var(--hit-offset-x, 0px) * -1);
   cursor: pointer;
   /* Debug: uncomment to visualize hit area */
   /* background: rgba(255, 0, 0, 0.2); */
