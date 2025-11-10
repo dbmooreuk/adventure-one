@@ -26,6 +26,11 @@
     font: inherit;
     color: inherit;
 
+    /* Disable touch highlight effects */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    tap-highlight-color: transparent;
+
     /* Ensure objects are above background but below UI */
     z-index: 5;
 

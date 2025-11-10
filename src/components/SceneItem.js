@@ -96,6 +96,9 @@ export class SceneItem {
         // Disable pointer events on the main element so only the polygon receives clicks
         element.style.pointerEvents = 'none'
 
+        // Disable touch highlight on the main element
+        element.style.webkitTapHighlightColor = 'transparent'
+
         // Create SVG element
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
         svg.style.position = 'absolute'
@@ -105,6 +108,7 @@ export class SceneItem {
         svg.style.height = '100%'
         svg.style.pointerEvents = 'auto'
         svg.style.overflow = 'visible'
+        svg.style.webkitTapHighlightColor = 'transparent'
 
         // Create polygon element
         const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon')
@@ -119,6 +123,7 @@ export class SceneItem {
         polygon.style.stroke = 'none'
         polygon.style.pointerEvents = 'auto'
         polygon.style.cursor = 'pointer'
+        polygon.style.webkitTapHighlightColor = 'transparent'
 
         svg.appendChild(polygon)
         element.appendChild(svg)

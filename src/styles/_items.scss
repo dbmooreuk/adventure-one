@@ -22,6 +22,11 @@
     transition: filter 0.2s ease-out;
     backdrop-filter: blur(4px);
 
+    /* Disable touch highlight effects */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    tap-highlight-color: transparent;
+
     // Hover styles are now unified in _objects.scss for consistency
     // Both .scene-item and .scene-object use the same hover effect
     &:hover:not([style*="pointer-events: none"]) {
