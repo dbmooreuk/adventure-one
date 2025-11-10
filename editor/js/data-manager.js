@@ -253,7 +253,10 @@ export class DataManager {
         if (item.size) output += `            size: [${item.size[0]}, ${item.size[1]}],\n`;
         if (item.hitW) output += `            hitW: ${item.hitW},\n`;
         if (item.hitH) output += `            hitH: ${item.hitH},\n`;
-        if (item.zIndex !== undefined && item.zIndex !== null) output += `            zIndex: ${item.zIndex},\n`;
+        if (item.zIndex !== undefined && item.zIndex !== null) {
+            console.log(`📦 Exporting z-index for ${item.name}:`, item.zIndex);
+            output += `            zIndex: ${item.zIndex},\n`;
+        }
         if (item.nonInteractive) output += `            nonInteractive: true,\n`;
 
         // Animation

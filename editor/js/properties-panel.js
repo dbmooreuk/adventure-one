@@ -176,6 +176,12 @@ export class PropertiesPanel {
         if (itemIndex !== -1) {
             Object.assign(this.editor.data.sceneItems[itemIndex], updates);
 
+            // Debug log for z-index changes
+            if (updates.zIndex !== undefined) {
+                console.log(`🎨 Z-Index updated for ${this.currentItem.name}:`, updates.zIndex);
+                console.log(`🎨 Item data after update:`, this.editor.data.sceneItems[itemIndex]);
+            }
+
             // Update currentItem reference
             this.currentItem = this.editor.data.sceneItems[itemIndex];
 
