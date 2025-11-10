@@ -61,6 +61,12 @@ export class SceneItem {
         if (this.itemData.zIndex !== undefined) {
             element.style.zIndex = this.itemData.zIndex
         }
+
+        // Disable pointer events if non-interactive
+        if (this.itemData.nonInteractive) {
+            element.style.pointerEvents = 'none'
+            element.style.cursor = 'default'
+        }
     }
 
     /**

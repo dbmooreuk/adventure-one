@@ -70,6 +70,12 @@ export class SceneObject {
             el.style.zIndex = this.itemData.zIndex
         }
 
+        // Disable pointer events if non-interactive
+        if (this.itemData.nonInteractive) {
+            el.style.pointerEvents = 'none'
+            el.style.cursor = 'default'
+        }
+
         // Apply image
         if (this.itemData.image) {
             const imagePath = `/src/assets/images/items/${this.itemData.image}`

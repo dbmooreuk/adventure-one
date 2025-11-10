@@ -277,6 +277,13 @@ export const itemSchema = {
         help: 'Touch target height (larger than visual size)',
         min: 0
     },
+    nonInteractive: {
+        type: 'boolean',
+        required: false,
+        label: 'Non-Interactive',
+        help: 'If checked, item is visible but not clickable (decorative only)',
+        default: false
+    },
     animation: {
         type: 'animation',
         required: false,
