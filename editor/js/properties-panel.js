@@ -14,11 +14,8 @@ export class PropertiesPanel {
      * Setup event listeners
      */
     setupEventListeners() {
-        // Hit areas toggle button
-        const toggleBtn = document.getElementById('toggle-hit-areas-btn');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => this.toggleHitAreas());
-        }
+        // No event listeners needed here anymore
+        // Hit area toggle is handled by the composer
     }
 
     /**
@@ -63,16 +60,10 @@ export class PropertiesPanel {
         sizeRow.appendChild(this.createField('height', 'Height', size[1], 'number', false, { min: 1 }));
         visualSection.appendChild(sizeRow);
 
-        // Hit area (hitW and hitH)
-        const hitRow = document.createElement('div');
-        hitRow.className = 'form-row';
-        const hitW = item.hitW !== undefined ? item.hitW : size[0];
-        const hitH = item.hitH !== undefined ? item.hitH : size[1];
-        hitRow.appendChild(this.createField('hitW', 'Hit Width', hitW, 'number', false, { min: 1 }));
-        hitRow.appendChild(this.createField('hitH', 'Hit Height', hitH, 'number', false, { min: 1 }));
-        visualSection.appendChild(hitRow);
-
+        // Hit Area Section
+        const hitAreaSection = this.createHitAreaSection(item);
         form.appendChild(visualSection);
+        form.appendChild(hitAreaSection);
 
         // Add change listeners to all inputs
         form.querySelectorAll('input, textarea').forEach(input => {
@@ -134,6 +125,157 @@ export class PropertiesPanel {
 
         formGroup.appendChild(input);
         return formGroup;
+    }
+
+    /**
+     * Create hit area section with polygon or rectangle controls
+     */
+    createHitAreaSection(item) {
+        const section = this.createSection('Hit Area');
+
+        // Hit area type selector
+        const typeRow = document.createElement('div');
+        typeRow.className = 'form-group';
+
+        const typeLabel = document.createElement('label');
+        typeLabel.textContent = 'Hit Area Type';
+        typeRow.appendChild(typeLabel);
+
+        const typeSelect = document.createElement('select');
+        typeSelect.name = 'hitAreaType';
+        typeSelect.innerHTML = `
+            <option value="none">None</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="polygon">Polygon</option>
+        `;
+
+        // Determine current type
+        if (item.hitPolygon && item.hitPolygon.length > 0) {
+            typeSelect.value = 'polygon';
+        } else if (item.hitW || item.hitH) {
+            typeSelect.value = 'rectangle';
+        } else {
+            typeSelect.value = 'none';
+        }
+
+        typeSelect.addEventListener('change', (e) => this.handleHitAreaTypeChange(e.target.value, item));
+        typeRow.appendChild(typeSelect);
+        section.appendChild(typeRow);
+
+        // Rectangle controls
+        const rectControls = document.createElement('div');
+        rectControls.className = 'hit-area-rect-controls';
+        rectControls.style.display = typeSelect.value === 'rectangle' ? 'block' : 'none';
+
+        const hitRow = document.createElement('div');
+        hitRow.className = 'form-row';
+        const size = item.size || [100, 100];
+        const hitW = item.hitW !== undefined ? item.hitW : '';
+        const hitH = item.hitH !== undefined ? item.hitH : '';
+        hitRow.appendChild(this.createField('hitW', 'Hit Width', hitW, 'number', false, { min: 1, placeholder: size[0] }));
+        hitRow.appendChild(this.createField('hitH', 'Hit Height', hitH, 'number', false, { min: 1, placeholder: size[1] }));
+        rectControls.appendChild(hitRow);
+        section.appendChild(rectControls);
+
+        // Polygon controls
+        const polyControls = document.createElement('div');
+        polyControls.className = 'hit-area-polygon-controls';
+        polyControls.style.display = typeSelect.value === 'polygon' ? 'block' : 'none';
+
+        const polyInfo = document.createElement('p');
+        polyInfo.style.fontSize = '0.85rem';
+        polyInfo.style.color = '#888';
+        polyInfo.style.margin = '0.5rem 0';
+        polyInfo.textContent = 'Drag nodes in the composer to edit polygon shape';
+        polyControls.appendChild(polyInfo);
+
+        // Polygon points list
+        const pointsList = document.createElement('div');
+        pointsList.className = 'polygon-points-list';
+        pointsList.id = 'polygon-points-list';
+        this.updatePolygonPointsList(pointsList, item.hitPolygon || []);
+        polyControls.appendChild(pointsList);
+
+        // Add/Remove node buttons
+        const btnRow = document.createElement('div');
+        btnRow.className = 'form-row';
+        btnRow.style.gap = '0.5rem';
+
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'btn btn-small';
+        addBtn.textContent = '+ Add Node';
+        addBtn.addEventListener('click', () => this.addPolygonNode(item));
+        btnRow.appendChild(addBtn);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-small';
+        removeBtn.textContent = '− Remove Last';
+        removeBtn.addEventListener('click', () => this.removePolygonNode(item));
+        btnRow.appendChild(removeBtn);
+
+        polyControls.appendChild(btnRow);
+        section.appendChild(polyControls);
+
+        return section;
+    }
+
+    /**
+     * Handle hit area type change
+     */
+    handleHitAreaTypeChange(type, item) {
+        const rectControls = document.querySelector('.hit-area-rect-controls');
+        const polyControls = document.querySelector('.hit-area-polygon-controls');
+
+        if (type === 'rectangle') {
+            rectControls.style.display = 'block';
+            polyControls.style.display = 'none';
+
+            // Remove polygon data
+            delete item.hitPolygon;
+
+            // Initialize rectangle if not set
+            if (!item.hitW && !item.hitH) {
+                const size = item.size || [100, 100];
+                item.hitW = size[0];
+                item.hitH = size[1];
+            }
+        } else if (type === 'polygon') {
+            rectControls.style.display = 'none';
+            polyControls.style.display = 'block';
+
+            // Remove rectangle data
+            delete item.hitW;
+            delete item.hitH;
+
+            // Initialize polygon if not set (create rectangle shape)
+            if (!item.hitPolygon || item.hitPolygon.length === 0) {
+                const size = item.size || [100, 100];
+                item.hitPolygon = [
+                    [0, 0],
+                    [size[0], 0],
+                    [size[0], size[1]],
+                    [0, size[1]]
+                ];
+                this.updatePolygonPointsList(document.getElementById('polygon-points-list'), item.hitPolygon);
+            }
+        } else {
+            // None
+            rectControls.style.display = 'none';
+            polyControls.style.display = 'none';
+            delete item.hitW;
+            delete item.hitH;
+            delete item.hitPolygon;
+        }
+
+        // Refresh composer visualization
+        if (this.editor.sceneComposer) {
+            this.editor.sceneComposer.refreshPolygonVisualization(item);
+        }
+
+        // Trigger save
+        this.editor.saveCurrentWork();
     }
 
     /**
@@ -229,73 +371,108 @@ export class PropertiesPanel {
     }
 
     /**
-     * Toggle hit area visualization
+     * Update polygon points list display
      */
-    toggleHitAreas() {
-        this.hitAreasVisible = !this.hitAreasVisible;
-        const btn = document.getElementById('toggle-hit-areas-btn');
-        
-        if (this.hitAreasVisible) {
-            btn.textContent = '👁️ Hide Hit Areas';
-            btn.classList.add('active');
-            this.showHitAreas();
-        } else {
-            btn.textContent = '👁️ Show Hit Areas';
-            btn.classList.remove('active');
-            this.hideHitAreas();
+    updatePolygonPointsList(container, points) {
+        container.innerHTML = '';
+
+        if (!points || points.length === 0) {
+            container.innerHTML = '<p style="color: #888; font-size: 0.85rem;">No polygon points</p>';
+            return;
         }
-    }
 
-    /**
-     * Show hit areas on all items in composer
-     */
-    showHitAreas() {
-        const itemsLayer = document.getElementById('composer-items-layer');
-        if (!itemsLayer) return;
+        points.forEach(([x, y], index) => {
+            const pointRow = document.createElement('div');
+            pointRow.style.display = 'flex';
+            pointRow.style.gap = '0.5rem';
+            pointRow.style.alignItems = 'center';
+            pointRow.style.marginBottom = '0.25rem';
+            pointRow.style.fontSize = '0.85rem';
 
-        // Add hit area overlays to all items
-        itemsLayer.querySelectorAll('.composer-item').forEach(itemEl => {
-            const itemName = itemEl.dataset.itemName;
-            const item = this.editor.data.sceneItems.find(i => i.name === itemName);
-            if (!item) return;
+            const label = document.createElement('span');
+            label.textContent = `${index + 1}:`;
+            label.style.width = '2rem';
+            label.style.color = '#888';
+            pointRow.appendChild(label);
 
-            // Remove existing overlay if any
-            const existingOverlay = itemEl.querySelector('.hit-area-overlay');
-            if (existingOverlay) existingOverlay.remove();
+            const coords = document.createElement('span');
+            coords.textContent = `(${x}, ${y})`;
+            coords.style.fontFamily = 'monospace';
+            pointRow.appendChild(coords);
 
-            // Create hit area overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'hit-area-overlay';
-
-            const size = item.size || [100, 100];
-            const hitW = item.hitW !== undefined ? item.hitW : size[0];
-            const hitH = item.hitH !== undefined ? item.hitH : size[1];
-
-            overlay.style.width = `${hitW}px`;
-            overlay.style.height = `${hitH}px`;
-            overlay.style.position = 'absolute';
-            overlay.style.top = '50%';
-            overlay.style.left = '50%';
-            overlay.style.transform = 'translate(-50%, -50%)';
-            overlay.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
-            overlay.style.border = '2px dashed red';
-            overlay.style.pointerEvents = 'none';
-            overlay.style.zIndex = '1000';
-
-            itemEl.appendChild(overlay);
+            container.appendChild(pointRow);
         });
     }
 
     /**
-     * Hide hit areas
+     * Add a new polygon node
      */
-    hideHitAreas() {
-        const itemsLayer = document.getElementById('composer-items-layer');
-        if (!itemsLayer) return;
+    addPolygonNode(item) {
+        if (!item.hitPolygon) {
+            item.hitPolygon = [];
+        }
 
-        itemsLayer.querySelectorAll('.hit-area-overlay').forEach(overlay => {
-            overlay.remove();
-        });
+        // Add a new point at the center of the item
+        const size = item.size || [100, 100];
+        const newPoint = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+        item.hitPolygon.push(newPoint);
+
+        // Update display
+        const pointsList = document.getElementById('polygon-points-list');
+        if (pointsList) {
+            this.updatePolygonPointsList(pointsList, item.hitPolygon);
+        }
+
+        // Refresh composer visualization
+        if (this.editor.sceneComposer) {
+            this.editor.sceneComposer.refreshPolygonVisualization(item);
+        }
+
+        // Trigger save
+        this.editor.saveCurrentWork();
+
+        console.log(`✓ Added polygon node to ${item.name}`);
+    }
+
+    /**
+     * Remove the last polygon node
+     */
+    removePolygonNode(item) {
+        if (!item.hitPolygon || item.hitPolygon.length === 0) return;
+
+        // Don't allow removing if less than 3 points (minimum for polygon)
+        if (item.hitPolygon.length <= 3) {
+            alert('A polygon must have at least 3 points');
+            return;
+        }
+
+        item.hitPolygon.pop();
+
+        // Update display
+        const pointsList = document.getElementById('polygon-points-list');
+        if (pointsList) {
+            this.updatePolygonPointsList(pointsList, item.hitPolygon);
+        }
+
+        // Refresh composer visualization
+        if (this.editor.sceneComposer) {
+            this.editor.sceneComposer.refreshPolygonVisualization(item);
+        }
+
+        // Trigger save
+        this.editor.saveCurrentWork();
+
+        console.log(`✓ Removed polygon node from ${item.name}`);
+    }
+
+    /**
+     * Update polygon display (called from composer when dragging nodes)
+     */
+    updatePolygonDisplay(points) {
+        const pointsList = document.getElementById('polygon-points-list');
+        if (pointsList) {
+            this.updatePolygonPointsList(pointsList, points);
+        }
     }
 }
 

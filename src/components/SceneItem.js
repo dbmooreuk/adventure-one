@@ -62,8 +62,12 @@ export class SceneItem {
             element.style.zIndex = this.itemData.zIndex
         }
 
-        // Apply larger hit area if specified (for better touch/click targets)
-        if (this.itemData.hitW || this.itemData.hitH) {
+        // Apply polygon hit area if specified
+        if (this.itemData.hitPolygon && this.itemData.hitPolygon.length > 0) {
+            this.createPolygonHitArea(element)
+        }
+        // Apply rectangular hit area if specified (legacy support)
+        else if (this.itemData.hitW || this.itemData.hitH) {
             const hitW = this.itemData.hitW || this.itemData.size[0]
             const hitH = this.itemData.hitH || this.itemData.size[1]
             const offsetX = (hitW - this.itemData.size[0]) / 2
@@ -82,6 +86,43 @@ export class SceneItem {
             element.style.pointerEvents = 'none'
             element.style.cursor = 'default'
         }
+    }
+
+    /**
+     * Create SVG polygon hit area
+     * @param {HTMLElement} element
+     */
+    createPolygonHitArea(element) {
+        // Disable pointer events on the main element so only the polygon receives clicks
+        element.style.pointerEvents = 'none'
+
+        // Create SVG element
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        svg.style.position = 'absolute'
+        svg.style.top = '0'
+        svg.style.left = '0'
+        svg.style.width = '100%'
+        svg.style.height = '100%'
+        svg.style.pointerEvents = 'auto'
+        svg.style.overflow = 'visible'
+
+        // Create polygon element
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon')
+
+        // Convert points array to SVG points string
+        const pointsStr = this.itemData.hitPolygon
+            .map(([x, y]) => `${x},${y}`)
+            .join(' ')
+
+        polygon.setAttribute('points', pointsStr)
+        polygon.style.fill = 'transparent'
+        polygon.style.stroke = 'none'
+        polygon.style.pointerEvents = 'auto'
+        polygon.style.cursor = 'pointer'
+
+        svg.appendChild(polygon)
+        element.appendChild(svg)
+        element.setAttribute('data-has-polygon-hit-area', 'true')
     }
 
     /**

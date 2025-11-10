@@ -251,7 +251,11 @@ export class SceneComposer {
         }
 
         // Hit area visualization overlay
-        if (item.hitW || item.hitH) {
+        if (item.hitPolygon && item.hitPolygon.length > 0) {
+            // Polygon hit area
+            this.createPolygonVisualization(itemEl, item);
+        } else if (item.hitW || item.hitH) {
+            // Rectangular hit area (legacy)
             const hitW = item.hitW || width;
             const hitH = item.hitH || height;
             const offsetX = (hitW - width) / 2;
@@ -289,6 +293,10 @@ export class SceneComposer {
 
         // Event listeners
         itemEl.addEventListener('mousedown', (e) => {
+            // Don't start drag if hit areas are visible (editing mode)
+            if (this.hitAreaVisible) {
+                return;
+            }
             // Don't start drag if clicking on a resize handle
             if (e.target.classList.contains('composer-resize-handle')) {
                 return;
@@ -309,6 +317,11 @@ export class SceneComposer {
     startResize(e, item, element, handle) {
         e.preventDefault();
         e.stopPropagation();
+
+        // Don't allow resizing if hit areas are visible (editing mode)
+        if (this.hitAreaVisible) {
+            return;
+        }
 
         this.resizing = true;
         this.resizeHandle = handle;
@@ -744,9 +757,29 @@ export class SceneComposer {
         // Update all item elements to show/hide hit areas
         const items = this.itemsLayer.querySelectorAll('.composer-item');
         items.forEach(itemEl => {
+            // Toggle rectangle hit areas
             const hitAreaOverlay = itemEl.querySelector('.composer-hit-area');
             if (hitAreaOverlay) {
                 hitAreaOverlay.style.display = this.hitAreaVisible ? 'block' : 'none';
+            }
+
+            // Toggle polygon hit areas
+            const polygonOverlay = itemEl.querySelector('.composer-polygon-hit-area');
+            if (polygonOverlay) {
+                polygonOverlay.style.display = this.hitAreaVisible ? 'block' : 'none';
+            }
+
+            // Hide/show resize handles when in hit area editing mode
+            const resizeHandles = itemEl.querySelectorAll('.composer-resize-handle');
+            resizeHandles.forEach(handle => {
+                handle.style.display = this.hitAreaVisible ? 'none' : 'block';
+            });
+
+            // Add visual indicator that item is locked
+            if (this.hitAreaVisible) {
+                itemEl.style.cursor = 'default';
+            } else {
+                itemEl.style.cursor = 'move';
             }
         });
 
@@ -825,6 +858,122 @@ export class SceneComposer {
             if (this.editor.propertiesPanel) {
                 this.editor.propertiesPanel.clear();
             }
+        }
+    }
+
+    /**
+     * Create polygon hit area visualization with editable nodes
+     */
+    createPolygonVisualization(itemEl, item) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('composer-polygon-hit-area');
+        svg.style.position = 'absolute';
+        svg.style.top = '0';
+        svg.style.left = '0';
+        svg.style.width = '100%';
+        svg.style.height = '100%';
+        svg.style.overflow = 'visible';
+        svg.style.pointerEvents = 'none';
+        svg.style.display = this.hitAreaVisible ? 'block' : 'none';
+
+        // Create polygon element
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        const pointsStr = item.hitPolygon.map(([x, y]) => `${x},${y}`).join(' ');
+        polygon.setAttribute('points', pointsStr);
+        polygon.style.fill = 'rgba(255, 0, 0, 0.1)';
+        polygon.style.stroke = 'rgba(255, 0, 0, 0.6)';
+        polygon.style.strokeWidth = '2';
+        polygon.style.strokeDasharray = '5,5';
+        svg.appendChild(polygon);
+
+        // Create draggable nodes for each point
+        item.hitPolygon.forEach(([x, y], index) => {
+            const node = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            node.setAttribute('cx', x);
+            node.setAttribute('cy', y);
+            node.setAttribute('r', '6');
+            node.style.fill = '#ff0000';
+            node.style.stroke = '#ffffff';
+            node.style.strokeWidth = '2';
+            node.style.cursor = 'move';
+            node.style.pointerEvents = 'auto';
+            node.dataset.nodeIndex = index;
+
+            // Add drag handlers for the node
+            node.addEventListener('mousedown', (e) => this.startPolygonNodeDrag(e, item, index, polygon));
+
+            svg.appendChild(node);
+        });
+
+        itemEl.appendChild(svg);
+    }
+
+    /**
+     * Start dragging a polygon node
+     */
+    startPolygonNodeDrag(e, item, nodeIndex, polygon) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const svg = polygon.parentElement;
+        const itemEl = svg.parentElement;
+
+        const handleMouseMove = (e) => {
+            const wrapper = document.querySelector('.composer-canvas-wrapper');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const itemRect = itemEl.getBoundingClientRect();
+
+            // Calculate mouse position relative to item
+            const x = (e.clientX - itemRect.left) / this.scale;
+            const y = (e.clientY - itemRect.top) / this.scale;
+
+            // Update the point in the data
+            item.hitPolygon[nodeIndex] = [Math.round(x), Math.round(y)];
+
+            // Update polygon points
+            const pointsStr = item.hitPolygon.map(([px, py]) => `${px},${py}`).join(' ');
+            polygon.setAttribute('points', pointsStr);
+
+            // Update node position
+            const nodes = svg.querySelectorAll('circle');
+            nodes[nodeIndex].setAttribute('cx', Math.round(x));
+            nodes[nodeIndex].setAttribute('cy', Math.round(y));
+
+            // Update properties panel if visible
+            if (this.editor.propertiesPanel && this.selectedItem === item) {
+                this.editor.propertiesPanel.updatePolygonDisplay(item.hitPolygon);
+            }
+        };
+
+        const handleMouseUp = () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+
+            // Trigger auto-save
+            this.editor.saveCurrentWork();
+            console.log(`📍 Updated polygon node ${nodeIndex} for ${item.name}`);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    /**
+     * Refresh polygon visualization for an item
+     */
+    refreshPolygonVisualization(item) {
+        const itemEl = this.itemsLayer.querySelector(`[data-item-name="${item.name}"]`);
+        if (!itemEl) return;
+
+        // Remove old polygon visualization
+        const oldSvg = itemEl.querySelector('.composer-polygon-hit-area');
+        if (oldSvg) {
+            oldSvg.remove();
+        }
+
+        // Create new one if polygon exists
+        if (item.hitPolygon && item.hitPolygon.length > 0) {
+            this.createPolygonVisualization(itemEl, item);
         }
     }
 }

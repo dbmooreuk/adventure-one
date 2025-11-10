@@ -190,6 +190,16 @@ export class UIManager extends EventEmitter {
         const item = e.target.closest('.scene-item, .scene-target, .scene-link, .scene-decor, .scene-object')
         if (!item) return
 
+        // Check if item has a polygon hit area
+        if (item.hasAttribute('data-has-polygon-hit-area')) {
+            // Only allow clicks that originated from the polygon element itself
+            const clickedPolygon = e.target.tagName === 'polygon' || e.target.closest('polygon')
+            if (!clickedPolygon) {
+                // Click was outside the polygon hit area - ignore it
+                return
+            }
+        }
+
         const itemName = this.getItemNameFromElement(item)
         const itemType = this.getItemTypeFromElement(item)
 
