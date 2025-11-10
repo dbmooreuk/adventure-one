@@ -29,14 +29,14 @@
     /* Ensure objects are above background but below UI */
     z-index: 5;
 
-    &:hover {
+    &:hover:not([style*="pointer-events: none"]) {
         // Don't use transform: scale() because it conflicts with animation transforms
         // Use filter and box-shadow instead for consistent hover effect
         filter: brightness(1.3) drop-shadow(0 4px 12px rgba(255, 215, 0, 0.6));
         z-index: 10;
     }
 
-    &:active {
+    &:active:not([style*="pointer-events: none"]) {
         filter: brightness(0.9);
     }
 
@@ -73,7 +73,7 @@
     box-shadow: inset 0 0 0 2px transparent;
     transition: box-shadow 0.2s ease-out;
 
-    &:hover {
+    &:hover:not([style*="pointer-events: none"]) {
         box-shadow: inset 0 0 0 2px $main-yellow;
     }
 }
@@ -83,15 +83,15 @@
     box-shadow: inset 0 0 0 2px transparent;
     transition: box-shadow 0.2s ease-out;
 
-    &:hover {
+    &:hover:not([style*="pointer-events: none"]) {
         box-shadow: inset 0 0 0 2px $main-pink;
     }
 }
 
 .scene-object-type-link {
     border: 2px solid transparent;
-    
-    &:hover {
+
+    &:hover:not([style*="pointer-events: none"]) {
         border-color: $main-marine;
     }
 }

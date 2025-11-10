@@ -24,12 +24,12 @@
 
     // Hover styles are now unified in _objects.scss for consistency
     // Both .scene-item and .scene-object use the same hover effect
-    &:hover {
+    &:hover:not([style*="pointer-events: none"]) {
         filter: brightness(1.3) drop-shadow(0 4px 12px rgba(255, 215, 0, 0.6));
         z-index: 10;
     }
 
-    &:active {
+    &:active:not([style*="pointer-events: none"]) {
         filter: brightness(0.9);
     }
 }
@@ -73,15 +73,15 @@
 }
 
 /* Type-specific hover borders for scene items (matching SceneObject behavior) */
-.scene-item.scene-item:hover {
+.scene-item.scene-item:hover:not([style*="pointer-events: none"]) {
     box-shadow: inset 0 0 0 2px $main-yellow;
 }
 
-.scene-item.scene-target:hover {
+.scene-item.scene-target:hover:not([style*="pointer-events: none"]) {
     box-shadow: inset 0 0 0 2px $main-pink;
 }
 
-.scene-item.scene-link:hover {
+.scene-item.scene-link:hover:not([style*="pointer-events: none"]) {
     box-shadow: inset 0 0 0 2px $main-marine;
 }
 
@@ -204,22 +204,22 @@
 }
 
 /* Item Hover Effects */
-.scene-item[data-hover="glow"]:hover,
-.scene-object[data-hover="glow"]:hover,
+.scene-item[data-hover="glow"]:hover:not([style*="pointer-events: none"]),
+.scene-object[data-hover="glow"]:hover:not([style*="pointer-events: none"]),
 .inventory-item[data-hover="glow"]:hover {
     box-shadow: 0 0 20px $main-yellow,
                 0 0 40px $main-yellow;
     animation: glow-pulse 1.5s ease-in-out infinite;
 }
 
-.scene-item[data-hover="pulse"]:hover,
-.scene-object[data-hover="pulse"]:hover,
+.scene-item[data-hover="pulse"]:hover:not([style*="pointer-events: none"]),
+.scene-object[data-hover="pulse"]:hover:not([style*="pointer-events: none"]),
 .inventory-item[data-hover="pulse"]:hover {
     animation: pulse-scale 0.8s ease-in-out infinite;
 }
 
-.scene-item[data-hover="shine"]:hover,
-.scene-object[data-hover="shine"]:hover,
+.scene-item[data-hover="shine"]:hover:not([style*="pointer-events: none"]),
+.scene-object[data-hover="shine"]:hover:not([style*="pointer-events: none"]),
 .inventory-item[data-hover="shine"]:hover {
     animation: shine-effect 2s linear infinite;
     background-image: linear-gradient(
@@ -231,8 +231,8 @@
     background-size: 200% 100%;
 }
 
-.scene-item[data-hover="swing"]:hover,
-.scene-object[data-hover="swing"]:hover,
+.scene-item[data-hover="swing"]:hover:not([style*="pointer-events: none"]),
+.scene-object[data-hover="swing"]:hover:not([style*="pointer-events: none"]),
 .inventory-item[data-hover="swing"]:hover {
     animation: swing 1s ease-in-out infinite;
 }
