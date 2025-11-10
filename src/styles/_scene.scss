@@ -37,6 +37,18 @@
     @include shadow-xl;
 }
 
+
+.scene-title-wrapper {
+  position: absolute;
+  top: $spacing-md;
+  left: $spacing-md;
+  right: $spacing-md;
+  z-index: 60;
+  padding-left: 65px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 .intro-title {
     font-family: $font-family-mono;
     font-size: $font-size-4xl;
@@ -82,13 +94,7 @@
     z-index: 50;
 }
 
-.scene-title-wrapper {
-  position: absolute;
-  top: $spacing-md;
-  left: $spacing-md;
-  z-index: 10;
-  padding-left: 65px;
-}
+
 
 
 

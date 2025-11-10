@@ -45,95 +45,6 @@
     }
 }
 
-/* Button Variants */
-.btn--primary {
-    background: $main-yellow;
-    color: $darkest-marine;
-    border-color: $main-yellow;
-
-    &:hover:not(:disabled) {
-        background: $main-pink;
-        border-color: $main-pink;
-    }
-}
-
-.btn--secondary {
-    background: $main-pink;
-    color: $main-yellow;
-    border-color: $main-pink;
-
-    &:hover:not(:disabled) {
-        background: $main-yellow;
-        border-color: $main-yellow;
-        color: $darkest-marine;
-    }
-}
-
-.btn--action {
-    background: linear-gradient(135deg, $main-yellow, $main-pink);
-    border: none;
-    color: $darkest-marine;
-    font-size: 1.1rem;
-    padding: 1rem 2rem;
-
-    &:hover:not(:disabled) {
-        background: linear-gradient(135deg, $main-pink, $main-yellow);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-    }
-}
-
-.btn--nav {
-    background: transparent;
-    border: 1px solid $main-yellow;
-    color: $main-yellow;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-
-    &:hover:not(:disabled) {
-        background: rgba(255, 254, 224, 0.1);
-        border-color: $main-pink;
-        color: $main-pink;
-    }
-}
-
-/* Button Sizes */
-.btn--small {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
-
-.btn--large {
-    padding: 1rem 2rem;
-    font-size: 1.25rem;
-}
-
-/* Button States */
-.btn--loading {
-    position: relative;
-    color: transparent;
-    pointer-events: none;
-
-    &::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 1rem;
-        height: 1rem;
-        margin: -0.5rem 0 0 -0.5rem;
-        border: 2px solid $main-yellow;
-        border-top-color: transparent;
-        border-radius: 50%;
-        animation: btn-spin 0.6s linear infinite;
-    }
-}
-
-@keyframes btn-spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 /* Button Groups */
 .btn-group {
@@ -153,15 +64,76 @@
         justify-content: flex-end;
     }
 }
-.btn-action{
-    border: 1px solid $main-pink;
+// .btn-action{
+//     border: 1px solid $main-pink;
+//     background-color: transparent;
+//     color: $main-pink;
+//     &.active {
+//         background: $main-pink;
+//         color: $dark-marine;
+//         @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);
+//         border: 1px solid $darker-marine;   
+//     }
+//     &.inactive {
+//         opacity: 0.5;
+
+//     }
+// }
+
+.btn-actions-container {
+  
+ 
+//    @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);   
+background-color: transparent;
+    z-index: 10;
+    margin-left: auto;
+    height: 60px;
+
+}
+
+.btn-action {
+    padding: 0.75rem 1.5rem;
+    height: 100%;
+    font-family: $font-family-mono;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius:  $border-radius-sm ;
+    border: 1px solid $light-marine;
     background-color: transparent;
-    color: $main-pink;
-    &.active {
-        background: $main-pink;
+    color: $light-yellow;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-right: $spacing-xs;
+
+    &:hover:not(:disabled) {
+        background: $main-yellow;
+        color: $darkest-marine;
+        // transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus {
+        outline: 2px solid $main-pink;
+        outline-offset: 2px;
+    }
+
+        &.active {
+        background: $light-marine;
         color: $dark-marine;
-        @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);
-        border: 1px solid $darker-marine;   
+        // @include vertical-gradient($lighter-pink, $light-yellow, 0.7); 
+        border: 1px solid $light-marine;   
     }
     &.inactive {
         opacity: 0.5;
@@ -170,26 +142,22 @@
 }
 
 .btn-examine{
-    border-radius:  $border-radius-sm 0 0 $border-radius-sm ;
-    margin-right: -1px;
+    
+
 }
 .btn-look{
-    border-radius:  $border-radius-sm 0 0 $border-radius-sm ;
-    margin-right: -1px;
+
 }
 .btn-get{
-    border-radius: 0;
-    margin-right: -1px;
+
 }
 .btn-use{
-    border-radius: 0;
-    margin-right: -1px;
+
 }
 
 
 .btn-combine{
-    border-radius:  0 $border-radius-sm   $border-radius-sm 0 ;
-    margin-right: 0;
+
 }
 
 button.prop{
