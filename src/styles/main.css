@@ -123,7 +123,7 @@ html {
 
 /* yellow */
 .text-main-yellow {
-  color: #E1E8CC;
+  color: #F4FED3;
 }
 
 .text-light-yellow {
@@ -145,17 +145,17 @@ html {
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
-  border: 2px solid #E1E8CC;
+  border: 2px solid #F4FED3;
   border-radius: 4px;
   background: #001125;
-  color: #E1E8CC;
+  color: #F4FED3;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 .btn:hover:not(:disabled) {
-  background: #E1E8CC;
+  background: #F4FED3;
   color: #001125;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -175,9 +175,9 @@ html {
 
 /* Button Variants */
 .btn--primary {
-  background: #E1E8CC;
+  background: #F4FED3;
   color: #001125;
-  border-color: #E1E8CC;
+  border-color: #F4FED3;
 }
 .btn--primary:hover:not(:disabled) {
   background: #BB067E;
@@ -186,32 +186,32 @@ html {
 
 .btn--secondary {
   background: #BB067E;
-  color: #E1E8CC;
+  color: #F4FED3;
   border-color: #BB067E;
 }
 .btn--secondary:hover:not(:disabled) {
-  background: #E1E8CC;
-  border-color: #E1E8CC;
+  background: #F4FED3;
+  border-color: #F4FED3;
   color: #001125;
 }
 
 .btn--action {
-  background: linear-gradient(135deg, #E1E8CC, #BB067E);
+  background: linear-gradient(135deg, #F4FED3, #BB067E);
   border: none;
   color: #001125;
   font-size: 1.1rem;
   padding: 1rem 2rem;
 }
 .btn--action:hover:not(:disabled) {
-  background: linear-gradient(135deg, #BB067E, #E1E8CC);
+  background: linear-gradient(135deg, #BB067E, #F4FED3);
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .btn--nav {
   background: transparent;
-  border: 1px solid #E1E8CC;
-  color: #E1E8CC;
+  border: 1px solid #F4FED3;
+  color: #F4FED3;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
 }
@@ -246,7 +246,7 @@ html {
   width: 1rem;
   height: 1rem;
   margin: -0.5rem 0 0 -0.5rem;
-  border: 2px solid #E1E8CC;
+  border: 2px solid #F4FED3;
   border-top-color: transparent;
   border-radius: 50%;
   animation: btn-spin 0.6s linear infinite;
@@ -331,10 +331,10 @@ button.prop {
   font-size: 0.9rem;
   font-weight: bold;
   text-transform: uppercase;
-  border: 2px solid #E1E8CC;
+  border: 2px solid #F4FED3;
   border-radius: 4px;
   background: rgba(26, 10, 0, 0.8);
-  color: #E1E8CC;
+  color: #F4FED3;
   cursor: pointer;
   transition: filter 0.2s ease-out;
   backdrop-filter: blur(4px);
@@ -360,7 +360,7 @@ button.prop {
   /* Item types - base border colors */
 }
 .scene-item--item {
-  border-color: #E1E8CC;
+  border-color: #F4FED3;
 }
 .scene-item--target {
   border-color: #BB067E;
@@ -371,7 +371,7 @@ button.prop {
 
 /* Type-specific hover borders for scene items (matching SceneObject behavior) */
 .scene-item.scene-item:hover {
-  box-shadow: inset 0 0 0 2px #E1E8CC;
+  box-shadow: inset 0 0 0 2px #F4FED3;
 }
 
 .scene-item.scene-target:hover {
@@ -395,7 +395,7 @@ button.prop {
   border: none;
   border-radius: 4px;
   background: transparent;
-  color: #E1E8CC;
+  color: #F4FED3;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -502,7 +502,7 @@ button.prop {
 .scene-item[data-hover=glow]:hover,
 .scene-object[data-hover=glow]:hover,
 .inventory-item[data-hover=glow]:hover {
-  box-shadow: 0 0 20px #E1E8CC, 0 0 40px #E1E8CC;
+  box-shadow: 0 0 20px #F4FED3, 0 0 40px #F4FED3;
   animation: glow-pulse 1.5s ease-in-out infinite;
 }
 
@@ -528,10 +528,10 @@ button.prop {
 
 @keyframes glow-pulse {
   0%, 100% {
-    box-shadow: 0 0 20px #E1E8CC;
+    box-shadow: 0 0 20px #F4FED3;
   }
   50% {
-    box-shadow: 0 0 40px #E1E8CC, 0 0 60px #BB067E;
+    box-shadow: 0 0 40px #F4FED3, 0 0 60px #BB067E;
   }
 }
 @keyframes pulse-scale {
@@ -632,7 +632,7 @@ button.prop {
   /* Focus styles for keyboard navigation */
 }
 .scene-object:focus {
-  outline: 2px solid #E1E8CC;
+  outline: 2px solid #F4FED3;
   outline-offset: 4px;
 }
 .scene-object:focus:not(:focus-visible) {
@@ -659,7 +659,7 @@ button.prop {
   transition: box-shadow 0.2s ease-out;
 }
 .scene-object-type-item:hover {
-  box-shadow: inset 0 0 0 2px #E1E8CC;
+  box-shadow: inset 0 0 0 2px #F4FED3;
 }
 
 .scene-object-type-target {
@@ -1580,14 +1580,14 @@ button.prop {
   transform: translate(-50%, -50%);
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(225, 232, 204, 0.1);
+  border: 2px solid rgba(244, 254, 211, 0.1);
   border-radius: 50%;
 }
 .inventory-slot {
   /* When slot has an item */
 }
 .inventory-slot:not(:empty) {
-  background: rgba(225, 232, 204, 0.3);
+  background: rgba(244, 254, 211, 0.3);
   pointer-events: all;
 }
 .inventory-slot:not(:empty)::before {
@@ -1613,6 +1613,10 @@ button.prop {
   background-image: url("/assets/images/screen-splash.png");
 }
 
+.scene-item {
+  color: #000000;
+}
+
 .intro-content {
   display: flex;
   flex-direction: column;
@@ -1629,7 +1633,7 @@ button.prop {
 .intro-title {
   font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
   font-size: 48px;
-  color: #E1E8CC;
+  color: #F4FED3;
 }
 
 .intro-text {
@@ -1811,7 +1815,7 @@ button.prop {
 }
 
 .text-main-yellow {
-  color: #E1E8CC;
+  color: #F4FED3;
 }
 
 .text-dark-yellow {
@@ -1879,7 +1883,7 @@ button.prop {
 }
 
 .bg-main-yellow {
-  background-color: #E1E8CC;
+  background-color: #F4FED3;
 }
 
 .bg-dark-yellow {
@@ -1983,7 +1987,7 @@ button.prop {
 .safe-puzzle-title {
   font-size: 40px;
   font-weight: 700;
-  color: #E1E8CC;
+  color: #F4FED3;
   margin-bottom: 8px;
 }
 
@@ -2003,7 +2007,7 @@ button.prop {
 }
 
 .safe-puzzle-attempts-count {
-  color: #E1E8CC;
+  color: #F4FED3;
   font-weight: 700;
 }
 
@@ -2055,7 +2059,7 @@ button.prop {
 
 .dial-value {
   background: rgba(0, 17, 37, 0.8);
-  color: #E1E8CC;
+  color: #F4FED3;
   font-size: 48px;
   font-weight: 700;
   font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
@@ -2085,7 +2089,7 @@ button.prop {
 
 .display-number {
   background: rgba(0, 0, 0, 0.5);
-  color: #E1E8CC;
+  color: #F4FED3;
   font-size: 40px;
   font-weight: 700;
   font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
@@ -2095,7 +2099,7 @@ button.prop {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  border: 2px solid rgba(225, 232, 204, 0.3);
+  border: 2px solid rgba(244, 254, 211, 0.3);
 }
 
 /* Controls */
@@ -2167,7 +2171,7 @@ button.prop {
   color: #F6FDDB;
   padding: 8px 16px;
   border-radius: 8px;
-  border-left: 4px solid #E1E8CC;
+  border-left: 4px solid #F4FED3;
 }
 
 /* Message */
@@ -2251,7 +2255,7 @@ body {
   transform-origin: top left;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(90deg, #004251 100%, #E1E8CC 30%);
+  background-color: #F4FED3;
   overflow: hidden;
 }
 
