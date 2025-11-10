@@ -21,6 +21,7 @@
     gap: $spacing-xs;
     padding: 0px;
     pointer-events: none;
+    z-index: 50;
     @include vertical-gradient($main-blue, $dark-marine, 0.2);
     @include shadow-custom(2px, 4px, 8px, 0px, rgba($black, 0.3));
 }

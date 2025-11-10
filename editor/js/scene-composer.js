@@ -25,6 +25,13 @@ export class SceneComposer {
         this.dragOffset = { x: 0, y: 0 };
         this.selectedItem = null;
 
+        // Resize state
+        this.resizing = false;
+        this.resizeHandle = null; // 'nw', 'ne', 'sw', 'se'
+        this.resizeStartPos = { x: 0, y: 0 };
+        this.resizeStartSize = { width: 0, height: 0 };
+        this.resizeStartItemPos = { x: 0, y: 0 };
+
         // Grid settings
         this.gridEnabled = false;
         this.gridSize = 10;
@@ -245,14 +252,183 @@ export class SceneComposer {
         label.textContent = item.longName || item.name;
         itemEl.appendChild(label);
 
+        // Resize handles (will be shown when selected)
+        const handles = ['nw', 'ne', 'sw', 'se'];
+        handles.forEach(position => {
+            const handle = document.createElement('div');
+            handle.className = `composer-resize-handle composer-resize-${position}`;
+            handle.dataset.handle = position;
+            handle.addEventListener('mousedown', (e) => this.startResize(e, item, itemEl, position));
+            itemEl.appendChild(handle);
+        });
+
         // Event listeners
-        itemEl.addEventListener('mousedown', (e) => this.startDrag(e, item, itemEl));
+        itemEl.addEventListener('mousedown', (e) => {
+            // Don't start drag if clicking on a resize handle
+            if (e.target.classList.contains('composer-resize-handle')) {
+                return;
+            }
+            this.startDrag(e, item, itemEl);
+        });
         itemEl.addEventListener('click', (e) => {
             e.stopPropagation();
             this.selectItem(item, itemEl);
         });
 
         this.itemsLayer.appendChild(itemEl);
+    }
+
+    /**
+     * Start resizing an item
+     */
+    startResize(e, item, element, handle) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.resizing = true;
+        this.resizeHandle = handle;
+        this.draggedItem = item;
+        this.draggedElement = element;
+
+        // Store starting state
+        const wrapper = document.querySelector('.composer-canvas-wrapper');
+        const wrapperRect = wrapper.getBoundingClientRect();
+        this.resizeStartPos.x = (e.clientX - wrapperRect.left) / this.scale;
+        this.resizeStartPos.y = (e.clientY - wrapperRect.top) / this.scale;
+
+        this.resizeStartSize.width = parseFloat(element.style.width) || 100;
+        this.resizeStartSize.height = parseFloat(element.style.height) || 100;
+
+        this.resizeStartItemPos.x = parseFloat(element.style.left) || 0;
+        this.resizeStartItemPos.y = parseFloat(element.style.top) || 0;
+
+        // Calculate aspect ratio
+        this.aspectRatio = this.resizeStartSize.width / this.resizeStartSize.height;
+
+        element.classList.add('resizing');
+
+        // Add document-level listeners
+        document.addEventListener('mousemove', this.handleResizeMove);
+        document.addEventListener('mouseup', this.handleResizeEnd);
+    }
+
+    /**
+     * Handle resize move
+     */
+    handleResizeMove = (e) => {
+        if (!this.resizing || !this.draggedElement) return;
+
+        const wrapper = document.querySelector('.composer-canvas-wrapper');
+        const wrapperRect = wrapper.getBoundingClientRect();
+
+        const mouseCanvasX = (e.clientX - wrapperRect.left) / this.scale;
+        const mouseCanvasY = (e.clientY - wrapperRect.top) / this.scale;
+
+        const deltaX = mouseCanvasX - this.resizeStartPos.x;
+        const deltaY = mouseCanvasY - this.resizeStartPos.y;
+
+        let newWidth = this.resizeStartSize.width;
+        let newHeight = this.resizeStartSize.height;
+        let newX = this.resizeStartItemPos.x;
+        let newY = this.resizeStartItemPos.y;
+
+        // Calculate new dimensions based on handle
+        switch (this.resizeHandle) {
+            case 'se': // Bottom-right
+                newWidth = this.resizeStartSize.width + deltaX;
+                newHeight = newWidth / this.aspectRatio;
+                break;
+            case 'sw': // Bottom-left
+                newWidth = this.resizeStartSize.width - deltaX;
+                newHeight = newWidth / this.aspectRatio;
+                newX = this.resizeStartItemPos.x + deltaX;
+                break;
+            case 'ne': // Top-right
+                newWidth = this.resizeStartSize.width + deltaX;
+                newHeight = newWidth / this.aspectRatio;
+                newY = this.resizeStartItemPos.y - (newHeight - this.resizeStartSize.height);
+                break;
+            case 'nw': // Top-left
+                newWidth = this.resizeStartSize.width - deltaX;
+                newHeight = newWidth / this.aspectRatio;
+                newX = this.resizeStartItemPos.x + deltaX;
+                newY = this.resizeStartItemPos.y - (newHeight - this.resizeStartSize.height);
+                break;
+        }
+
+        // Enforce minimum size
+        const minSize = 20;
+        if (newWidth < minSize) {
+            newWidth = minSize;
+            newHeight = minSize / this.aspectRatio;
+        }
+
+        // Apply new dimensions
+        this.draggedElement.style.width = `${newWidth}px`;
+        this.draggedElement.style.height = `${newHeight}px`;
+        this.draggedElement.style.left = `${newX}px`;
+        this.draggedElement.style.top = `${newY}px`;
+    }
+
+    /**
+     * Handle resize end
+     */
+    handleResizeEnd = (e) => {
+        if (!this.resizing || !this.draggedElement || !this.draggedItem) return;
+
+        this.draggedElement.classList.remove('resizing');
+
+        // Update item data
+        const width = Math.round(parseFloat(this.draggedElement.style.width));
+        const height = Math.round(parseFloat(this.draggedElement.style.height));
+        const x = Math.round(parseFloat(this.draggedElement.style.left));
+        const y = Math.round(parseFloat(this.draggedElement.style.top));
+
+        // Update both position formats
+        if (this.draggedItem.position) {
+            this.draggedItem.position = [x, y];
+        } else {
+            this.draggedItem.x = x;
+            this.draggedItem.y = y;
+        }
+
+        if (this.draggedItem.size) {
+            this.draggedItem.size = [width, height];
+        } else {
+            this.draggedItem.width = width;
+            this.draggedItem.height = height;
+        }
+
+        // Scale hit area proportionally
+        if (this.draggedItem.hitArea) {
+            const scaleX = width / this.resizeStartSize.width;
+            const scaleY = height / this.resizeStartSize.height;
+
+            const currentHitWidth = this.draggedItem.hitArea[0] || width;
+            const currentHitHeight = this.draggedItem.hitArea[1] || height;
+
+            this.draggedItem.hitArea = [
+                Math.round(currentHitWidth * scaleX),
+                Math.round(currentHitHeight * scaleY)
+            ];
+        }
+
+        console.log(`✓ Resized ${this.draggedItem.name} to ${width}x${height} at (${x}, ${y})`);
+
+        // Update properties panel if visible
+        this.updatePropertiesPanel();
+
+        // Trigger auto-save
+        this.editor.saveCurrentWork();
+
+        // Clean up
+        document.removeEventListener('mousemove', this.handleResizeMove);
+        document.removeEventListener('mouseup', this.handleResizeEnd);
+
+        this.resizing = false;
+        this.resizeHandle = null;
+        this.draggedItem = null;
+        this.draggedElement = null;
     }
 
     /**
@@ -370,6 +546,16 @@ export class SceneComposer {
             this.editor.switchPreviewTab('properties');
             // Show item properties
             this.editor.propertiesPanel.showItemProperties(item);
+        }
+    }
+
+    /**
+     * Update properties panel with current item values
+     */
+    updatePropertiesPanel() {
+        if (this.selectedItem && this.editor.propertiesPanel) {
+            // Refresh the properties panel with updated values
+            this.editor.propertiesPanel.showItemProperties(this.selectedItem);
         }
     }
 

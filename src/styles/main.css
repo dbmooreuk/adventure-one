@@ -1544,6 +1544,7 @@ button.prop {
   gap: 6px;
   padding: 0px;
   pointer-events: none;
+  z-index: 50;
   background: rgba(4, 30, 61, 0.2);
   background: linear-gradient(to bottom, rgba(4, 30, 61, 0.2) 0%, rgba(29, 102, 111, 0.2) 100%);
   box-shadow: 2px 4px 8px 0px rgba(0, 0, 0, 0.3);
