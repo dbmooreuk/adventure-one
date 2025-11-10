@@ -876,6 +876,12 @@ export class SceneComposer {
         svg.style.pointerEvents = 'none';
         svg.style.display = this.hitAreaVisible ? 'block' : 'none';
 
+        // Set viewBox to match item dimensions so polygon coordinates are relative to item
+        const width = item.size ? item.size[0] : (item.width || 100);
+        const height = item.size ? item.size[1] : (item.height || 100);
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        svg.setAttribute('preserveAspectRatio', 'none');
+
         // Create polygon element
         const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         const pointsStr = item.hitPolygon.map(([x, y]) => `${x},${y}`).join(' ');
@@ -884,6 +890,8 @@ export class SceneComposer {
         polygon.style.stroke = 'rgba(255, 0, 0, 0.6)';
         polygon.style.strokeWidth = '2';
         polygon.style.strokeDasharray = '5,5';
+        // Scale stroke width to be visible at any size
+        polygon.style.vectorEffect = 'non-scaling-stroke';
         svg.appendChild(polygon);
 
         // Create draggable nodes for each point
@@ -897,6 +905,7 @@ export class SceneComposer {
             node.style.strokeWidth = '2';
             node.style.cursor = 'move';
             node.style.pointerEvents = 'auto';
+            node.style.vectorEffect = 'non-scaling-stroke';
             node.dataset.nodeIndex = index;
 
             // Add drag handlers for the node
