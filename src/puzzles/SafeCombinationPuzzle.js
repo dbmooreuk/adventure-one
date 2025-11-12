@@ -59,7 +59,7 @@ export class SafeCombinationPuzzle {
         this.container.innerHTML = `
             <div class="safe-puzzle">
                 <div class="safe-puzzle-header">
-                    <h2 class="safe-puzzle-title">Safe Combination Lock</h2>
+                
                     <p class="safe-puzzle-subtitle">Enter the correct ${dialCount}-digit combination</p>
                     <div class="safe-puzzle-attempts">
                         Attempts: <span class="attempts-count">${attempts}</span> / ${maxAttempts}
@@ -71,15 +71,9 @@ export class SafeCombinationPuzzle {
                         ${this.renderDials()}
                     </div>
 
-                    <div class="safe-display">
-                        <div class="safe-display-numbers">
-                            ${combination.map((num, i) => `
-                                <span class="display-number" data-dial="${i}">${num}</span>
-                            `).join('')}
-                        </div>
-                    </div>
 
-                    <div class="safe-controls">
+
+                    <div class="safe-controls ">
                         <button class="btn btn-puzzle btn-submit">
                             <span>🔓</span> Try Combination
                         </button>

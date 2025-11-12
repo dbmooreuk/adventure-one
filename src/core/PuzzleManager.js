@@ -11,7 +11,9 @@ export class PuzzleManager extends EventEmitter {
         this.game = game
         this.currentPuzzle = null
         this.puzzleContainer = null
+        this.puzzleOverlay = null
         this.currentSceneData = null
+        this.parentScene = null // Store the scene that opened the puzzle
     }
 
     /**
@@ -32,17 +34,19 @@ export class PuzzleManager extends EventEmitter {
     }
 
     /**
-     * Load and initialize a puzzle
+     * Load and initialize a puzzle as an overlay
      * @param {Object} sceneData - Scene data containing puzzle configuration
+     * @param {string} parentSceneName - Name of the scene that opened the puzzle
      */
-    async loadPuzzle(sceneData) {
+    async loadPuzzle(sceneData, parentSceneName = null) {
         try {
             console.log('🧩 Loading puzzle:', sceneData.puzzleModule)
-            
-            this.currentSceneData = sceneData
 
-            // Create puzzle container if it doesn't exist
-            this.createPuzzleContainer()
+            this.currentSceneData = sceneData
+            this.parentScene = parentSceneName || this.game.sceneManager?.currentScene?.sceneName
+
+            // Create puzzle overlay and container
+            this.createPuzzleContainer(sceneData)
 
             // Dynamically import the puzzle module
             const moduleName = sceneData.puzzleModule
@@ -76,30 +80,64 @@ export class PuzzleManager extends EventEmitter {
 
         } catch (error) {
             console.error('❌ Failed to load puzzle:', error)
-            this.game.uiManager?.showMessage("Failed to load puzzle. Returning to previous scene.")
+            this.game.uiManager?.showMessage("Failed to load puzzle.")
             this.handlePuzzleCancel()
         }
     }
 
     /**
-     * Create the puzzle container element
+     * Create the puzzle overlay and container element
+     * @param {Object} sceneData - Scene data with puzzle configuration
      */
-    createPuzzleContainer() {
+    createPuzzleContainer(sceneData) {
+        const sceneContainer = this.game.uiManager?.elements?.sceneContainer
+        if (!sceneContainer) {
+            console.error('❌ Scene container not found!')
+            return
+        }
+
+        // Create overlay backdrop if it doesn't exist
+        if (!this.puzzleOverlay) {
+            this.puzzleOverlay = document.createElement('div')
+            this.puzzleOverlay.className = 'puzzle-overlay'
+            this.puzzleOverlay.id = 'puzzle-overlay'
+            sceneContainer.appendChild(this.puzzleOverlay)
+        }
+
+        // Create puzzle container if it doesn't exist
         if (!this.puzzleContainer) {
             this.puzzleContainer = document.createElement('div')
             this.puzzleContainer.className = 'puzzle-container'
             this.puzzleContainer.id = 'puzzle-container'
-            
-            const sceneContainer = this.game.uiManager?.elements?.sceneContainer
-            if (sceneContainer) {
-                sceneContainer.appendChild(this.puzzleContainer)
-            } else {
-                console.error('❌ Scene container not found!')
-            }
+            this.puzzleOverlay.appendChild(this.puzzleContainer)
         }
 
-        // Show the container
+        // Apply custom size and position from scene data
+        const width = sceneData.puzzleWidth || 824
+        const height = sceneData.puzzleHeight || 554
+        const top = sceneData.puzzleTop !== undefined ? `${sceneData.puzzleTop}px` : 'auto'
+        const left = sceneData.puzzleLeft !== undefined ? `${sceneData.puzzleLeft}px` : 'auto'
+        const right = sceneData.puzzleRight !== undefined ? `${sceneData.puzzleRight}px` : 'auto'
+        const bottom = sceneData.puzzleBottom !== undefined ? `${sceneData.puzzleBottom}px` : 'auto'
+
+        this.puzzleContainer.style.width = `${width}px`
+        this.puzzleContainer.style.height = `${height}px`
+        this.puzzleContainer.style.top = top
+        this.puzzleContainer.style.left = left
+        this.puzzleContainer.style.right = right
+        this.puzzleContainer.style.bottom = bottom
+
+        // Show the overlay and container
+        this.puzzleOverlay.style.display = 'flex'
         this.puzzleContainer.style.display = 'flex'
+
+        // Trigger fade-in animation after a brief delay (for CSS transition)
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                this.puzzleOverlay.classList.add('active')
+                this.puzzleContainer.classList.add('active')
+            })
+        })
     }
 
     /**
@@ -141,13 +179,9 @@ export class PuzzleManager extends EventEmitter {
         // Emit completion event
         this.emit('puzzleCompleted', { result, sceneData: this.currentSceneData })
 
-        // Return to previous scene after a delay
+        // Close puzzle overlay after a delay (stay on parent scene)
         setTimeout(() => {
             this.unloadPuzzle()
-            const returnScene = config.returnScene || this.game.sceneManager?.scenes[this.game.sceneManager.currentSceneIndex - 1]?.sceneName
-            if (returnScene) {
-                this.game.sceneManager?.changeScene(returnScene)
-            }
         }, 1500)
     }
 
@@ -157,15 +191,8 @@ export class PuzzleManager extends EventEmitter {
     handlePuzzleCancel() {
         console.log('🚫 Puzzle cancelled')
 
-        const config = this.currentSceneData?.puzzleConfig || {}
-        
+        // Just close the overlay (stay on parent scene)
         this.unloadPuzzle()
-
-        // Return to previous scene
-        const returnScene = config.returnScene || this.game.sceneManager?.scenes[this.game.sceneManager.currentSceneIndex - 1]?.sceneName
-        if (returnScene) {
-            this.game.sceneManager?.changeScene(returnScene)
-        }
 
         this.emit('puzzleCancelled', { sceneData: this.currentSceneData })
     }
@@ -199,24 +226,39 @@ export class PuzzleManager extends EventEmitter {
     unloadPuzzle() {
         console.log('🧹 Unloading puzzle...')
 
-        // Destroy puzzle instance
-        if (this.currentPuzzle) {
-            if (typeof this.currentPuzzle.destroy === 'function') {
-                this.currentPuzzle.destroy()
-            }
-            this.currentPuzzle = null
+        // Trigger fade-out animation
+        if (this.puzzleOverlay) {
+            this.puzzleOverlay.classList.remove('active')
         }
-
-        // Hide/remove puzzle container
         if (this.puzzleContainer) {
-            this.puzzleContainer.style.display = 'none'
-            this.puzzleContainer.innerHTML = ''
+            this.puzzleContainer.classList.remove('active')
         }
 
-        this.currentSceneData = null
+        // Wait for fade-out animation to complete before cleanup
+        setTimeout(() => {
+            // Destroy puzzle instance
+            if (this.currentPuzzle) {
+                if (typeof this.currentPuzzle.destroy === 'function') {
+                    this.currentPuzzle.destroy()
+                }
+                this.currentPuzzle = null
+            }
 
-        console.log('✅ Puzzle unloaded')
-        this.emit('puzzleUnloaded')
+            // Hide puzzle overlay and clear container
+            if (this.puzzleOverlay) {
+                this.puzzleOverlay.style.display = 'none'
+            }
+
+            if (this.puzzleContainer) {
+                this.puzzleContainer.innerHTML = ''
+            }
+
+            this.currentSceneData = null
+            this.parentScene = null
+
+            console.log('✅ Puzzle unloaded')
+            this.emit('puzzleUnloaded')
+        }, 300) // Match CSS transition duration
     }
 
     /**
@@ -240,10 +282,15 @@ export class PuzzleManager extends EventEmitter {
      */
     destroy() {
         this.unloadPuzzle()
-        
+
         if (this.puzzleContainer) {
             this.puzzleContainer.remove()
             this.puzzleContainer = null
+        }
+
+        if (this.puzzleOverlay) {
+            this.puzzleOverlay.remove()
+            this.puzzleOverlay = null
         }
     }
 }

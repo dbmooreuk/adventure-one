@@ -8,13 +8,12 @@
 
 /* Safe Combination Puzzle */
 .safe-puzzle {
-    background: rgba($dark-marine, 0.95);
+   
     border-radius: $border-radius-xl;
     padding: $spacing-xxl;
-    max-width: 600px;
-    width: 90%;
+width: 100%;
     @include shadow-xl;
-    border: 2px solid $main-marine;
+
 }
 
 .safe-puzzle-header {
@@ -146,7 +145,6 @@
 /* Controls */
 .safe-controls {
     display: flex;
-    flex-direction: column;
     gap: $spacing-md;
 }
 

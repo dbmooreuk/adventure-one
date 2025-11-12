@@ -263,22 +263,30 @@ export class UIManager extends EventEmitter {
             const targetScene = this.game.sceneManager?.findScene(itemData.linkToScene)
             const isPuzzleScene = targetScene?.sceneType === 'puzzle'
 
-            // Only show message for non-puzzle scenes
-            if (!isPuzzleScene && itemData.useMessage) {
-                this.showMessage(itemData.useMessage)
-            } else if (!isPuzzleScene) {
-                const message = `You proceed through the ${itemData.longName || itemName}.`
-                this.showMessage(message)
-            }
+            if (isPuzzleScene) {
+                // Open puzzle as overlay (don't change scene)
+                console.log('🧩 Opening puzzle overlay:', itemData.linkToScene)
+                const currentSceneName = this.game.sceneManager?.currentScene?.sceneName
+                this.game.puzzleManager?.loadPuzzle(targetScene, currentSceneName)
+            } else {
+                // Normal scene navigation
+                // Show message for non-puzzle scenes
+                if (itemData.useMessage) {
+                    this.showMessage(itemData.useMessage)
+                } else {
+                    const message = `You proceed through the ${itemData.longName || itemName}.`
+                    this.showMessage(message)
+                }
 
-            // Add points if specified
-            if (itemData.points) {
-                const achievementId = `navigate_${itemName}_to_${itemData.linkToScene}`
-                this.game.addScore(itemData.points, achievementId)
-            }
+                // Add points if specified
+                if (itemData.points) {
+                    const achievementId = `navigate_${itemName}_to_${itemData.linkToScene}`
+                    this.game.addScore(itemData.points, achievementId)
+                }
 
-            // Change to the linked scene
-            this.game.sceneManager?.changeScene(itemData.linkToScene)
+                // Change to the linked scene
+                this.game.sceneManager?.changeScene(itemData.linkToScene)
+            }
         } else {
             this.showMessage("This doesn't seem to lead anywhere.")
         }

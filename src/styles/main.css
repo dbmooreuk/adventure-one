@@ -1917,19 +1917,47 @@ button.prop {
  * Common Puzzle Styles
  * Shared styles used by all puzzle components
  */
-/* Puzzle Container - Common to all puzzles */
-.puzzle-container {
+/* Puzzle Overlay - Full screen backdrop */
+.puzzle-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
+  display: none; /* Hidden by default, shown when puzzle loads */
   align-items: center;
   justify-content: center;
   z-index: 100;
-  background: rgba(6, 51, 64, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(2, 16, 24, 0.8);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+.puzzle-overlay.active {
+  opacity: 1;
+}
+
+/* Puzzle Container - Centered puzzle content */
+.puzzle-container {
+  position: absolute;
+  width: 824px;
+  height: 554px;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  background: rgba(6, 51, 64, 0.98);
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  /* Center by default if no position specified */
+  margin: auto;
+  /* Fade in/out animation */
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.puzzle-container.active {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /**
@@ -1938,13 +1966,10 @@ button.prop {
  */
 /* Safe Combination Puzzle */
 .safe-puzzle {
-  background: rgba(6, 51, 64, 0.95);
   border-radius: 24px;
   padding: 48px;
-  max-width: 600px;
-  width: 90%;
+  width: 100%;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 2px solid #19545C;
 }
 
 .safe-puzzle-header {
@@ -2073,7 +2098,6 @@ button.prop {
 /* Controls */
 .safe-controls {
   display: flex;
-  flex-direction: column;
   gap: 16px;
 }
 

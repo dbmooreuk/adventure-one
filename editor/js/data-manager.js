@@ -149,6 +149,24 @@ export class DataManager {
                 if (scene.puzzleConfig) {
                     output += `,\n            puzzleConfig: ${JSON.stringify(scene.puzzleConfig, null, 12).replace(/\n/g, '\n            ')}`;
                 }
+                if (scene.puzzleWidth) {
+                    output += `,\n            puzzleWidth: ${scene.puzzleWidth}`;
+                }
+                if (scene.puzzleHeight) {
+                    output += `,\n            puzzleHeight: ${scene.puzzleHeight}`;
+                }
+                if (scene.puzzleTop !== undefined && scene.puzzleTop !== null) {
+                    output += `,\n            puzzleTop: ${scene.puzzleTop}`;
+                }
+                if (scene.puzzleLeft !== undefined && scene.puzzleLeft !== null) {
+                    output += `,\n            puzzleLeft: ${scene.puzzleLeft}`;
+                }
+                if (scene.puzzleRight !== undefined && scene.puzzleRight !== null) {
+                    output += `,\n            puzzleRight: ${scene.puzzleRight}`;
+                }
+                if (scene.puzzleBottom !== undefined && scene.puzzleBottom !== null) {
+                    output += `,\n            puzzleBottom: ${scene.puzzleBottom}`;
+                }
             }
             
             output += '\n        }';

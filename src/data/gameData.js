@@ -40,7 +40,7 @@ export const gameData = {
             sceneType: "puzzle",
             sceneMusic: "ambient2",
             backgroundImage: "splash.png",
-            items: [],
+            items: ["rope", "key"],
             puzzleModule: "SafeCombinationPuzzle",
             puzzleConfig: {
                       "solution": [

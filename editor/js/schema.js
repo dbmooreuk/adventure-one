@@ -111,6 +111,50 @@ export const sceneSchema = {
         label: 'Puzzle Configuration',
         help: 'JSON configuration for the puzzle',
         condition: (data) => data.sceneType === 'puzzle'
+    },
+    puzzleWidth: {
+        type: 'number',
+        required: false,
+        label: 'Puzzle Width',
+        help: 'Width of puzzle container in pixels (default: 824)',
+        default: 824,
+        condition: (data) => data.sceneType === 'puzzle'
+    },
+    puzzleHeight: {
+        type: 'number',
+        required: false,
+        label: 'Puzzle Height',
+        help: 'Height of puzzle container in pixels (default: 554)',
+        default: 554,
+        condition: (data) => data.sceneType === 'puzzle'
+    },
+    puzzleTop: {
+        type: 'number',
+        required: false,
+        label: 'Puzzle Top Position',
+        help: 'Top position in pixels (leave empty for auto-center)',
+        condition: (data) => data.sceneType === 'puzzle'
+    },
+    puzzleLeft: {
+        type: 'number',
+        required: false,
+        label: 'Puzzle Left Position',
+        help: 'Left position in pixels (leave empty for auto-center)',
+        condition: (data) => data.sceneType === 'puzzle'
+    },
+    puzzleRight: {
+        type: 'number',
+        required: false,
+        label: 'Puzzle Right Position',
+        help: 'Right position in pixels (leave empty for auto-center)',
+        condition: (data) => data.sceneType === 'puzzle'
+    },
+    puzzleBottom: {
+        type: 'number',
+        required: false,
+        label: 'Puzzle Bottom Position',
+        help: 'Bottom position in pixels (leave empty for auto-center)',
+        condition: (data) => data.sceneType === 'puzzle'
     }
 };
 
