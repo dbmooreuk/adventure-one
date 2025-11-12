@@ -318,48 +318,32 @@ export const gameData = {
             longName: "Mechanical Gear",
             shortName: "Sea",
             type: "decor",
-            lookAt: "A brass gear that's constantly rotating. It might be part of a mechanism.",
-            pickUpMessage: "You pick up the spinning gear. It's surprisingly light.",
-            useMessage: "The gear fits perfectly into the mechanism!",
-            outcome: "remove",
-            points: 20,
             image: "sea-1.png",
             position: [-12, 579],
             size: [1304, 225],
-            hitW: 1304,
-            hitH: 225,
             zIndex: 2,
             nonInteractive: true,
             animation: {
                       "type": "bob",
                       "speed": 0.5
             },
-            onClickEffect: "shake",
-            onClickSound: "success"
+
         },
         {
             name: "sea-two",
             longName: "Mechanical Gear",
             shortName: "Sea",
             type: "decor",
-            lookAt: "A brass gear that's constantly rotating. It might be part of a mechanism.",
-            pickUpMessage: "You pick up the spinning gear. It's surprisingly light.",
-            useMessage: "The gear fits perfectly into the mechanism!",
-            outcome: "remove",
-            points: 20,
             image: "sea-1.png",
             position: [-54, 638],
             size: [1404, 235],
-            hitW: 1304,
-            hitH: 225,
             zIndex: 3,
             nonInteractive: true,
             animation: {
                       "type": "bob",
                       "speed": 0.9
             },
-            onClickEffect: "shake",
-            onClickSound: "success"
+
         },
         {
             name: "key",
