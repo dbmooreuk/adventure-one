@@ -238,6 +238,47 @@ html {
   opacity: 0.5;
 }
 
+.btn-look {
+  width: 60px;
+  height: 60px;
+  border-radius: 9999px;
+  border: 1px solid #417B7B;
+  background-color: #021018;
+  color: #F6FDDB;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: absolute;
+  z-index: 100;
+  bottom: 16px;
+  right: 16px;
+  margin-right: 6px;
+}
+.btn-look:hover:not(:disabled) {
+  background: #F4FED3;
+  color: #021018;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.btn-look:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.btn-look:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-look:focus {
+  outline: 2px solid #BB067E;
+  outline-offset: 2px;
+}
+.btn-look.active {
+  background: #417B7B;
+  color: #063340;
+  border: 1px solid #417B7B;
+}
+.btn-look.inactive {
+  opacity: 0.5;
+}
+
 button.prop {
   background-color: transparent;
   border: none;

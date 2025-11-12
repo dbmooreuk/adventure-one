@@ -141,23 +141,54 @@ background-color: transparent;
     }
 }
 
-.btn-examine{
-    
+.btn-look {
+width: 60px;
+height: 60px;
+    border-radius:  $border-radius-full ;
+    border: 1px solid $light-marine;
+    background-color: $darkest-marine;
+    color: $light-yellow;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  position: absolute;
+  z-index: 100;
 
-}
-.btn-look{
+  bottom: $spacing-md;
+  right: $spacing-md;
+    margin-right: $spacing-xs;
 
-}
-.btn-get{
+    &:hover:not(:disabled) {
+        background: $main-yellow;
+        color: $darkest-marine;
+        // transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
 
-}
-.btn-use{
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-}
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
+    &:focus {
+        outline: 2px solid $main-pink;
+        outline-offset: 2px;
+    }
 
-.btn-combine{
+        &.active {
+        background: $light-marine;
+        color: $dark-marine;
+        // @include vertical-gradient($lighter-pink, $light-yellow, 0.7); 
+        border: 1px solid $light-marine;   
+    }
+    &.inactive {
+        opacity: 0.5;
 
+    }
 }
 
 button.prop{
