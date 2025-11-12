@@ -48,6 +48,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  @include shadow-custom(2px, 2px, 8px, 2px, rgba($black, 0.5));
 }
 .intro-title {
     font-family: $font-family-mono;

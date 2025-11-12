@@ -142,6 +142,9 @@ background-color: transparent;
 }
 
 .btn-look {
+        font-family: $font-family-mono;
+    font-weight: bold;
+    text-transform: uppercase;
 width: 60px;
 height: 60px;
     border-radius:  $border-radius-full ;
@@ -152,10 +155,9 @@ height: 60px;
     transition: all 0.3s ease;
   position: absolute;
   z-index: 100;
-
   bottom: $spacing-md;
   right: $spacing-md;
-    margin-right: $spacing-xs;
+  @include shadow-custom(2px, 2px, 8px, 2px, rgba($black, 0.5));
 
     &:hover:not(:disabled) {
         background: $main-yellow;
