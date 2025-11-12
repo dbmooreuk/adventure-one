@@ -60,3 +60,37 @@
     }
 }
 
+/* Common Leave Button - Positioned below puzzle container */
+.puzzle-leave-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30%);
+    padding: 12px 24px;
+    background: rgba($dark-marine, 0.95);
+    color: $main-yellow;
+    border: 2px solid $main-yellow;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    z-index: 1;
+
+    span {
+        margin-right: 8px;
+    }
+
+    &:hover {
+        background: $main-yellow;
+        color: $dark-marine;
+        // transform: translateX(0px) translateY(0) scale(1.05);
+    }
+
+    &.active {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+

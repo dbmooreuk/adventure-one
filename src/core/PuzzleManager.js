@@ -110,6 +110,13 @@ export class PuzzleManager extends EventEmitter {
             this.puzzleContainer.className = 'puzzle-container'
             this.puzzleContainer.id = 'puzzle-container'
             this.puzzleOverlay.appendChild(this.puzzleContainer)
+
+            // Create common Leave button
+            this.leaveButton = document.createElement('button')
+            this.leaveButton.className = 'puzzle-leave-btn'
+            this.leaveButton.innerHTML = 'Leave'
+            this.leaveButton.addEventListener('click', () => this.handlePuzzleCancel())
+            this.puzzleOverlay.appendChild(this.leaveButton)
         }
 
         // Apply custom size and position from scene data
@@ -136,6 +143,9 @@ export class PuzzleManager extends EventEmitter {
             requestAnimationFrame(() => {
                 this.puzzleOverlay.classList.add('active')
                 this.puzzleContainer.classList.add('active')
+                if (this.leaveButton) {
+                    this.leaveButton.classList.add('active')
+                }
             })
         })
     }
@@ -232,6 +242,9 @@ export class PuzzleManager extends EventEmitter {
         }
         if (this.puzzleContainer) {
             this.puzzleContainer.classList.remove('active')
+        }
+        if (this.leaveButton) {
+            this.leaveButton.classList.remove('active')
         }
 
         // Wait for fade-out animation to complete before cleanup

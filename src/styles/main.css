@@ -1960,6 +1960,36 @@ button.prop {
   transform: scale(1);
 }
 
+/* Common Leave Button - Positioned below puzzle container */
+.puzzle-leave-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30%);
+  padding: 12px 24px;
+  background: rgba(6, 51, 64, 0.95);
+  color: #F4FED3;
+  border: 2px solid #F4FED3;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  z-index: 1;
+}
+.puzzle-leave-btn span {
+  margin-right: 8px;
+}
+.puzzle-leave-btn:hover {
+  background: #F4FED3;
+  color: #063340;
+}
+.puzzle-leave-btn.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /**
  * Safe Combination Puzzle Styles
  * Single-hyphen naming convention for puzzle elements

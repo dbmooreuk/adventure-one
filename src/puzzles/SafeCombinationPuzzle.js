@@ -80,9 +80,6 @@ export class SafeCombinationPuzzle {
                         <button class="btn btn-puzzle btn-hint" ${this.state.hintsUsed.length >= hints.length ? 'disabled' : ''}>
                             <span>💡</span> Get Hint (${hints.length - this.state.hintsUsed.length} left)
                         </button>
-                        <button class="btn btn-puzzle btn-cancel">
-                            <span>❌</span> Exit
-                        </button>
                     </div>
 
                     <div class="safe-hints">
@@ -101,7 +98,6 @@ export class SafeCombinationPuzzle {
         this.elements.displayNumbers = this.container.querySelectorAll('.display-number')
         this.elements.submitBtn = this.container.querySelector('.btn-submit')
         this.elements.hintBtn = this.container.querySelector('.btn-hint')
-        this.elements.cancelBtn = this.container.querySelector('.btn-cancel')
         this.elements.message = this.container.querySelector('.safe-message')
         this.elements.attemptsCount = this.container.querySelector('.attempts-count')
         this.elements.hintsContainer = this.container.querySelector('.safe-hints')
@@ -143,9 +139,6 @@ export class SafeCombinationPuzzle {
 
         // Hint button
         this.elements.hintBtn?.addEventListener('click', () => this.handleHint())
-
-        // Cancel button
-        this.elements.cancelBtn?.addEventListener('click', () => this.handleCancel())
     }
 
     /**
@@ -192,8 +185,8 @@ export class SafeCombinationPuzzle {
      * Handle submit button
      */
     handleSubmit() {
-        const { solution, maxAttempts } = this.puzzleConfig
-        
+        const { solution } = this.puzzleConfig
+
         this.state.attempts++
         this.elements.attemptsCount.textContent = this.state.attempts
 
@@ -279,12 +272,7 @@ export class SafeCombinationPuzzle {
         }
     }
 
-    /**
-     * Handle cancel button
-     */
-    handleCancel() {
-        this.callbacks.onCancel()
-    }
+
 
     /**
      * Show message
