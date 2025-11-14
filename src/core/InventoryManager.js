@@ -447,9 +447,21 @@ export class InventoryManager extends EventEmitter {
         this.game.uiManager?.showMessage(message)
 
         // Add score if specified (prefer target's points)
-        if (resultData.points) {
+        const points = resultData.points || 0
+        if (points > 0) {
             const achievementId = `use_${itemData.name}_on_${targetName}`
-            this.game.addScore(resultData.points, achievementId)
+            this.game.addScore(points, achievementId)
+        }
+
+        // Add achievement to journal if specified (prefer target's achievement)
+        if (resultData.achievement) {
+            const achievementId = `use_${itemData.name}_on_${targetName}`
+            this.game.achievementManager?.addAchievement(
+                achievementId,
+                resultData.achievement,
+                points,
+                'item'
+            )
         }
 
         // Check if this unlocks a scene transition
