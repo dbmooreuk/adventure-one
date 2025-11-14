@@ -125,6 +125,10 @@ export class UIManager extends EventEmitter {
         this.game.inventoryManager?.on('itemDeselected', (itemName) => this.handleItemDeselected(itemName))
         this.game.inventoryManager?.on('selectionCleared', () => this.handleSelectionCleared())
 
+        // Listen for save/load events
+        this.game.saveManager?.on('gameSaved', (data) => this.handleGameSaved(data))
+        this.game.saveManager?.on('gameLoaded', () => this.handleGameLoaded())
+
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (this.isMenuOpen && !this.elements.menu?.contains(e.target) && !this.elements.menuToggle?.contains(e.target)) {
@@ -404,7 +408,7 @@ export class UIManager extends EventEmitter {
         const selectedItems = this.game.inventoryManager?.getSelectedItems() || []
 
         if (selectedItems.length === 0) {
-            this.showMessage("Select an item to use first.")
+            this.showMessage("You must have something to use it....")
             return
         }
 
@@ -995,6 +999,26 @@ export class UIManager extends EventEmitter {
                 this.closeMenu()
                 break
         }
+    }
+
+    /**
+     * Handle game saved event
+     * @param {Object} data - Save data containing slot, timestamp, and isAutoSave flag
+     */
+    handleGameSaved(data) {
+        // Only show message for manual saves, not auto-saves
+        if (!data.isAutoSave) {
+            this.showMessage('Progress Saved')
+            this.closeMenu()
+        }
+    }
+
+    /**
+     * Handle game loaded event
+     */
+    handleGameLoaded() {
+        this.showMessage('Progress Loaded')
+        this.closeMenu()
     }
 
     /**

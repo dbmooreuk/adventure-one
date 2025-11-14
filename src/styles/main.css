@@ -79,6 +79,15 @@ html {
   scroll-behavior: smooth;
 }
 
+.stage-title {
+  line-height: 14px;
+  margin-top: 5px;
+}
+
+.scene-title {
+  letter-spacing: 1px;
+}
+
 /* Utilities */
 .text-uppercase {
   text-transform: uppercase;
@@ -1606,9 +1615,9 @@ button.prop {
 /* Messages */
 .panel-text {
   position: fixed;
-  bottom: 24px;
-  left: 24px;
-  font-size: 1rem;
+  bottom: 16px;
+  left: 16px;
+  font-size: 16px;
   background: rgba(2, 16, 24, 0.9);
   padding: 16px 24px;
   border-radius: 8px;

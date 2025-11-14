@@ -62,9 +62,10 @@ export class SaveManager extends EventEmitter {
     /**
      * Save the current game state
      * @param {string} [slot='main'] - Save slot name
+     * @param {boolean} [isAutoSave=false] - Whether this is an auto-save
      * @returns {Promise<boolean>} Success status
      */
-    async saveGame(slot = 'main') {
+    async saveGame(slot = 'main', isAutoSave = false) {
         if (!this.storageAvailable) {
             console.warn('💾 Cannot save: localStorage not available')
             this.emit('saveError', 'Storage not available')
@@ -93,7 +94,7 @@ export class SaveManager extends EventEmitter {
             this.updateSaveList(slot, saveData)
 
             console.log(`✅ Game saved to slot: ${slot}`)
-            this.emit('gameSaved', { slot, timestamp: saveData.timestamp })
+            this.emit('gameSaved', { slot, timestamp: saveData.timestamp, isAutoSave })
 
             return true
 
@@ -157,7 +158,7 @@ export class SaveManager extends EventEmitter {
      * Auto-save the game
      */
     autoSave() {
-        this.saveGame('main').then(success => {
+        this.saveGame('main', true).then(success => {
             if (success) {
                 console.log('💾 Auto-save completed')
                 this.emit('autoSaved')

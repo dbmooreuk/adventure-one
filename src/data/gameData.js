@@ -11,9 +11,9 @@ export const gameData = {
     scenes: [
         {
             sceneName: "scene1",
-            title: "The Stasis Chamber",
+            title: "The Chamber of Transmission",
             textOne: "You find yourself standing at the entrance of a mysterious cave. The air is thick with anticipation.",
-            stage: "Stage 1",
+            stage: "Awakening",
             stageNumber: 1,
             sceneType: "scene",
             sceneMusic: "ambient1",
@@ -342,9 +342,7 @@ export const gameData = {
             animation: {
                       "type": "bob",
                       "speed": 0.5
-            },
-            onClickEffect: "shake",
-            onClickSound: "success"
+            }
         },
         {
             name: "sea-two",
@@ -366,9 +364,7 @@ export const gameData = {
             animation: {
                       "type": "bob",
                       "speed": 0.9
-            },
-            onClickEffect: "shake",
-            onClickSound: "success"
+            }
         },
         {
             name: "key",

@@ -77,9 +77,9 @@
 /* Messages */
 .panel-text {
   position: fixed;
-  bottom: $spacing-lg;
-  left: $spacing-lg;
-  font-size: 1rem;
+  bottom: $spacing-md;
+  left: $spacing-md;
+  font-size: $font-size-md;
   background: rgba($darkest-marine, 0.9);
   padding: $spacing-md $spacing-lg;
   border-radius: $border-radius-md;

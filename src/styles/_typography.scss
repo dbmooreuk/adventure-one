@@ -4,6 +4,14 @@ html {
   font-size: $font-base-size;
   scroll-behavior: smooth;
 }
+
+.stage-title{
+  line-height: 14px;
+  margin-top: 5px;
+}
+.scene-title{
+  letter-spacing: 1px;
+}
 /* Utilities */
 .text-uppercase{
   text-transform: uppercase;
