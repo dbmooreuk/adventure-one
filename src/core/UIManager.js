@@ -1183,7 +1183,7 @@ export class UIManager extends EventEmitter {
         // Create entry elements
         sortedJournal.forEach(entry => {
             const entryEl = document.createElement('div')
-            entryEl.className = 'journal-entry'
+            entryEl.className = 'journal-entry p-md mb-xs'
 
             const header = document.createElement('div')
             header.className = 'journal-entry-header'

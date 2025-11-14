@@ -44,7 +44,7 @@ export const gameConfig = {
         autoSaveEnabled: true,             // Auto-save on progress - legacy
         autoSaveInterval: 30000,           // Auto-save interval (ms) - from gameData
         autoSaveDelay: 30000,
-        win: 60,              // Auto-save interval (ms) - legacy
+        win: 100,              // Auto-save interval (ms) - legacy
     },
 
     // Animation Settings
