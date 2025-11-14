@@ -45,13 +45,14 @@
             </div>
         </div>
 
-        <!-- Win/Win Screen -->
-        <div class="intro-container">
-            <div class="intro-content">
-                <h1 class="intro-title">Adventure Game</h1>
-                <p class="intro-text">Well done you have completed the game</p>
+        <!-- Win Screen -->
+        <div class="win-container" id="win-container" style="display: none;">
+            <div class="win-content">
+                <h1 class="win-title">🎉 Congratulations! 🎉</h1>
+                <p class="win-text">Well done! You have completed the game!</p>
+                <p class="win-points" id="win-points">Total Points: <span id="win-points-value">0</span></p>
                 <div class="flex flex-column">
-                    <button class="btn btn-new-game btn-md btn-secondary">Start New Game</button>
+                    <button class="btn btn-win-new-game btn-md btn-secondary" id="btn-win-new-game">Start New Game</button>
                 </div>
             </div>
         </div>

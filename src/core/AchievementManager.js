@@ -62,16 +62,8 @@ export class AchievementManager extends EventEmitter {
 
         if (totalPoints >= winPoints) {
             console.log(`🎉 Win condition reached! ${totalPoints} / ${winPoints} points`)
+            // Emit gameWon event - Game class will handle showing win screen
             this.game.emit('gameWon', { totalPoints, winPoints })
-
-            // Show congratulations message after a short delay
-            setTimeout(() => {
-                this.game.uiManager?.showMessage(
-                    `🎉 Congratulations! You've completed the game with ${totalPoints} points!`,
-                    0,
-                    true
-                )
-            }, 1000)
         }
     }
 

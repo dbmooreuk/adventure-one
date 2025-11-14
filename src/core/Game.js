@@ -11,6 +11,7 @@ import { UIManager } from './UIManager.js'
 import { SaveManager } from './SaveManager.js'
 import { InventoryManager } from './InventoryManager.js'
 import { IntroManager } from './IntroManager.js'
+import { WinManager } from './WinManager.js'
 import { PuzzleManager } from './PuzzleManager.js'
 import { AchievementManager } from './AchievementManager.js'
 import { gameData } from '../data/gameData.js'
@@ -28,6 +29,7 @@ export class Game extends EventEmitter {
         this.saveManager = new SaveManager(this)
         this.inventoryManager = new InventoryManager(this)
         this.introManager = new IntroManager(this)
+        this.winManager = new WinManager(this)
         this.puzzleManager = new PuzzleManager(this)
         this.achievementManager = new AchievementManager(this)
 
@@ -66,6 +68,7 @@ export class Game extends EventEmitter {
             await this.saveManager.initialize()
             await this.inventoryManager.initialize()
             await this.introManager.initialize()
+            await this.winManager.initialize()
             await this.puzzleManager.initialize()
 
             // Set up event listeners
@@ -121,6 +124,11 @@ export class Game extends EventEmitter {
         
         this.uiManager.on('resetRequested', () => {
             this.resetGame()
+        })
+
+        // Win condition event
+        this.on('gameWon', (data) => {
+            this.handleGameWon(data)
         })
     }
 
@@ -239,6 +247,19 @@ export class Game extends EventEmitter {
         this.score = newScore
         this.stateManager.setState('score', newScore)
         this.uiManager.updateScore(newScore)
+    }
+
+    /**
+     * Handle game won event
+     */
+    async handleGameWon(data) {
+        console.log('🎉 Game won!', data)
+
+        // Wait a moment for the achievement modal to be seen
+        setTimeout(async () => {
+            // Show win screen with total points
+            await this.winManager.show(data.totalPoints)
+        }, 2000) // 2 second delay to let player see the final achievement
     }
 
     /**
