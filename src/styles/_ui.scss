@@ -2,20 +2,25 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
+
+.logo-bar{
+    width: 22px;
+}
+
 .menu-container{
 
 }
 
 /* Menu Toggle Button */
 .menu-toggle {
-    position: absolute;
-    top: $spacing-xs;
-    left: $spacing-xs;
+    // position: absolute;
+    // top: $spacing-xs;
+    // left: $spacing-xs;
+    border: 2px solid $main-marine;
     width: 50px;
     height: 50px;
-    border: none;
-    background: rgba($white, 0.1);
-    backdrop-filter: blur(10px);
+    // background: rgba($white, 0.1);
+    // backdrop-filter: blur(10px);
     border-radius: 50%;
     cursor: pointer;
     z-index: $z-index-modal;

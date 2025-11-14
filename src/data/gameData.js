@@ -538,8 +538,7 @@ export const gameData = {
             image: "tower-one.png",
             position: [18, 170],
             size: [550, 550],
-            zIndex: 4,
-            onClickEffect: "flash"
+            zIndex: 4
         },
         {
             name: "starburst-one",

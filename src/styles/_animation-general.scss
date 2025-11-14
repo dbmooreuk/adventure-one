@@ -51,11 +51,11 @@
 
 @keyframes pulse-using {
   0%, 100% {
-    box-shadow: 0 0 20px rgba($main-marine, 0.6);
+    // box-shadow: 0 0 20px rgba($main-marine, 0.6);
     transform: scale(1);
   }
   50% {
     box-shadow: 0 0 30px rgba($main-marine, 0.9);
-    transform: scale(1.05);
+    // transform: scale(1.05);
   }
 }

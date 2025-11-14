@@ -1,0 +1,29 @@
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+
+
+/* Intro/Splash Screen */
+.intro-container {
+      width: $game-width;
+  height: $game-height;
+    // flex: 1;
+    position: relative;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
+    // padding: $spacing-xl;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: $main-yellow;
+    background-image: url('/assets/images/screen-splash.png');
+    
+    padding: $spacing-xl;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 30px;
+    overflow: hidden;}

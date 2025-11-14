@@ -71,6 +71,8 @@ export class UIManager extends EventEmitter {
             // Menu elements
             menuToggle: document.querySelector('#menu-toggle'),
             menu: document.querySelector('#menu'),
+            menuContainer: document.querySelector('#menu-container'),
+            btnClose: document.querySelector('.btn-close'),
             btnSave: document.querySelector('.btn-save'),
             btnLoad: document.querySelector('.btn-load'),
             btnReset: document.querySelector('.btn-reset'),
@@ -103,6 +105,7 @@ export class UIManager extends EventEmitter {
 
         // Menu buttons
         this.elements.menuToggle?.addEventListener('click', () => this.toggleMenu())
+        this.elements.btnClose?.addEventListener('click', () => this.closeMenu())
         this.elements.btnSave?.addEventListener('click', () => this.emit('saveRequested'))
         this.elements.btnLoad?.addEventListener('click', () => this.emit('loadRequested'))
         this.elements.btnReset?.addEventListener('click', () => this.emit('resetRequested'))
@@ -446,10 +449,11 @@ export class UIManager extends EventEmitter {
      */
     toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen
-        
+
         this.elements.menuToggle?.classList.toggle('on', this.isMenuOpen)
-        
+
         if (this.isMenuOpen) {
+            this.elements.menuContainer?.style.setProperty('display', 'block')
             this.elements.menu?.style.setProperty('display', 'block')
             this.elements.menu?.animate([
                 { height: '0px', opacity: '0' },
@@ -467,6 +471,7 @@ export class UIManager extends EventEmitter {
         this.isMenuOpen = false
         this.elements.menuToggle?.classList.remove('on')
         this.elements.menu?.style.setProperty('display', 'none')
+        this.elements.menuContainer?.style.setProperty('display', 'none')
     }
 
     /**
