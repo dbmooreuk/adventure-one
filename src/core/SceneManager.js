@@ -90,12 +90,17 @@ export class SceneManager extends EventEmitter {
             if (scene.sceneType === 'scene' && scene.achievement && isFirstVisit) {
                 setTimeout(() => {
                     const achievementId = `scene_${scene.sceneName}_entered`
+                    const points = scene.points || 0
                     this.game.achievementManager?.addAchievement(
                         achievementId,
                         scene.achievement,
-                        0, // Scenes don't award points, just journal entry
+                        points,
                         'scene'
                     )
+                    // Add score if points specified
+                    if (points > 0) {
+                        this.game.addScore(points, achievementId)
+                    }
                 }, 4000)
             }
 

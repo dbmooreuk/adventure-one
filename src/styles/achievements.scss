@@ -237,3 +237,32 @@
     font-style: italic;
 }
 
+// Journal Footer
+.journal-footer {
+    padding: 20px 30px;
+    background: rgba($black, 0.3);
+    border-top: 2px solid $main-yellow;
+}
+
+.journal-total {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.journal-total-label {
+    color: $white;
+}
+
+.journal-total-points {
+    color: $main-yellow;
+    font-size: 24px;
+}
+
+.journal-total-goal {
+    color: rgba($white, 0.7);
+    font-size: 18px;
+}

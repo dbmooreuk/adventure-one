@@ -89,6 +89,8 @@ export class UIManager extends EventEmitter {
             journalBtn: document.getElementById('journal-btn'),
             journalModal: document.getElementById('journal-modal'),
             journalEntries: document.getElementById('journal-entries'),
+            journalTotalPoints: document.getElementById('journal-total-points'),
+            journalTotalGoal: document.getElementById('journal-total-goal'),
             closeJournalBtn: document.getElementById('close-journal-btn'),
             achievementModal: document.getElementById('achievement-modal')
         }
@@ -1211,6 +1213,22 @@ export class UIManager extends EventEmitter {
 
             this.elements.journalEntries.appendChild(entryEl)
         })
+
+        // Calculate and display total points
+        const totalPoints = this.game.achievementManager?.getTotalPoints() || 0
+        const winPoints = this.game.gameConfig?.gameplay?.win || 60
+
+        if (this.elements.journalTotalPoints) {
+            this.elements.journalTotalPoints.textContent = totalPoints
+        }
+        if (this.elements.journalTotalGoal) {
+            this.elements.journalTotalGoal.textContent = `/ ${winPoints}`
+        }
+
+        // Check if player has won
+        if (totalPoints >= winPoints) {
+            console.log('🎉 Player has achieved winning points!')
+        }
     }
 
     /**

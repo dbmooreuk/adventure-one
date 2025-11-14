@@ -29,6 +29,7 @@ export const gameData = {
             sceneType: "scene",
             sceneMusic: "ambient2",
             achievement: "You have successfully got to scene 2",
+            points: 50,
             backgroundImage: "screen-stasis.png",
             items: ["safe_door", "rope", "key", "map", "boat", "oar"]
         },
@@ -420,8 +421,9 @@ export const gameData = {
             useMessage: "You use the oar to paddle across the lake safely. The boat takes you to the other side!",
             useResult: "crossing",
             outcome: "scene",
-            nextScene: "scene3",
+            achievement: "You unlocked the boat!",
             points: 30,
+            nextScene: "scene3",
             image: "boat-without-oar.png",
             position: [202, 323],
             size: [219, 146]
@@ -436,7 +438,6 @@ export const gameData = {
             useMessage: "You use the oar to paddle the boat across the water.",
             useResult: "crossing",
             outcome: "remove",
-            points: 15,
             position: [300, 200],
             size: [100, 30],
             style: {

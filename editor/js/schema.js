@@ -161,6 +161,14 @@ export const sceneSchema = {
         required: false,
         label: 'Achievement',
         help: 'Journal entry text. For regular scenes: appears 4 seconds after entering (first visit only). For puzzles: appears when puzzle is completed.'
+    },
+    points: {
+        type: 'number',
+        required: false,
+        label: 'Points',
+        help: 'Points awarded for this achievement (default: 0)',
+        min: 0,
+        default: 0
     }
 };
 

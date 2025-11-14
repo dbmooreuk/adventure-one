@@ -763,6 +763,12 @@
                             <div class="detail-value"><em>"${scene.achievement}"</em></div>
                         </div>
                     ` : ''}
+                    ${scene.points !== undefined && scene.points !== null ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Achievement Points</div>
+                            <div class="detail-value">${scene.points}</div>
+                        </div>
+                    ` : ''}
                 </div>
 
                 <div class="items-section">

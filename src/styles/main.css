@@ -2452,6 +2452,35 @@ button.prop {
   font-style: italic;
 }
 
+.journal-footer {
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 2px solid #F4FED3;
+}
+
+.journal-total {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.journal-total-label {
+  color: #FFFFFF;
+}
+
+.journal-total-points {
+  color: #F4FED3;
+  font-size: 24px;
+}
+
+.journal-total-goal {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+}
+
 /*General stuff*/
 * {
   margin: 0;

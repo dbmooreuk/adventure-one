@@ -14,7 +14,7 @@ import { IntroManager } from './IntroManager.js'
 import { PuzzleManager } from './PuzzleManager.js'
 import { AchievementManager } from './AchievementManager.js'
 import { gameData } from '../data/gameData.js'
-import { gameplay } from '../config/gameConfig.js'
+import { gameConfig, gameplay } from '../config/gameConfig.js'
 
 export class Game extends EventEmitter {
     constructor() {
@@ -30,6 +30,10 @@ export class Game extends EventEmitter {
         this.introManager = new IntroManager(this)
         this.puzzleManager = new PuzzleManager(this)
         this.achievementManager = new AchievementManager(this)
+
+        // Game data and config
+        this.gameData = gameData
+        this.gameConfig = gameConfig
 
         // Game state
         this.isInitialized = false

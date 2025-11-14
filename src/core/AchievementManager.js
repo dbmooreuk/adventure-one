@@ -37,17 +37,42 @@ export class AchievementManager extends EventEmitter {
 
         this.journal.push(entry)
         console.log(`🏆 Achievement added to journal: ${achievementId}`, entry)
-        
+
         // Emit event for listeners
         this.emit('achievementAdded', entry)
-        
+
         // Show achievement notification modal
         this.showAchievementModal(text, points)
-        
+
         // Pulse journal button
         this.pulseJournalButton()
-        
+
+        // Check if player has reached winning points
+        this.checkWinCondition()
+
         return true
+    }
+
+    /**
+     * Check if player has reached the winning points threshold
+     */
+    checkWinCondition() {
+        const totalPoints = this.getTotalPoints()
+        const winPoints = this.game.gameConfig?.gameplay?.win || 60
+
+        if (totalPoints >= winPoints) {
+            console.log(`🎉 Win condition reached! ${totalPoints} / ${winPoints} points`)
+            this.game.emit('gameWon', { totalPoints, winPoints })
+
+            // Show congratulations message after a short delay
+            setTimeout(() => {
+                this.game.uiManager?.showMessage(
+                    `🎉 Congratulations! You've completed the game with ${totalPoints} points!`,
+                    0,
+                    true
+                )
+            }, 1000)
+        }
     }
 
     /**

@@ -173,6 +173,10 @@ export class DataManager {
                 output += `,\n            achievement: "${this.escapeString(scene.achievement)}"`;
             }
 
+            if (scene.points !== undefined && scene.points !== null) {
+                output += `,\n            points: ${scene.points}`;
+            }
+
             output += '\n        }';
             if (index < data.scenes.length - 1) output += ',';
             output += '\n';
