@@ -111,6 +111,11 @@ export class ItemEditor {
         interactionSection.appendChild(this.editor.uiManager.createFormField('points', itemSchema.points, item.points, item));
         form.appendChild(interactionSection);
 
+        // Achievement Section
+        const achievementSection = this.createSection('Achievement');
+        achievementSection.appendChild(this.editor.uiManager.createFormField('achievement', itemSchema.achievement, item.achievement, item));
+        form.appendChild(achievementSection);
+
         // Combine Section
         const combineSection = this.createSection('Combine Properties (Optional)');
         combineSection.appendChild(this.editor.uiManager.createFormField('combineWith', itemSchema.combineWith, item.combineWith, item));

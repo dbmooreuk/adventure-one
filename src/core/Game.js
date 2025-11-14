@@ -12,6 +12,7 @@ import { SaveManager } from './SaveManager.js'
 import { InventoryManager } from './InventoryManager.js'
 import { IntroManager } from './IntroManager.js'
 import { PuzzleManager } from './PuzzleManager.js'
+import { AchievementManager } from './AchievementManager.js'
 import { gameData } from '../data/gameData.js'
 import { gameplay } from '../config/gameConfig.js'
 
@@ -28,6 +29,7 @@ export class Game extends EventEmitter {
         this.inventoryManager = new InventoryManager(this)
         this.introManager = new IntroManager(this)
         this.puzzleManager = new PuzzleManager(this)
+        this.achievementManager = new AchievementManager(this)
 
         // Game state
         this.isInitialized = false
@@ -127,6 +129,7 @@ export class Game extends EventEmitter {
         // Reset all state
         this.score = 0
         this.achievements.clear() // Clear all achievements
+        this.achievementManager.clearJournal() // Clear journal entries
         this.inventoryManager.clear()
         this.stateManager.reset()
         this.sceneManager.reset() // Reset all scene states (restores items to scenes)
@@ -162,6 +165,7 @@ export class Game extends EventEmitter {
         // Reset all state
         this.score = 0
         this.achievements.clear()
+        this.achievementManager.clearJournal() // Clear journal entries
         this.inventoryManager.clear()
         this.stateManager.reset()
         this.sceneManager.reset() // Reset all scene states (restores items to scenes)
@@ -253,6 +257,25 @@ export class Game extends EventEmitter {
         this.score += points // Actually update the score
         console.log(`📊 Score updated: ${this.score} (+${points})`)
         this.emit('scoreChanged', this.score)
+
+        // Check win condition
+        if (this.score >= gameplay.win) {
+            this.handleGameWin()
+        }
+    }
+
+    /**
+     * Handle game win condition
+     */
+    handleGameWin() {
+        console.log('🎉 Game Won! Score reached win condition:', this.score)
+        this.emit('gameWon', { score: this.score })
+
+        // Show victory message
+        this.uiManager?.showMessage('🎉 Congratulations! You have completed the game!')
+
+        // Play success sound
+        this.audioManager?.playSound('success')
     }
 
     /**
@@ -263,12 +286,13 @@ export class Game extends EventEmitter {
             currentScene: this.currentScene?.sceneName || 'splash',
             score: this.score,
             achievements: Array.from(this.achievements), // Convert Set to Array for JSON serialization
+            journal: this.achievementManager.getJournal(), // Save journal entries
             inventory: this.inventoryManager.getItems(),
             sceneStates: this.sceneManager.getSceneStates(),
             customState: this.stateManager.getState('customState') || {},
             timestamp: Date.now()
         }
-        console.log('💾 Getting game state for save:', { score: state.score, achievements: state.achievements })
+        console.log('💾 Getting game state for save:', { score: state.score, achievements: state.achievements, journalEntries: state.journal.length })
         return state
     }
 
@@ -277,11 +301,16 @@ export class Game extends EventEmitter {
      */
     async restoreGameState(saveData) {
         try {
-            console.log('💾 Restoring game state:', { score: saveData.score, achievements: saveData.achievements })
+            console.log('💾 Restoring game state:', { score: saveData.score, achievements: saveData.achievements, journalEntries: saveData.journal?.length || 0 })
             this.score = saveData.score || 0
 
             // Restore achievements
             this.achievements = new Set(saveData.achievements || [])
+
+            // Restore journal
+            if (saveData.journal) {
+                this.achievementManager.setJournal(saveData.journal)
+            }
 
             // Restore inventory
             this.inventoryManager.setItems(saveData.inventory || [])

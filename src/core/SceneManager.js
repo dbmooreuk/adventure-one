@@ -69,6 +69,7 @@ export class SceneManager extends EventEmitter {
 
             // Mark scene as visited
             const sceneState = this.getSceneState(sceneName)
+            const isFirstVisit = !sceneState.visited
             sceneState.visited = true
 
             // Update game state
@@ -84,6 +85,19 @@ export class SceneManager extends EventEmitter {
             console.log(`🎭 SceneManager emitting 'sceneChanged' event for:`, scene)
             this.emit('sceneChanged', scene)
             console.log(`🎭 Event emitted successfully`)
+
+            // Add achievement for regular scenes after 4 seconds (only on first visit)
+            if (scene.sceneType === 'scene' && scene.achievement && isFirstVisit) {
+                setTimeout(() => {
+                    const achievementId = `scene_${scene.sceneName}_entered`
+                    this.game.achievementManager?.addAchievement(
+                        achievementId,
+                        scene.achievement,
+                        0, // Scenes don't award points, just journal entry
+                        'scene'
+                    )
+                }, 4000)
+            }
 
             console.log(`✅ Scene changed to: ${sceneName}`)
 

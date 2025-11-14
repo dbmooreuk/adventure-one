@@ -164,6 +164,16 @@ export class PuzzleManager extends EventEmitter {
         const achievementId = `puzzle_${this.currentSceneData.sceneName}_completed`
         this.game.addScore(points, achievementId)
 
+        // Add achievement to journal if specified
+        if (this.currentSceneData.achievement) {
+            this.game.achievementManager?.addAchievement(
+                achievementId,
+                this.currentSceneData.achievement,
+                points,
+                'puzzle'
+            )
+        }
+
         // Give reward item if specified
         if (result.reward || config.reward) {
             const rewardItem = result.reward || config.reward

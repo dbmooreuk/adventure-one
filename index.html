@@ -96,7 +96,7 @@
 
 
 
-                <div class="scene-inventory-overlay">
+                <div class="scene-inventory-overlay flex">
                     <div class="inventory-slot border-radius-sm p-relative" data-slot="0"></div>
                     <div class="inventory-slot border-radius-sm p-relative" data-slot="1"></div>
                     <div class="inventory-slot border-radius-sm p-relative" data-slot="2"></div>
@@ -104,8 +104,8 @@
                     <div class="inventory-slot border-radius-sm p-relative" data-slot="4"></div>
                     <div class="inventory-slot border-radius-sm p-relative" data-slot="5"></div>
                     <div class="inventory-slot border-radius-sm p-relative" data-slot="6"></div>
-                    <div class="score-box body-lg text-main-yellow">0%</div>
-                    <button>Journal link</button>
+                    <!-- <div class="score-box body-lg text-main-yellow">0%</div> -->
+                    <button class="btn-journal" id="journal-btn">Journal</button>
                 </div>
 
 
@@ -117,6 +117,28 @@
             <div class="panel-text body-sm text-dark-marine bg-white">
                 <div class="panel-text-content"></div>
                 <button class="btn btn-dismiss btn-md btn-primary-outline" style="display: none;">Dismiss</button>
+            </div>
+
+            <!-- Achievement Notification Modal -->
+            <div class="achievement-modal" id="achievement-modal">
+                <div class="achievement-content">
+                    <h2 class="achievement-title">Achievement Added to Journal</h2>
+                    <p class="achievement-text"></p>
+                    <p class="achievement-points"></p>
+                </div>
+            </div>
+
+            <!-- Journal Modal -->
+            <div class="journal-modal" id="journal-modal">
+                <div class="journal-container">
+                    <div class="journal-header">
+                        <h2>Journal</h2>
+                        <button class="btn-close-journal" id="close-journal-btn">×</button>
+                    </div>
+                    <div class="journal-entries" id="journal-entries">
+                        <!-- Journal entries will be populated here -->
+                    </div>
+                </div>
             </div>
 
 

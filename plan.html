@@ -415,6 +415,24 @@
             border-color: #667eea;
         }
 
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            box-shadow: 0 2px 8px rgba(240, 147, 251, 0.3);
+        }
+
+        .achievement-icon {
+            font-size: 14px;
+        }
+
         .no-combinations {
             text-align: center;
             padding: 40px;
@@ -574,6 +592,28 @@
                 </div>
 
                 <div class="legend-card">
+                    <h3 class="legend-heading">Achievement System</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="achievement-badge"><span class="achievement-icon">🏆</span> Achievement</span>
+                            <span class="legend-desc">Items/scenes with this badge add journal entries when triggered.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Scene Achievement:</span>
+                            <span class="legend-desc">Regular scenes: triggers 4 seconds after entering (first visit only). Puzzle scenes: triggers on completion.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Item Achievement:</span>
+                            <span class="legend-desc">Triggers when successfully combining this item with another item.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Journal:</span>
+                            <span class="legend-desc">Players can view all achievements in the Journal modal. Journal button pulses when new achievement is added.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
                     <h3 class="legend-heading">Click Interactions</h3>
                     <div class="legend-items">
                         <div class="legend-item">
@@ -651,7 +691,10 @@
 
             card.innerHTML = `
                 <div class="scene-header">
-                    <div class="scene-title">${scene.title}</div>
+                    <div class="scene-title">
+                        ${scene.title}
+                        ${scene.achievement ? '<span class="achievement-badge"><span class="achievement-icon">🏆</span> Achievement</span>' : ''}
+                    </div>
                     <div class="scene-meta">
                         <span class="badge badge-stage">${scene.stage}</span>
                         <span class="badge badge-type">${scene.sceneType}</span>
@@ -714,6 +757,12 @@
                             <div class="detail-value">${getSceneOutcomes(sceneItemsData)}</div>
                         </div>
                     ` : ''}
+                    ${scene.achievement ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Achievement Text</div>
+                            <div class="detail-value"><em>"${scene.achievement}"</em></div>
+                        </div>
+                    ` : ''}
                 </div>
 
                 <div class="items-section">
@@ -753,7 +802,10 @@
             return `
                 <div class="item-card">
                     <div class="item-header">
-                        <div class="item-name">${item.longName || item.name}</div>
+                        <div class="item-name">
+                            ${item.longName || item.name}
+                            ${item.achievement ? '<span class="achievement-badge"><span class="achievement-icon">🏆</span> Achievement</span>' : ''}
+                        </div>
                         <div class="item-type type-${item.type}">${item.type}</div>
                     </div>
                     <div class="item-details">
@@ -801,6 +853,12 @@
                             <span class="item-detail-label">Points:</span>
                             <span class="item-detail-value">${item.points || 0}</span>
                         </div>
+                        ${item.achievement ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Achievement:</span>
+                                <span class="item-detail-value"><em>"${item.achievement}"</em></span>
+                            </div>
+                        ` : ''}
                         ${item.image ? `
                             <div class="item-detail-row">
                                 <span class="item-detail-label">Image:</span>

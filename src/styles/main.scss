@@ -26,6 +26,9 @@
 @use 'puzzles/puzzles-common' as *;
 @use 'puzzles/SafeCombinationPuzzle' as *;
 
+// Import component styles
+@use 'achievements' as *;
+
 /*General stuff*/
 
 * {

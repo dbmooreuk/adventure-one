@@ -168,7 +168,11 @@ export class DataManager {
                     output += `,\n            puzzleBottom: ${scene.puzzleBottom}`;
                 }
             }
-            
+
+            if (scene.achievement) {
+                output += `,\n            achievement: "${this.escapeString(scene.achievement)}"`;
+            }
+
             output += '\n        }';
             if (index < data.scenes.length - 1) output += ',';
             output += '\n';
@@ -268,7 +272,12 @@ export class DataManager {
         if (item.points !== undefined && item.points !== null) {
             output += `            points: ${item.points},\n`;
         }
-        
+
+        // Achievement
+        if (item.achievement) {
+            output += `            achievement: "${this.escapeString(item.achievement)}",\n`;
+        }
+
         // Visual properties
         if (item.image) output += `            image: "${item.image}",\n`;
         if (item.position) output += `            position: [${item.position[0]}, ${item.position[1]}],\n`;

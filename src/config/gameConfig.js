@@ -56,7 +56,7 @@ export const gameConfig = {
 
     // Inventory Settings
     inventory: {
-        maxItems: 20,                      // Maximum inventory items
+        maxItems: 6,                      // Maximum inventory items
         itemSize: 60,                      // Inventory item size (px)
         itemGap: 3,                        // Gap between items (px)
     },

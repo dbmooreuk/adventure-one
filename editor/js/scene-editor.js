@@ -101,12 +101,17 @@ export class SceneEditor {
         // Lock Settings Section
         const lockSection = this.createSection('Lock Settings');
         lockSection.appendChild(this.editor.uiManager.createFormField('locked', sceneSchema.locked, scene.locked, scene));
-        
+
         const unlockedByField = this.editor.uiManager.createFormField('unlockedBy', sceneSchema.unlockedBy, scene.unlockedBy, scene);
         if (unlockedByField) {
             lockSection.appendChild(unlockedByField);
         }
         form.appendChild(lockSection);
+
+        // Achievement Section
+        const achievementSection = this.createSection('Achievement');
+        achievementSection.appendChild(this.editor.uiManager.createFormField('achievement', sceneSchema.achievement, scene.achievement, scene));
+        form.appendChild(achievementSection);
         
         // Puzzle Settings Section (conditional)
         if (scene.sceneType === 'puzzle') {

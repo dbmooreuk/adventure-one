@@ -28,6 +28,7 @@ export const gameData = {
             stageNumber: 2,
             sceneType: "scene",
             sceneMusic: "ambient2",
+            achievement: "You have successfully got to scene 2",
             backgroundImage: "screen-stasis.png",
             items: ["safe_door", "rope", "key", "map", "boat", "oar"]
         },

@@ -346,6 +346,17 @@ export class InventoryManager extends EventEmitter {
             this.game.addScore(points, achievementId)
         }
 
+        // Add achievement to journal if specified
+        if (combination.achievement) {
+            const achievementId = `combine_${item1}_${item2}`
+            this.game.achievementManager?.addAchievement(
+                achievementId,
+                combination.achievement,
+                points,
+                'combine'
+            )
+        }
+
         // Clear selection and exit combine mode
         this.clearSelection()
         this.game.uiManager?.setAction(null)

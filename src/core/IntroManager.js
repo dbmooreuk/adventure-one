@@ -164,6 +164,7 @@ export class IntroManager extends EventEmitter {
         // Reset all game state
         this.game.score = 0
         this.game.achievements.clear()
+        this.game.achievementManager.clearJournal() // Clear journal entries
         this.game.inventoryManager.clear()
         this.game.stateManager.reset()
         this.game.sceneManager.reset() // Reset all scene states (restores items to scenes)

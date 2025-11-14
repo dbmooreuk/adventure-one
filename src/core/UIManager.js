@@ -83,7 +83,14 @@ export class UIManager extends EventEmitter {
             sceneContainer: document.querySelector('.scene-container'),
             btnActionsContainer: document.querySelector('.btn-actions-container'),
             messages: document.querySelector('.messages'),
-            loader: document.querySelector('#loader')
+            loader: document.querySelector('#loader'),
+
+            // Achievement & Journal elements
+            journalBtn: document.getElementById('journal-btn'),
+            journalModal: document.getElementById('journal-modal'),
+            journalEntries: document.getElementById('journal-entries'),
+            closeJournalBtn: document.getElementById('close-journal-btn'),
+            achievementModal: document.getElementById('achievement-modal')
         }
     }
 
@@ -113,6 +120,10 @@ export class UIManager extends EventEmitter {
 
         // Dismiss button
         this.elements.btnDismiss?.addEventListener('click', () => this.dismissMessage())
+
+        // Journal button
+        this.elements.journalBtn?.addEventListener('click', () => this.openJournal())
+        this.elements.closeJournalBtn?.addEventListener('click', () => this.closeJournal())
 
         // Scene item interactions
         this.elements.sceneItemsOverlay?.addEventListener('click', (e) => this.handleSceneItemClick(e))
@@ -1125,6 +1136,81 @@ export class UIManager extends EventEmitter {
         this.clearMessage()
 
         console.log('✅ Scene UI cleared')
+    }
+
+    /**
+     * Open journal modal
+     */
+    openJournal() {
+        if (!this.elements.journalModal) {
+            console.warn('Journal modal not found')
+            return
+        }
+
+        // Get journal entries from achievement manager
+        const journal = this.game.achievementManager?.getJournal() || []
+
+        // Populate journal entries
+        this.populateJournal(journal)
+
+        // Show modal
+        this.elements.journalModal.classList.add('active')
+    }
+
+    /**
+     * Close journal modal
+     */
+    closeJournal() {
+        if (!this.elements.journalModal) return
+        this.elements.journalModal.classList.remove('active')
+    }
+
+    /**
+     * Populate journal with entries
+     * @param {Array} journal - Array of journal entries
+     */
+    populateJournal(journal) {
+        if (!this.elements.journalEntries) return
+
+        // Clear existing entries
+        this.elements.journalEntries.innerHTML = ''
+
+        // Sort by timestamp (newest first)
+        const sortedJournal = [...journal].sort((a, b) => b.timestamp - a.timestamp)
+
+        // Create entry elements
+        sortedJournal.forEach(entry => {
+            const entryEl = document.createElement('div')
+            entryEl.className = 'journal-entry'
+
+            const header = document.createElement('div')
+            header.className = 'journal-entry-header'
+
+            const type = document.createElement('span')
+            type.className = 'journal-entry-type'
+            type.textContent = entry.type || 'achievement'
+
+            const points = document.createElement('span')
+            points.className = 'journal-entry-points'
+            points.textContent = entry.points > 0 ? `+${entry.points} pts` : ''
+
+            header.appendChild(type)
+            header.appendChild(points)
+
+            const text = document.createElement('div')
+            text.className = 'journal-entry-text'
+            text.textContent = entry.text
+
+            const date = document.createElement('div')
+            date.className = 'journal-entry-date'
+            date.textContent = new Date(entry.timestamp).toLocaleString()
+
+            entryEl.appendChild(header)
+            entryEl.appendChild(text)
+            entryEl.appendChild(date)
+
+            this.elements.journalEntries.appendChild(entryEl)
+        })
     }
 
     /**

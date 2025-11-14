@@ -155,6 +155,12 @@ export const sceneSchema = {
         label: 'Puzzle Bottom Position',
         help: 'Bottom position in pixels (leave empty for auto-center)',
         condition: (data) => data.sceneType === 'puzzle'
+    },
+    achievement: {
+        type: 'textarea',
+        required: false,
+        label: 'Achievement',
+        help: 'Journal entry text. For regular scenes: appears 4 seconds after entering (first visit only). For puzzles: appears when puzzle is completed.'
     }
 };
 
@@ -284,6 +290,12 @@ export const itemSchema = {
         help: 'Points awarded for this item',
         default: 0,
         min: 0
+    },
+    achievement: {
+        type: 'textarea',
+        required: false,
+        label: 'Achievement',
+        help: 'Journal entry text when successfully combining this item with another item'
     },
     image: {
         type: 'image',

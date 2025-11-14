@@ -105,6 +105,37 @@
 
 }
 
+
+
+// Journal Button
+.btn-journal {
+    background: transparent;
+    border: 2px solid $main-yellow;
+    color: $main-yellow;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: all;
+
+
+    // &:hover {
+    //     background: rgba($main-yellow, 0.1);
+    //     transform: translateY(-2px);
+    //     box-shadow: 0 4px 8px rgba($main-yellow, 0.3);
+    // }
+
+    // &:active {
+    //     transform: translateY(0);
+    // }
+
+    // Pulse animation when new achievement added
+    &.pulse {
+        animation: pulse-once 0.6s ease-in-out;
+    }
+}
+
 /*Button sizes*/
 .btn-xs{
     font-size: $font-size-xs;
