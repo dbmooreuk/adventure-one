@@ -1,37 +1,37 @@
-/**
- * Button Styles
- * BEM naming convention for button components
- */
 
 @use 'variables' as *;
 @use 'mixins' as *;
 
+.btn-actions-container {
+    //    @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);   
+    background-color: transparent;
+    z-index: 10;
+    margin-left: auto;
+    height: 60px;
+
+}
+
 /* Base Button */
 .btn {
-    padding: 0.75rem 1.5rem;
     font-family: $font-family-mono;
-    font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
-    border: 2px solid $main-yellow;
-    border-radius: 4px;
-    background: $darkest-marine;
-    color: $main-yellow;
+    border-radius: $border-radius-sm;
     cursor: pointer;
+    border: none;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 
     &:hover:not(:disabled) {
-        background: $main-yellow;
-        color: $darkest-marine;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        // color: $darkest-marine;
+        // transform: translateY(-2px);
+        // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
-    &:active:not(:disabled) {
+    &:active:hover {
         transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     &:disabled {
@@ -40,12 +40,88 @@
     }
 
     &:focus {
-        outline: 2px solid $main-pink;
-        outline-offset: 2px;
+        outline: none;
+        outline-offset: none;
     }
+}
+/* Button variants */
+.btn-primary{
+    background: $main-marine;
+    color: $main-yellow;
+}
+.btn-primary-outline{
+    background-color: transparent;
+    color: $main-marine;
+    border: 1px solid $main-marine;
+}
+.btn-secondary{
+    background: $main-marine;
+    color: $light-yellow;
+}
+.btn-secondary-outline{
+    background-color: transparent;
+    color: $light-marine;
+    border: 1px solid $main-marine;
+}
+.btn-tertiary{
+    background: $light-marine;
+    color: $darkest-marine;
+}
+.btn-tertiary-outline{
+    background-color: transparent;
+    color: $main-marine;
+    border: 1px solid $main-marine;
 }
 
 
+/* Button Action */
+.btn-action {
+    min-width: 80px;
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &.active {
+        background: $light-marine;
+        color: $dark-marine;
+    }
+
+}
+.btn-action.inactive{
+    opacity: 0.5;
+}
+/* Button Look */
+.btn-look {
+    width: 60px;
+    height: 60px;
+    border-radius: $border-radius-full ;
+    background-color: $darkest-marine;
+    color: $light-yellow;
+    z-index: 100;
+    bottom: $spacing-md;
+    right: $spacing-md;
+    @include shadow-custom(2px, 2px, 8px, 2px, rgba($black, 0.5));
+
+}
+
+/*Button sizes*/
+.btn-xs{
+    font-size: $font-size-xs;
+    padding: $spacing-xs $spacing-sm;
+}
+.btn-sm{
+    font-size: $font-size-sm;
+    padding: $spacing-xs $spacing-sm;
+}
+.btn-md{
+    font-size: $font-size-md;
+    padding: $spacing-sm $spacing-md;
+}
+.btn-lg{
+    font-size: $font-size-lg;
+    padding: $spacing-md $spacing-lg;
+}
 /* Button Groups */
 .btn-group {
     display: flex;
@@ -64,137 +140,12 @@
         justify-content: flex-end;
     }
 }
-// .btn-action{
-//     border: 1px solid $main-pink;
-//     background-color: transparent;
-//     color: $main-pink;
-//     &.active {
-//         background: $main-pink;
-//         color: $dark-marine;
-//         @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);
-//         border: 1px solid $darker-marine;   
-//     }
-//     &.inactive {
-//         opacity: 0.5;
 
-//     }
-// }
 
-.btn-actions-container {
-  
- 
-//    @include vertical-gradient($lighter-pink, $light-yellow, 0.7); //($start, $end, $opacity: 1);   
-background-color: transparent;
-    z-index: 10;
-    margin-left: auto;
-    height: 60px;
 
-}
 
-.btn-action {
-    padding: 0.75rem 1.5rem;
-    height: 100%;
-    font-family: $font-family-mono;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-radius:  $border-radius-sm ;
-    border: 1px solid $light-marine;
-    background-color: transparent;
-    color: $light-yellow;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    margin-right: $spacing-xs;
 
-    &:hover:not(:disabled) {
-        background: $main-yellow;
-        color: $darkest-marine;
-        // transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    &:focus {
-        outline: 2px solid $main-pink;
-        outline-offset: 2px;
-    }
-
-        &.active {
-        background: $light-marine;
-        color: $dark-marine;
-        // @include vertical-gradient($lighter-pink, $light-yellow, 0.7); 
-        border: 1px solid $light-marine;   
-    }
-    &.inactive {
-        opacity: 0.5;
-
-    }
-}
-
-.btn-look {
-        font-family: $font-family-mono;
-    font-weight: bold;
-    text-transform: uppercase;
-width: 60px;
-height: 60px;
-    border-radius:  $border-radius-full ;
-    border: 1px solid $light-marine;
-    background-color: $darkest-marine;
-    color: $light-yellow;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  position: absolute;
-  z-index: 100;
-  bottom: $spacing-md;
-  right: $spacing-md;
-  @include shadow-custom(2px, 2px, 8px, 2px, rgba($black, 0.5));
-
-    &:hover:not(:disabled) {
-        background: $main-yellow;
-        color: $darkest-marine;
-        // transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    &:focus {
-        outline: 2px solid $main-pink;
-        outline-offset: 2px;
-    }
-
-        &.active {
-        background: $light-marine;
-        color: $dark-marine;
-        // @include vertical-gradient($lighter-pink, $light-yellow, 0.7); 
-        border: 1px solid $light-marine;   
-    }
-    &.inactive {
-        opacity: 0.5;
-
-    }
-}
-
-button.prop{
+button.prop {
     background-color: transparent;
     border: none;
 }
-

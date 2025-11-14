@@ -3,8 +3,45 @@
  * Single-hyphen naming convention for UI elements
  */
 
+
 @use 'variables' as *;
 @use 'mixins' as *;
+
+ /* Flexbox*/
+ .h-100{
+    height: 100%;
+ }
+.flex {
+    display: flex;
+}
+.flex-column {
+    flex-direction: column;
+}
+.flex-wrap {
+    flex-wrap: wrap;
+}
+.align-center {
+    align-items: center;
+}
+.justify-center {
+    justify-content: center;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.justify-start {
+    justify-content: flex-start;
+}
+ /* Positioning */
+ .p-absolute {
+    position: absolute;
+}
+.p-relative {
+    position: relative;
+}
+.p-sticky{
+    position: sticky;
+}
 
 
 /* border radius */

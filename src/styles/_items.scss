@@ -96,9 +96,7 @@
     width: 100%;
     height: 100%;
     padding: 0.5rem;
-    font-family: $font-family-mono;
     font-size: 0.7rem;
-    font-weight: bold;
     text-align: center;
     border: none; // Border is handled by the slot
     border-radius: 4px;
@@ -112,11 +110,13 @@
     pointer-events: all;
 
     &:hover {
-        background: rgba(255, 215, 0, 0.2);
-        border-color: $main-pink;
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+        background: rgba($light-marine, 0.9);
+        border-color: $dark-marine;
+        // transform: scale(1.1);
+        // box-shadow: 0 4px 12px rgba($light-marine, 0.9);
         z-index: 10;
+        border: none;
+        outline: none;
     }
 
     &:active {
@@ -151,10 +151,11 @@
 
     /* Using state - when item is selected for use action */
     &.using {
-        background: rgba($main-marine, 0.4);
+        // background: rgba($main-marine, 0.4);
+        background: rgba($main-yellow, 0.9);
         border-color: $main-marine;
         border-width: 3px;
-        box-shadow: 0 0 20px rgba($main-marine, 0.6);
+        box-shadow: 10px 10px 20px rgba($light-yellow, 0.6);
         animation: pulse-using 1.5s ease-in-out infinite;
     }
 
@@ -299,24 +300,24 @@
 
 
 /* Specific Item Styles */
-.item--torch {
-    border-color: #FFA500;
-}
+// .item--torch {
+//     border-color: #FFA500;
+// }
 
-.item--key {
-    border-color: #FFD700;
-}
+// .item--key {
+//     border-color: #FFD700;
+// }
 
-.item--gold {
-    border-color: #FFD700;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
-}
+// .item--gold {
+//     border-color: #FFD700;
+//     background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+// }
 
-.item--safe {
-    border-color: #808080;
-}
+// .item--safe {
+//     border-color: #808080;
+// }
 
-.item--rope {
-    border-color: #8B4513;
-}
+// .item--rope {
+//     border-color: #8B4513;
+// }
 

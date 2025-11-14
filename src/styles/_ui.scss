@@ -1,27 +1,10 @@
-/**
- * UI Component Styles
- * Single-hyphen naming convention for UI elements
- */
 
 @use 'variables' as *;
 @use 'mixins' as *;
 
+.menu-container{
 
-
-/* UI Panel */
-// .ui-panel {
-//     position: fixed;
-//     bottom: 0;
-//     left: 0;
-//     right: 0;
-//     background: rgba($black, 0.8);
-//     backdrop-filter: blur(10px);
-//     padding: $spacing-md;
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     z-index: $z-index-dropdown;
-// }
+}
 
 /* Menu Toggle Button */
 .menu-toggle {
@@ -50,13 +33,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba($black, 0.9);
-    backdrop-filter: blur(15px);
+    background: rgba($darkest-marine, 01);
+    // backdrop-filter: blur(15px);
     border-radius: $border-radius-md;
     padding: $spacing-md;
     min-width: 200px;
     z-index: $z-index-overlay;
     display: none;
+    @include shadow-custom(2px, 2px, 8px, 2px, rgba($darkest-marine, 0.5));
 
     &.active {
         display: block;
@@ -64,27 +48,27 @@
 }
 
 /* Menu Item */
-.menu-item {
-    display: block;
-    width: 100%;
-    padding: $spacing-sm $spacing-md;
-    border: none;
-    background: transparent;
-    color: $white;
-    text-align: left;
-    cursor: pointer;
-    border-radius: $border-radius-sm;
-    margin-bottom: $spacing-sm;
-    transition: background $transition-base;
+// .menu-item {
+//     display: block;
+//     width: 100%;
+//     padding: $spacing-sm $spacing-md;
+//     border: none;
+//     background: transparent;
+//     color: $white;
+//     text-align: left;
+//     cursor: pointer;
+//     border-radius: $border-radius-sm;
+//     margin-bottom: $spacing-sm;
+//     transition: background $transition-base;
 
-    &:hover {
-        background: rgba($white, 0.1);
-    }
+//     &:hover {
+//         background: rgba($white, 0.1);
+//     }
 
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
+//     &:last-child {
+//         margin-bottom: 0;
+//     }
+// }
 
 
 

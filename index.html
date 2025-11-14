@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Adventure Game">
     <meta name="theme-color" content="#000000">
@@ -20,6 +22,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="/manifest.json">
 </head>
+
 <body>
     <div id="app"></div>
     <!-- Loading Screen -->
@@ -34,31 +37,33 @@
             <div class="intro-content">
                 <h1 class="intro-title">Adventure Game</h1>
                 <p class="intro-text">Welcome to your adventure!</p>
-                <div class="intro-buttons">
-                    <button class="btn btn-start btn-new-game">Start New Game</button>
-                    <button class="btn btn-start btn-continue" style="display: none;">Continue</button>
-                    <button class="btn btn-secondary btn-reset-intro" style="display: none;">Reset Game</button>
+                <div class="flex flex-column">
+                    <button class="btn btn-new-game btn-md btn-secondary">Start New Game</button>
+                    <button class="btn btn-continue btn-md btn-secondary" style="display: none;">Continue</button>
+                    <button class="btn btn-reset-intro btn-md btn-secondary" style="display: none;">Reset Game</button>
                 </div>
             </div>
         </div>
 
         <!-- Menu -->
         <div id="menu-container" class="menu-container" style="display: none;">
-            <!-- <div id="menu-toggle" class="menu-toggle">
-                <div class="burger-line one"></div>
-                <div class="burger-line two"></div>
-                <div class="burger-line three"></div>
-            </div> -->
             <div id="menu" class="menu">
-                <button class="menu-item btn-save">Save</button>
-                <button class="menu-item btn-reset">Reset</button>
-                <button class="menu-item btn-load">Load</button>
-                <button class="menu-item btn-mute active">Mute</button>
+                <div class="menu-header flex justify-center align-center mb-lg">
+<Button class="btn btn-close btn-sm btn-secondary mt-xs">Close</Button>
+                </div>
+                
+                <div class="flex flex-column">
+                <button class="btn btn-save btn-md btn-secondary-outline mt-xs">Save</button>
+                <button class="btn btn-reset btn-md btn-secondary-outline mt-xs">Reset</button>
+                <button class="btn btn-load btn-md btn-secondary-outline mt-xs">Load</button>
+                <button class="btn btn-mute btn-md btn-secondary-outline mt-xs active">Mute</button>
+                <button class="btn btn-mute btn-md btn-secondary-outline mt-xs">About</button>
+                </div>
             </div>
         </div>
 
         <!-- Game Scene -->
-        <div class="scene-container" style="display: none;">
+        <div class="scene-container flex flex-column justify-center align-center p-relative" style="display: none;">
 
 
 
@@ -67,83 +72,59 @@
             <div class="scene-items-overlay"></div>
 
 
-
-                                        <!-- Inventory -->
-           
-                    
-                    <!-- <div class="scene-inventory-overlay">
-                        <div class="inventory-slot" data-slot="0"></div>
-                        <div class="inventory-slot" data-slot="1"></div>
-                        <div class="inventory-slot" data-slot="2"></div>
-                        <div class="inventory-slot" data-slot="3"></div>
-                        <div class="inventory-slot" data-slot="4"></div>
-                        <div class="inventory-slot" data-slot="5"></div>
-                        <div class="inventory-slot" data-slot="6"></div>
-                        <div class="score-box body-lg text-main-yellow">0%</div>
-                    </div> -->
-                  
-           
-
-
-                        <!-- Action Buttons -->
-                <!-- <div class="btn-actions-container btn-group p-xs border-radius-md">
-                    <button class="btn btn-action btn-examine">Examine</button>
-                        <button class="btn btn-action btn-look border-radius-none">Look</button>
-                    <button class="btn btn-action btn-get border-radius-none">Get</button>
-                    <button class="btn btn-action btn-use border-radius-none">Use</button>
-                    <button class="btn btn-action btn-combine">Combine</button>
-                </div> -->
-
-            <!-- Panel Text Popup (bottom-left) -->
-            <div class="panel-text body-sm text-dark-marine bg-white">
-                <div class="panel-text-content"></div>
-                <button class="btn btn-dismiss" style="display: none;">Dismiss</button>
-            </div>
-
-
-            <!-- Navigation -->
-            <nav class="nav-directions">
-                <button class="btn btn-nav btn-back">Back</button>
-                <button class="btn btn-nav btn-next">Next</button>
-            </nav>
+ 
 
             <!-- Stage Info -->
-             <div class="scene-title-wrapper bg-darker-marine border-radius-md shadow-2xl p-sm pr-md">
+            <div class="scene-title-wrapper bg-darker-marine border-radius-md shadow-2xl p-sm pr-md flex align-center justify-start p-absolute ">
 
                 <div class="scene-titles-container">
-             <div id="menu-toggle" class="menu-toggle">
-                <image src="src/assets/images/ui/fingerprint.svg"></image>
-            </div>
-            <h1 class="stage-title body-md text-main-marine text-uppercase"></h1>
-            <h2 class="scene-title body-md text-light-marine text-uppercase"></h2>
-            </div>
+                    <div id="menu-toggle" class="menu-toggle">
+                        <image src="src/assets/images/ui/fingerprint.svg"></image>
+                    </div>
+                    <h1 class="stage-title body-md text-main-marine text-uppercase"></h1>
+                    <h2 class="scene-title body-md text-light-marine text-uppercase"></h2>
+                </div>
 
                 <div class="btn-actions-container btn-group">
-                    <button class="btn-action btn-examine">Examine</button>
-                        
-                    <button class="btn-action btn-get">Get</button>
-                    <button class="btn-action btn-use">Use</button>
-                    <button class="btn-action btn-combine">Combine</button>
+                    <button class="btn btn-action btn-secondary btn-examine mr-xs text-center h-100 btn-sm">Examine</button>
+                    <button class="btn btn-action btn-secondary btn-get mr-xs text-center h-100 btn-sm">Get</button>
+                    <button class="btn btn-action btn-secondary btn-use mr-xs text-center h-100 btn-sm">Use</button>
+                    <button class="btn btn-action btn-secondary btn-combine mr-xs text-center h-100 btn-sm">Combine</button>
                 </div>
 
 
 
-                    <div class="scene-inventory-overlay">
-                        <div class="inventory-slot" data-slot="0"></div>
-                        <div class="inventory-slot" data-slot="1"></div>
-                        <div class="inventory-slot" data-slot="2"></div>
-                        <div class="inventory-slot" data-slot="3"></div>
-                        <div class="inventory-slot" data-slot="4"></div>
-                        <div class="inventory-slot" data-slot="5"></div>
-                        <div class="inventory-slot" data-slot="6"></div>
-                        <div class="score-box body-lg text-main-yellow">0%</div>
-                    </div>
+                <div class="scene-inventory-overlay">
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="0"></div>
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="1"></div>
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="2"></div>
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="3"></div>
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="4"></div>
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="5"></div>
+                    <div class="inventory-slot border-radius-sm p-relative" data-slot="6"></div>
+                    <div class="score-box body-lg text-main-yellow">0%</div>
+                </div>
 
 
 
             </div>
 
-<button class="btn-look">Look</button>
+
+            <!-- Panel Text Popup (bottom-left) -->
+            <div class="panel-text body-sm text-dark-marine bg-white">
+                <div class="panel-text-content"></div>
+                <button class="btn btn-dismiss btn-md btn-primary-outline" style="display: none;">Dismiss</button>
+            </div>
+
+
+           <!-- Navigation -->
+            <nav class="nav-directions">
+                <button class="btn btn-nav btn-back text-center btn-lg">Back</button>
+                <button class="btn btn-nav btn-next text-center btn-lg">Next</button>
+            </nav>
+
+            <!-- Look at scene -->
+            <button class="btn btn-look text-center p-absolute btn-secondary">Look</button>
             <div class="pips-container">
                 <span></span>
             </div>
@@ -232,4 +213,5 @@
     <!-- Main Application -->
     <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

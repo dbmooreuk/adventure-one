@@ -79,8 +79,21 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Utilities */
 .text-uppercase {
   text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
 }
 
 /* Body */
@@ -134,43 +147,120 @@ html {
   color: #CFD7C1;
 }
 
-/**
- * Button Styles
- * BEM naming convention for button components
- */
+.btn-actions-container {
+  background-color: transparent;
+  z-index: 10;
+  margin-left: auto;
+  height: 60px;
+}
+
 /* Base Button */
 .btn {
-  padding: 0.75rem 1.5rem;
   font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
-  font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
-  border: 2px solid #F4FED3;
   border-radius: 4px;
-  background: #021018;
-  color: #F4FED3;
   cursor: pointer;
+  border: none;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
-.btn:hover:not(:disabled) {
-  background: #F4FED3;
-  color: #021018;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.btn:active:not(:disabled) {
+.btn:active:hover {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 .btn:focus {
-  outline: 2px solid #BB067E;
-  outline-offset: 2px;
+  outline: none;
+  outline-offset: none;
+}
+
+/* Button variants */
+.btn-primary {
+  background: #19545C;
+  color: #F4FED3;
+}
+
+.btn-primary-outline {
+  background-color: transparent;
+  color: #19545C;
+  border: 1px solid #19545C;
+}
+
+.btn-secondary {
+  background: #19545C;
+  color: #F6FDDB;
+}
+
+.btn-secondary-outline {
+  background-color: transparent;
+  color: #417B7B;
+  border: 1px solid #19545C;
+}
+
+.btn-tertiary {
+  background: #417B7B;
+  color: #021018;
+}
+
+.btn-tertiary-outline {
+  background-color: transparent;
+  color: #19545C;
+  border: 1px solid #19545C;
+}
+
+/* Button Action */
+.btn-action {
+  min-width: 80px;
+}
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-action.active {
+  background: #417B7B;
+  color: #063340;
+}
+
+.btn-action.inactive {
+  opacity: 0.5;
+}
+
+/* Button Look */
+.btn-look {
+  width: 60px;
+  height: 60px;
+  border-radius: 9999px;
+  background-color: #021018;
+  color: #F6FDDB;
+  z-index: 100;
+  bottom: 16px;
+  right: 16px;
+  box-shadow: 2px 2px 8px 2px rgba(0, 0, 0, 0.5);
+}
+
+/*Button sizes*/
+.btn-xs {
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.btn-sm {
+  font-size: 14px;
+  padding: 6px 8px;
+}
+
+.btn-md {
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+.btn-lg {
+  font-size: 20px;
+  padding: 16px 24px;
 }
 
 /* Button Groups */
@@ -187,99 +277,6 @@ html {
 }
 .btn-group--right {
   justify-content: flex-end;
-}
-
-.btn-actions-container {
-  background-color: transparent;
-  z-index: 10;
-  margin-left: auto;
-  height: 60px;
-}
-
-.btn-action {
-  padding: 0.75rem 1.5rem;
-  height: 100%;
-  font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 4px;
-  border: 1px solid #417B7B;
-  background-color: transparent;
-  color: #F6FDDB;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  margin-right: 6px;
-}
-.btn-action:hover:not(:disabled) {
-  background: #F4FED3;
-  color: #021018;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.btn-action:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.btn-action:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.btn-action:focus {
-  outline: 2px solid #BB067E;
-  outline-offset: 2px;
-}
-.btn-action.active {
-  background: #417B7B;
-  color: #063340;
-  border: 1px solid #417B7B;
-}
-.btn-action.inactive {
-  opacity: 0.5;
-}
-
-.btn-look {
-  font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
-  font-weight: bold;
-  text-transform: uppercase;
-  width: 60px;
-  height: 60px;
-  border-radius: 9999px;
-  border: 1px solid #417B7B;
-  background-color: #021018;
-  color: #F6FDDB;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: absolute;
-  z-index: 100;
-  bottom: 16px;
-  right: 16px;
-  box-shadow: 2px 2px 8px 2px rgba(0, 0, 0, 0.5);
-}
-.btn-look:hover:not(:disabled) {
-  background: #F4FED3;
-  color: #021018;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.btn-look:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.btn-look:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.btn-look:focus {
-  outline: 2px solid #BB067E;
-  outline-offset: 2px;
-}
-.btn-look.active {
-  background: #417B7B;
-  color: #063340;
-  border: 1px solid #417B7B;
-}
-.btn-look.inactive {
-  opacity: 0.5;
 }
 
 button.prop {
@@ -376,9 +373,7 @@ button.prop {
   width: 100%;
   height: 100%;
   padding: 0.5rem;
-  font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
   font-size: 0.7rem;
-  font-weight: bold;
   text-align: center;
   border: none;
   border-radius: 4px;
@@ -392,11 +387,11 @@ button.prop {
   pointer-events: all;
 }
 .inventory-item:hover {
-  background: rgba(255, 215, 0, 0.2);
-  border-color: #BB067E;
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+  background: rgba(65, 123, 123, 0.9);
+  border-color: #063340;
   z-index: 10;
+  border: none;
+  outline: none;
 }
 .inventory-item:active {
   transform: scale(1.05);
@@ -430,10 +425,10 @@ button.prop {
   /* Using state - when item is selected for use action */
 }
 .inventory-item.using {
-  background: rgba(25, 84, 92, 0.4);
+  background: rgba(244, 254, 211, 0.9);
   border-color: #19545C;
   border-width: 3px;
-  box-shadow: 0 0 20px rgba(25, 84, 92, 0.6);
+  box-shadow: 10px 10px 20px rgba(246, 253, 219, 0.6);
   animation: pulse-using 1.5s ease-in-out infinite;
 }
 .inventory-item {
@@ -563,27 +558,6 @@ button.prop {
 }
 
 /* Specific Item Styles */
-.item--torch {
-  border-color: #FFA500;
-}
-
-.item--key {
-  border-color: #FFD700;
-}
-
-.item--gold {
-  border-color: #FFD700;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
-}
-
-.item--safe {
-  border-color: #808080;
-}
-
-.item--rope {
-  border-color: #8B4513;
-}
-
 /**
  * Scene Objects Styles
  * Styles for animated, interactive scene objects
@@ -888,6 +862,52 @@ button.prop {
  * UI Component Styles
  * Single-hyphen naming convention for UI elements
  */
+/* Flexbox*/
+.h-100 {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+/* Positioning */
+.p-absolute {
+  position: absolute;
+}
+
+.p-relative {
+  position: relative;
+}
+
+.p-sticky {
+  position: sticky;
+}
+
 /* border radius */
 .border-radius-sm {
   border-radius: 4px;
@@ -1436,11 +1456,6 @@ button.prop {
   margin-left: 0;
 }
 
-/**
- * UI Component Styles
- * Single-hyphen naming convention for UI elements
- */
-/* UI Panel */
 /* Menu Toggle Button */
 .menu-toggle {
   position: absolute;
@@ -1467,39 +1482,19 @@ button.prop {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(15px);
+  background: #021018;
   border-radius: 8px;
   padding: 16px;
   min-width: 200px;
   z-index: 500;
   display: none;
+  box-shadow: 2px 2px 8px 2px rgba(2, 16, 24, 0.5);
 }
 .menu.active {
   display: block;
 }
 
 /* Menu Item */
-.menu-item {
-  display: block;
-  width: 100%;
-  padding: 8px 16px;
-  border: none;
-  background: transparent;
-  color: #FFFFFF;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  transition: background 0.3s ease;
-}
-.menu-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-.menu-item:last-child {
-  margin-bottom: 0;
-}
-
 .nav-directions {
   position: absolute;
   bottom: 16px;
@@ -1510,12 +1505,6 @@ button.prop {
   z-index: 60;
 }
 
-/**
- * Inventory Component Styles
- * BEM naming convention for inventory elements
- * Note: Detailed inventory-item styles are in _items.scss
- */
-/* Inventory Panel Wrapper */
 /* Scene Inventory Overlay (bottom of screen) */
 .scene-inventory-overlay {
   display: flex;
@@ -1527,11 +1516,9 @@ button.prop {
 
 /* Inventory Slots */
 .inventory-slot {
-  position: relative;
   width: 60px;
   height: 60px;
-  border-radius: 4px;
-  background: rgba(2, 16, 24, 0.3);
+  background: rgba(2, 16, 24, 0.9);
   backdrop-filter: blur(4px);
   transition: all 0.3s ease;
   pointer-events: none;
@@ -1552,17 +1539,13 @@ button.prop {
   /* When slot has an item */
 }
 .inventory-slot:not(:empty) {
-  background: rgba(244, 254, 211, 0.3);
+  background: rgba(65, 123, 123, 0.7);
   pointer-events: all;
 }
 .inventory-slot:not(:empty)::before {
   display: none;
 }
 
-/**
- * Scene Component Styles
- * Single-hyphen naming convention for scene elements
- */
 /* Intro/Splash Screen */
 .intro-container {
   flex: 1;
@@ -1596,46 +1579,27 @@ button.prop {
 }
 
 .scene-title-wrapper {
-  position: absolute;
   top: 16px;
   left: 16px;
   right: 16px;
   z-index: 60;
   padding-left: 65px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  box-shadow: 2px 2px 8px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 8px 2px rgba(2, 16, 24, 0.5);
 }
 
 .intro-title {
-  font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
   font-size: 48px;
   color: #F4FED3;
 }
 
 .intro-text {
-  font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
   font-size: 24px;
   color: #F6FDDB;
-}
-
-.intro-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 300px;
 }
 
 /* Scene Container */
 .scene-container {
   flex: 1;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 32px;
   background-size: cover;
   background-position: center;

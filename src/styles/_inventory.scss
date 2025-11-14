@@ -1,51 +1,22 @@
-/**
- * Inventory Component Styles
- * BEM naming convention for inventory elements
- * Note: Detailed inventory-item styles are in _items.scss
- */
 
 @use 'variables' as *;
 @use 'mixins' as *;
 
-/* Inventory Panel Wrapper */
-// .panel-wrapper {
-//     position: absolute;
-//     top: $spacing-md;
-//     bottom: $spacing-md;
-//     right: $spacing-md;
-//     width: $inventory-width;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: top;
-//     justify-content: flex-start;
-//     gap: $spacing-xs;
-//     padding: 0px;
-//     pointer-events: none;
-//     z-index: 50;
-//     @include vertical-gradient($darkest-marine, $dark-marine, 0.2);
-//     @include shadow-custom(2px, 4px, 8px, 0px, rgba($black, 0.3));
-// }
 
 /* Scene Inventory Overlay (bottom of screen) */
-
-
 .scene-inventory-overlay {
     display: flex;
-    // padding-top: $spacing-sm;
     gap: $spacing-xs;
     flex-wrap: wrap;
-       pointer-events: none;
+    pointer-events: none;
     justify-content: center;
 }
 
 /* Inventory Slots */
 .inventory-slot {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    // border: 2px dashed rgba($main-yellow, 0.3);
-    border-radius: 4px;
-    background: rgba($darkest-marine, 0.3);
+    width: $inventory-slot;
+    height: $inventory-slot;
+    background: rgba($darkest-marine, 0.9);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
     pointer-events: none;
@@ -65,13 +36,8 @@
 
     /* When slot has an item */
     &:not(:empty) {
-        // border-style: solid;
-        // border-color: $main-yellow;
-        // background: rgba(26, 10, 0, 0.9);
-        background: rgba($main-yellow, 0.3); // 30% opacity - adjust as needed
+        background: rgba($light-marine, 0.7); // 30% opacity - adjust as needed
         pointer-events: all;
-        
-
         &::before {
             display: none;
         }
