@@ -1476,7 +1476,7 @@ body {
 .composer-canvas-wrapper {
     flex: 1;
     position: relative;
-    overflow: auto;
+    overflow: hidden;
     background: #0a0a0a;
     display: flex;
     align-items: center;
@@ -1484,16 +1484,16 @@ body {
 }
 
 .composer-canvas {
+    position: absolute;
     display: block;
     background: #000;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
+    transform-origin: top left;
 }
 
 .composer-items-layer {
     position: absolute;
-    top: 0;
-    left: 0;
     pointer-events: none;
     transform-origin: top left;
 }

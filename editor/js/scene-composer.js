@@ -59,6 +59,30 @@ export class SceneComposer {
     }
 
     /**
+     * Cleanup - remove event listeners
+     */
+    cleanup() {
+        if (this.resizeHandler) {
+            window.removeEventListener('resize', this.resizeHandler);
+        }
+    }
+
+    /**
+     * Debounce utility function
+     */
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    /**
      * Setup event listeners
      */
     setupEventListeners() {
@@ -68,6 +92,14 @@ export class SceneComposer {
         document.getElementById('composer-fit')?.addEventListener('click', () => this.fitToView());
         document.getElementById('composer-grid-toggle')?.addEventListener('click', () => this.toggleGrid());
         document.getElementById('composer-hitarea-toggle')?.addEventListener('click', () => this.toggleHitAreas());
+
+        // Window resize handler - recalculate scale to maintain aspect ratio
+        this.resizeHandler = this.debounce(() => {
+            if (this.currentScene) {
+                this.fitToView();
+            }
+        }, 250);
+        window.addEventListener('resize', this.resizeHandler);
 
         // Canvas wrapper for panning and deselection
         const wrapper = document.querySelector('.composer-canvas-wrapper');
@@ -720,7 +752,8 @@ export class SceneComposer {
     }
 
     /**
-     * Update canvas transform
+     * Update canvas and items layer transforms together
+     * This ensures they're always perfectly aligned
      */
     updateCanvasTransform() {
         const wrapper = document.querySelector('.composer-canvas-wrapper');
@@ -730,33 +763,32 @@ export class SceneComposer {
         const canvasWidth = this.baseWidth * this.scale;
         const canvasHeight = this.baseHeight * this.scale;
 
-        // Center the canvas
+        // Center both canvas and items layer using CSS positioning
         const offsetX = (wrapperRect.width - canvasWidth) / 2;
         const offsetY = (wrapperRect.height - canvasHeight) / 2;
 
-        this.canvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${this.scale})`;
+        // Position using left/top and scale using transform
+        // This prevents overflow issues
+        this.canvas.style.left = `${offsetX}px`;
+        this.canvas.style.top = `${offsetY}px`;
+        this.canvas.style.transform = `scale(${this.scale})`;
         this.canvas.style.transformOrigin = '0 0';
-    }
 
-    /**
-     * Update items layer transform
-     */
-    updateItemsLayerTransform() {
-        const wrapper = document.querySelector('.composer-canvas-wrapper');
-        if (!wrapper) return;
-
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const canvasWidth = this.baseWidth * this.scale;
-        const canvasHeight = this.baseHeight * this.scale;
-
-        // Center the items layer (same as canvas)
-        const offsetX = (wrapperRect.width - canvasWidth) / 2;
-        const offsetY = (wrapperRect.height - canvasHeight) / 2;
-
-        this.itemsLayer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${this.scale})`;
+        this.itemsLayer.style.left = `${offsetX}px`;
+        this.itemsLayer.style.top = `${offsetY}px`;
+        this.itemsLayer.style.transform = `scale(${this.scale})`;
         this.itemsLayer.style.transformOrigin = '0 0';
         this.itemsLayer.style.width = `${this.baseWidth}px`;
         this.itemsLayer.style.height = `${this.baseHeight}px`;
+    }
+
+    /**
+     * Update items layer transform (calls updateCanvasTransform for consistency)
+     */
+    updateItemsLayerTransform() {
+        // Both transforms are now updated together in updateCanvasTransform
+        // This method is kept for backwards compatibility
+        this.updateCanvasTransform();
     }
 
     /**
