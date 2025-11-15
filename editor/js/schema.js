@@ -344,13 +344,15 @@ export const itemSchema = {
         label: 'Points',
         help: 'Points awarded for this item',
         default: 0,
-        min: 0
+        min: 0,
+        condition: (data) => ['item', 'target', 'link', 'decor'].includes(data.type)
     },
     achievement: {
         type: 'textarea',
         required: false,
         label: 'Achievement',
-        help: 'Journal entry text. For type "item" or "decor": appears on first examine. For type "target": appears when correct item is used on it. For combinations: appears when items are combined.'
+        help: 'Journal entry text. For type "item" or "decor": appears on first examine. For type "target": appears when correct item is used on it. For combinations: appears when items are combined.',
+        condition: (data) => ['item', 'target', 'link', 'decor'].includes(data.type)
     },
     image: {
         type: 'image',

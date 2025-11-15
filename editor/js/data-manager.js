@@ -303,12 +303,12 @@ export class DataManager {
         if (item.nextScene) output += `            nextScene: "${item.nextScene}",\n`;
         if (item.lockedMessage) output += `            lockedMessage: "${this.escapeString(item.lockedMessage)}",\n`;
         
-        // Points
+        // Points (optional for item, target, link, decor)
         if (item.points !== undefined && item.points !== null) {
             output += `            points: ${item.points},\n`;
         }
 
-        // Achievement
+        // Achievement (optional for item, target, link, decor)
         if (item.achievement) {
             output += `            achievement: "${this.escapeString(item.achievement)}",\n`;
         }

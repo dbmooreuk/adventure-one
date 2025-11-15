@@ -111,6 +111,7 @@ export class SceneEditor {
         // Achievement Section
         const achievementSection = this.createSection('Achievement');
         achievementSection.appendChild(this.editor.uiManager.createFormField('achievement', sceneSchema.achievement, scene.achievement, scene));
+        achievementSection.appendChild(this.editor.uiManager.createFormField('points', sceneSchema.points, scene.points, scene));
         form.appendChild(achievementSection);
         
         // Puzzle Settings Section (conditional)
