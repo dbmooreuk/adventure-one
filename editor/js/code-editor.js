@@ -31,32 +31,46 @@ export class CodeEditor {
      * Show code editor view
      */
     show() {
+        console.log('📝 Code Editor show() called');
         this.textarea = document.getElementById('code-textarea');
-        if (!this.textarea) return;
-        
-        // Generate current code
-        const code = this.generateCode();
-        this.textarea.value = code;
-        this.isDirty = false;
-        
-        // Add change listener
-        this.textarea.addEventListener('input', () => {
-            this.isDirty = true;
+        if (!this.textarea) {
+            console.error('❌ Code textarea not found!');
+            return;
+        }
+
+        console.log('✓ Code textarea found');
+
+        try {
+            // Generate current code
+            console.log('🔄 Generating code...');
+            const code = this.generateCode();
+            console.log('✓ Code generated, length:', code.length);
+            this.textarea.value = code;
+            this.isDirty = false;
+
+            // Add change listener
+            this.textarea.addEventListener('input', () => {
+                this.isDirty = true;
+                this.updateStatus();
+            });
+
             this.updateStatus();
-        });
-        
-        this.updateStatus();
-        this.updateLineNumbers();
-        
-        // Update line numbers on scroll
-        this.textarea.addEventListener('scroll', () => {
-            this.syncScroll();
-        });
-        
-        // Update line numbers on input
-        this.textarea.addEventListener('input', () => {
             this.updateLineNumbers();
-        });
+
+            // Update line numbers on scroll
+            this.textarea.addEventListener('scroll', () => {
+                this.syncScroll();
+            });
+
+            // Update line numbers on input
+            this.textarea.addEventListener('input', () => {
+                this.updateLineNumbers();
+            });
+
+            console.log('✓ Code editor initialized successfully');
+        } catch (error) {
+            console.error('❌ Error in code editor show():', error);
+        }
     }
     
     /**

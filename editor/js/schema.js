@@ -208,41 +208,82 @@ export const itemSchema = {
     },
     lookAt: {
         type: 'textarea',
-        required: true,
+        required: false,
         label: 'Look At Description',
-        help: 'Text shown when examining the item'
+        help: 'Text shown when examining the item',
+        condition: (data) => data.type !== 'decor',
+        validate: (value, data) => {
+            if (data.type !== 'decor' && !value) {
+                return 'Look At description is required for this item type';
+            }
+            return null;
+        }
     },
     pickUpMessage: {
         type: 'string',
         required: false,
         label: 'Pick Up Message',
         help: 'Message shown when picking up the item',
-        condition: (data) => data.type === 'item'
+        condition: (data) => ['item', 'target', 'link'].includes(data.type),
+        validate: (value, data) => {
+            if (['item', 'target', 'link'].includes(data.type) && !value) {
+                return 'Pick Up Message is required for this item type';
+            }
+            return null;
+        }
     },
     useWith: {
         type: 'item-select',
         required: false,
         label: 'Use With',
-        help: 'Item this can be used with'
+        help: 'Item this can be used with',
+        condition: (data) => ['item', 'target', 'link'].includes(data.type),
+        validate: (value, data) => {
+            if (['item', 'target', 'link'].includes(data.type) && !value) {
+                return 'Use With is required for this item type';
+            }
+            return null;
+        }
     },
     useMessage: {
         type: 'string',
         required: false,
         label: 'Use Message',
-        help: 'Message shown when using the item'
+        help: 'Message shown when using the item',
+        condition: (data) => data.type === 'target',
+        validate: (value, data) => {
+            if (data.type === 'target' && !value) {
+                return 'Use Message is required for target items';
+            }
+            return null;
+        }
     },
     useResult: {
         type: 'item-select',
         required: false,
         label: 'Use Result',
-        help: 'Item to add when used (appears on scene or in inventory based on outcome)'
+        help: 'Item to add when used (appears on scene or in inventory based on outcome)',
+        condition: (data) => data.type === 'target',
+        validate: (value, data) => {
+            if (data.type === 'target' && !value) {
+                return 'Use Result is required for target items';
+            }
+            return null;
+        }
     },
     outcome: {
         type: 'multi-select-dropdown',
         required: false,
         label: 'Outcome',
         options: OUTCOMES,
-        help: 'What happens after using the item (can select multiple)'
+        help: 'What happens after using the item (can select multiple)',
+        condition: (data) => ['item', 'target', 'link'].includes(data.type),
+        validate: (value, data) => {
+            if (['item', 'target', 'link'].includes(data.type) && !value) {
+                return 'Outcome is required for this item type';
+            }
+            return null;
+        }
     },
     combineWith: {
         type: 'item-select',
@@ -275,7 +316,13 @@ export const itemSchema = {
         required: false,
         label: 'Link To Scene',
         help: 'Scene name to link to',
-        condition: (data) => data.type === 'link'
+        condition: (data) => data.type === 'link',
+        validate: (value, data) => {
+            if (data.type === 'link' && !value) {
+                return 'Link To Scene is required for link items';
+            }
+            return null;
+        }
     },
     nextScene: {
         type: 'string',
@@ -307,53 +354,96 @@ export const itemSchema = {
     },
     image: {
         type: 'image',
-        required: false,
+        required: true,
         label: 'Image',
-        help: 'Item image filename'
+        help: 'Item image filename (REQUIRED)',
+        validate: (value) => {
+            if (!value) return 'Image is required for all items';
+            return null;
+        }
     },
     zIndex: {
         type: 'number',
-        required: false,
+        required: true,
         label: 'Z-Index',
-        help: 'Layer order (higher numbers appear on top)',
+        help: 'Layer order (higher numbers appear on top) (REQUIRED)',
         default: 1,
         min: 0,
-        max: 100
+        max: 100,
+        validate: (value) => {
+            if (value === undefined || value === null) return 'Z-Index is required';
+            return null;
+        }
     },
     position: {
         type: 'position',
-        required: false,
+        required: true,
         label: 'Position [X, Y]',
-        help: 'Position on scene canvas',
-        default: [0, 0]
+        help: 'Position on scene canvas (REQUIRED)',
+        default: [0, 0],
+        validate: (value) => {
+            if (!value || !Array.isArray(value) || value.length !== 2) {
+                return 'Position is required and must be [x, y]';
+            }
+            return null;
+        }
     },
     size: {
         type: 'size',
-        required: false,
+        required: true,
         label: 'Size [W, H]',
-        help: 'Width and height in pixels',
-        default: [50, 50]
+        help: 'Width and height in pixels (REQUIRED)',
+        default: [50, 50],
+        validate: (value) => {
+            if (!value || !Array.isArray(value) || value.length !== 2) {
+                return 'Size is required and must be [width, height]';
+            }
+            return null;
+        }
     },
     hitW: {
         type: 'number',
         required: false,
         label: 'Hit Width',
-        help: 'Touch target width (larger than visual size)',
-        min: 0
+        help: 'Touch target width. Required for item/target/link if hitPolygon not set.',
+        min: 0,
+        condition: (data) => ['item', 'target', 'link'].includes(data.type)
     },
     hitH: {
         type: 'number',
         required: false,
         label: 'Hit Height',
-        help: 'Touch target height (larger than visual size)',
-        min: 0
+        help: 'Touch target height. Required for item/target/link if hitPolygon not set.',
+        min: 0,
+        condition: (data) => ['item', 'target', 'link'].includes(data.type)
+    },
+    hitPolygon: {
+        type: 'polygon',
+        required: false,
+        label: 'Hit Polygon',
+        help: 'Custom hit area [[x,y], [x,y], ...]. Required for item/target/link if hitW/hitH not set.',
+        condition: (data) => ['item', 'target', 'link'].includes(data.type),
+        validate: (value, data) => {
+            // For item/target/link types, must have either hitPolygon OR (hitW AND hitH)
+            if (['item', 'target', 'link'].includes(data.type)) {
+                const hasPolygon = value && Array.isArray(value) && value.length >= 3;
+                const hasRect = (data.hitW !== undefined && data.hitW !== null) &&
+                               (data.hitH !== undefined && data.hitH !== null);
+
+                if (!hasPolygon && !hasRect) {
+                    return 'Must define either hitPolygon OR both hitW and hitH for interactive items';
+                }
+            }
+            return null;
+        }
     },
     nonInteractive: {
         type: 'boolean',
         required: false,
         label: 'Non-Interactive',
         help: 'If checked, item is visible but not clickable (decorative only)',
-        default: false
+        default: false,
+        condition: (data) => data.type === 'decor'
     },
     animation: {
         type: 'animation',
@@ -469,7 +559,7 @@ export function validateField(fieldName, value, schema, allData = {}) {
 
     // Custom validation
     if (field.validate) {
-        return field.validate(value);
+        return field.validate(value, allData);
     }
 
     // Type-specific validation

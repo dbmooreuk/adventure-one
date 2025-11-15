@@ -110,8 +110,8 @@ export class SceneComposer {
         // Render scene items
         this.renderSceneItems();
 
-        // Fit to view initially
-        this.fitToView();
+        // Fit to view initially (with small delay to ensure layout is ready)
+        setTimeout(() => this.fitToView(), 100);
     }
 
     /**
@@ -258,8 +258,13 @@ export class SceneComposer {
             itemEl.style.backgroundPosition = 'center';
         }
 
+        // Normalize hitPolygon if it's an object (from IndexedDB)
+        if (item.hitPolygon && typeof item.hitPolygon === 'object' && !Array.isArray(item.hitPolygon)) {
+            item.hitPolygon = Object.values(item.hitPolygon);
+        }
+
         // Hit area visualization overlay
-        if (item.hitPolygon && item.hitPolygon.length > 0) {
+        if (item.hitPolygon && Array.isArray(item.hitPolygon) && item.hitPolygon.length > 0) {
             // Polygon hit area
             this.createPolygonVisualization(itemEl, item);
         } else if (item.hitW || item.hitH) {
@@ -718,7 +723,19 @@ export class SceneComposer {
      * Update canvas transform
      */
     updateCanvasTransform() {
-        this.canvas.style.transform = `scale(${this.scale})`;
+        const wrapper = document.querySelector('.composer-canvas-wrapper');
+        if (!wrapper) return;
+
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const canvasWidth = this.baseWidth * this.scale;
+        const canvasHeight = this.baseHeight * this.scale;
+
+        // Center the canvas
+        const offsetX = (wrapperRect.width - canvasWidth) / 2;
+        const offsetY = (wrapperRect.height - canvasHeight) / 2;
+
+        this.canvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${this.scale})`;
+        this.canvas.style.transformOrigin = '0 0';
     }
 
     /**
@@ -732,11 +749,12 @@ export class SceneComposer {
         const canvasWidth = this.baseWidth * this.scale;
         const canvasHeight = this.baseHeight * this.scale;
 
-        // Center the items layer
+        // Center the items layer (same as canvas)
         const offsetX = (wrapperRect.width - canvasWidth) / 2;
         const offsetY = (wrapperRect.height - canvasHeight) / 2;
 
         this.itemsLayer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${this.scale})`;
+        this.itemsLayer.style.transformOrigin = '0 0';
         this.itemsLayer.style.width = `${this.baseWidth}px`;
         this.itemsLayer.style.height = `${this.baseHeight}px`;
     }
@@ -996,8 +1014,13 @@ export class SceneComposer {
             oldSvg.remove();
         }
 
+        // Normalize hitPolygon if it's an object (from IndexedDB)
+        if (item.hitPolygon && typeof item.hitPolygon === 'object' && !Array.isArray(item.hitPolygon)) {
+            item.hitPolygon = Object.values(item.hitPolygon);
+        }
+
         // Create new one if polygon exists
-        if (item.hitPolygon && item.hitPolygon.length > 0) {
+        if (item.hitPolygon && Array.isArray(item.hitPolygon) && item.hitPolygon.length > 0) {
             this.createPolygonVisualization(itemEl, item);
         }
     }

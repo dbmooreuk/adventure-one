@@ -84,31 +84,42 @@ export class ItemEditor {
         basicSection.appendChild(this.editor.uiManager.createFormField('longName', itemSchema.longName, item.longName, item));
         basicSection.appendChild(this.editor.uiManager.createFormField('shortName', itemSchema.shortName, item.shortName, item));
         basicSection.appendChild(this.editor.uiManager.createFormField('type', itemSchema.type, item.type, item));
-        basicSection.appendChild(this.editor.uiManager.createFormField('lookAt', itemSchema.lookAt, item.lookAt, item));
         form.appendChild(basicSection);
         
         // Interaction Section
         const interactionSection = this.createSection('Interaction');
-        
-        // Conditional fields based on type
+
+        // Conditional fields based on type - check for null before appending
+        const lookAtField = this.editor.uiManager.createFormField('lookAt', itemSchema.lookAt, item.lookAt, item);
+        if (lookAtField) interactionSection.appendChild(lookAtField);
+
         const pickUpField = this.editor.uiManager.createFormField('pickUpMessage', itemSchema.pickUpMessage, item.pickUpMessage, item);
         if (pickUpField) interactionSection.appendChild(pickUpField);
-        
-        interactionSection.appendChild(this.editor.uiManager.createFormField('useWith', itemSchema.useWith, item.useWith, item));
-        interactionSection.appendChild(this.editor.uiManager.createFormField('useMessage', itemSchema.useMessage, item.useMessage, item));
-        interactionSection.appendChild(this.editor.uiManager.createFormField('useResult', itemSchema.useResult, item.useResult, item));
-        interactionSection.appendChild(this.editor.uiManager.createFormField('outcome', itemSchema.outcome, item.outcome, item));
-        
+
+        const useWithField = this.editor.uiManager.createFormField('useWith', itemSchema.useWith, item.useWith, item);
+        if (useWithField) interactionSection.appendChild(useWithField);
+
+        const useMessageField = this.editor.uiManager.createFormField('useMessage', itemSchema.useMessage, item.useMessage, item);
+        if (useMessageField) interactionSection.appendChild(useMessageField);
+
+        const useResultField = this.editor.uiManager.createFormField('useResult', itemSchema.useResult, item.useResult, item);
+        if (useResultField) interactionSection.appendChild(useResultField);
+
+        const outcomeField = this.editor.uiManager.createFormField('outcome', itemSchema.outcome, item.outcome, item);
+        if (outcomeField) interactionSection.appendChild(outcomeField);
+
         const linkField = this.editor.uiManager.createFormField('linkToScene', itemSchema.linkToScene, item.linkToScene, item);
         if (linkField) interactionSection.appendChild(linkField);
-        
+
         const nextSceneField = this.editor.uiManager.createFormField('nextScene', itemSchema.nextScene, item.nextScene, item);
         if (nextSceneField) interactionSection.appendChild(nextSceneField);
-        
+
         const lockedMsgField = this.editor.uiManager.createFormField('lockedMessage', itemSchema.lockedMessage, item.lockedMessage, item);
         if (lockedMsgField) interactionSection.appendChild(lockedMsgField);
-        
-        interactionSection.appendChild(this.editor.uiManager.createFormField('points', itemSchema.points, item.points, item));
+
+        const pointsField = this.editor.uiManager.createFormField('points', itemSchema.points, item.points, item);
+        if (pointsField) interactionSection.appendChild(pointsField);
+
         form.appendChild(interactionSection);
 
         // Achievement Section
@@ -136,11 +147,25 @@ export class ItemEditor {
         const sizeField = this.createSizeField(item.size || [50, 50]);
         visualSection.appendChild(sizeField);
 
-        const hitRow = document.createElement('div');
-        hitRow.className = 'form-row';
-        hitRow.appendChild(this.editor.uiManager.createFormField('hitW', itemSchema.hitW, item.hitW, item));
-        hitRow.appendChild(this.editor.uiManager.createFormField('hitH', itemSchema.hitH, item.hitH, item));
-        visualSection.appendChild(hitRow);
+        // Hit area fields - conditional based on type
+        const hitWField = this.editor.uiManager.createFormField('hitW', itemSchema.hitW, item.hitW, item);
+        const hitHField = this.editor.uiManager.createFormField('hitH', itemSchema.hitH, item.hitH, item);
+
+        if (hitWField && hitHField) {
+            const hitRow = document.createElement('div');
+            hitRow.className = 'form-row';
+            hitRow.appendChild(hitWField);
+            hitRow.appendChild(hitHField);
+            visualSection.appendChild(hitRow);
+        }
+
+        // Hit polygon field - conditional based on type
+        const hitPolygonField = this.editor.uiManager.createFormField('hitPolygon', itemSchema.hitPolygon, item.hitPolygon, item);
+        if (hitPolygonField) visualSection.appendChild(hitPolygonField);
+
+        // Non-interactive field - conditional for decor
+        const nonInteractiveField = this.editor.uiManager.createFormField('nonInteractive', itemSchema.nonInteractive, item.nonInteractive, item);
+        if (nonInteractiveField) visualSection.appendChild(nonInteractiveField);
 
         form.appendChild(visualSection);
         
