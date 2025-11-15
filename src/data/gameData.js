@@ -437,6 +437,8 @@ export const gameData = {
             useWith: "boat",
             useMessage: "You use the oar to paddle the boat across the water.",
             useResult: "crossing",
+            achievement: "You gained insight",
+            points: 5,
             outcome: "remove",
             position: [300, 200],
             size: [100, 30],

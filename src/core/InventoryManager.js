@@ -187,14 +187,33 @@ export class InventoryManager extends EventEmitter {
      */
     examineItem(itemName) {
         const itemData = this.getItemData(itemName)
-        
+
         if (itemData) {
             const message = itemData.lookAt || `You examine the ${itemData.longName || itemName}.`
             this.game.uiManager?.showMessage(message)
+
+            // Check if this item has an achievement (for type: "item" or "decor")
+            if ((itemData.type === 'item' || itemData.type === 'decor') && itemData.achievement) {
+                const achievementId = `examine_${itemData.name}`
+                const points = itemData.points || 0
+
+                // Add achievement to journal (only once)
+                this.game.achievementManager?.addAchievement(
+                    achievementId,
+                    itemData.achievement,
+                    points,
+                    'item'
+                )
+
+                // Add score if points specified
+                if (points > 0) {
+                    this.game.addScore(points, achievementId)
+                }
+            }
         } else {
             this.game.uiManager?.showMessage(`You examine the ${itemName}.`)
         }
-        
+
         this.emit('itemExamined', itemName)
     }
 

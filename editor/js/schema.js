@@ -303,7 +303,7 @@ export const itemSchema = {
         type: 'textarea',
         required: false,
         label: 'Achievement',
-        help: 'Journal entry text when successfully combining this item with another item'
+        help: 'Journal entry text. For type "item" or "decor": appears on first examine. For type "target": appears when correct item is used on it. For combinations: appears when items are combined.'
     },
     image: {
         type: 'image',
