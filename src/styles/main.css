@@ -1624,6 +1624,7 @@ button.prop {
 /* Scene Container */
 .scene-container {
   flex: 1;
+  border: 1px solid #F4FED3;
   padding: 32px;
   background-size: cover;
   background-position: center;
@@ -1639,6 +1640,7 @@ button.prop {
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: none;
   z-index: 50;
 }
 

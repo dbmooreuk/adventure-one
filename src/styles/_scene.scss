@@ -43,11 +43,7 @@
 /* Scene Container */
 .scene-container {
     flex: 1;
-    // position: relative;
-    // display: flex;
-    // flex-direction: column;
-    // justify-content: center;
-    // align-items: center;
+    border: 1px solid $main-yellow;
     padding: $spacing-xl;
     background-size: cover;
     background-position: center;
@@ -63,7 +59,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    // pointer-events: none;
+    pointer-events: none;
     z-index: 50;
 }
 
