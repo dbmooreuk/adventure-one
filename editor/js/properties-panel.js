@@ -51,7 +51,15 @@ export class PropertiesPanel {
         // Z-Index - show actual value or empty string if not set
         const zIndexValue = item.zIndex !== undefined && item.zIndex !== null ? item.zIndex : '';
         visualSection.appendChild(this.createField('zIndex', 'Layer (Z-Index)', zIndexValue, 'number', false, { min: 0, max: 100, placeholder: 'auto' }));
-        
+
+        // Position (x and y)
+        const positionRow = document.createElement('div');
+        positionRow.className = 'form-row';
+        const position = item.position || [0, 0];
+        positionRow.appendChild(this.createField('positionX', 'X Position', position[0], 'number', false, { step: 1 }));
+        positionRow.appendChild(this.createField('positionY', 'Y Position', position[1], 'number', false, { step: 1 }));
+        visualSection.appendChild(positionRow);
+
         // Size (width and height)
         const sizeRow = document.createElement('div');
         sizeRow.className = 'form-row';
@@ -300,6 +308,14 @@ export class PropertiesPanel {
         for (const [key, value] of formData.entries()) {
             if (key === 'name') {
                 updates[key] = value;
+            } else if (key === 'positionX' || key === 'positionY') {
+                // Handle position array
+                if (!updates.position) {
+                    const currentPosition = this.currentItem.position || [0, 0];
+                    updates.position = [...currentPosition];
+                }
+                if (key === 'positionX') updates.position[0] = Number(value);
+                if (key === 'positionY') updates.position[1] = Number(value);
             } else if (key === 'width' || key === 'height') {
                 // Handle size array
                 if (!updates.size) {
