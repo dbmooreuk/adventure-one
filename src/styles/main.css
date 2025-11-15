@@ -2375,28 +2375,6 @@ button.prop {
   background: rgba(2, 16, 24, 0.5);
 }
 
-.btn-close-journal {
-  background: transparent;
-  border: 2px solid #F4FED3;
-  color: #F4FED3;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-.btn-close-journal:hover {
-  background: #F4FED3;
-  color: #063340;
-  transform: rotate(90deg);
-}
-
 .journal-entries {
   flex: 1;
   overflow-y: auto;

@@ -91,7 +91,6 @@ export class UIManager extends EventEmitter {
             journalEntries: document.getElementById('journal-entries'),
             journalTotalPoints: document.getElementById('journal-total-points'),
             journalTotalGoal: document.getElementById('journal-total-goal'),
-            closeJournalBtn: document.getElementById('close-journal-btn'),
             achievementModal: document.getElementById('achievement-modal')
         }
     }
@@ -123,9 +122,8 @@ export class UIManager extends EventEmitter {
         // Dismiss button
         this.elements.btnDismiss?.addEventListener('click', () => this.dismissMessage())
 
-        // Journal button
-        this.elements.journalBtn?.addEventListener('click', () => this.openJournal())
-        this.elements.closeJournalBtn?.addEventListener('click', () => this.closeJournal())
+        // Journal button - toggle modal
+        this.elements.journalBtn?.addEventListener('click', () => this.toggleJournal())
 
         // Scene item interactions
         this.elements.sceneItemsOverlay?.addEventListener('click', (e) => this.handleSceneItemClick(e))
@@ -1160,30 +1158,30 @@ export class UIManager extends EventEmitter {
     }
 
     /**
-     * Open journal modal
+     * Toggle journal modal open/closed
      */
-    openJournal() {
+    toggleJournal() {
         if (!this.elements.journalModal) {
             console.warn('Journal modal not found')
             return
         }
 
-        // Get journal entries from achievement manager
-        const journal = this.game.achievementManager?.getJournal() || []
+        // Check if modal is currently open
+        const isOpen = this.elements.journalModal.classList.contains('active')
 
-        // Populate journal entries
-        this.populateJournal(journal)
+        if (isOpen) {
+            // Close modal
+            this.elements.journalModal.classList.remove('active')
+        } else {
+            // Open modal - get journal entries from achievement manager
+            const journal = this.game.achievementManager?.getJournal() || []
 
-        // Show modal
-        this.elements.journalModal.classList.add('active')
-    }
+            // Populate journal entries
+            this.populateJournal(journal)
 
-    /**
-     * Close journal modal
-     */
-    closeJournal() {
-        if (!this.elements.journalModal) return
-        this.elements.journalModal.classList.remove('active')
+            // Show modal
+            this.elements.journalModal.classList.add('active')
+        }
     }
 
     /**
