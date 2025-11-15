@@ -430,20 +430,24 @@ export class SceneComposer {
         const x = Math.round(parseFloat(this.draggedElement.style.left));
         const y = Math.round(parseFloat(this.draggedElement.style.top));
 
-        // Update both position formats
-        if (this.draggedItem.position) {
-            this.draggedItem.position = [x, y];
-        } else {
-            this.draggedItem.x = x;
-            this.draggedItem.y = y;
+        // Always use array format (create if doesn't exist)
+        if (!this.draggedItem.position) {
+            this.draggedItem.position = [0, 0];
         }
+        this.draggedItem.position[0] = x;
+        this.draggedItem.position[1] = y;
 
-        if (this.draggedItem.size) {
-            this.draggedItem.size = [width, height];
-        } else {
-            this.draggedItem.width = width;
-            this.draggedItem.height = height;
+        if (!this.draggedItem.size) {
+            this.draggedItem.size = [0, 0];
         }
+        this.draggedItem.size[0] = width;
+        this.draggedItem.size[1] = height;
+
+        // Remove old x/y/width/height properties if they exist
+        delete this.draggedItem.x;
+        delete this.draggedItem.y;
+        delete this.draggedItem.width;
+        delete this.draggedItem.height;
 
         // Scale hit area proportionally
         if (this.draggedItem.hitArea) {
@@ -548,17 +552,21 @@ export class SceneComposer {
         const x = parseInt(this.draggedElement.style.left);
         const y = parseInt(this.draggedElement.style.top);
 
-        // Update position in the correct format (array)
-        if (this.draggedItem.position) {
-            this.draggedItem.position[0] = x;
-            this.draggedItem.position[1] = y;
-        } else {
-            // Fallback to x/y properties if position array doesn't exist
-            this.draggedItem.x = x;
-            this.draggedItem.y = y;
+        // Always use position array format (create if doesn't exist)
+        if (!this.draggedItem.position) {
+            this.draggedItem.position = [0, 0];
         }
+        this.draggedItem.position[0] = x;
+        this.draggedItem.position[1] = y;
+
+        // Remove old x/y properties if they exist
+        delete this.draggedItem.x;
+        delete this.draggedItem.y;
 
         console.log(`📍 Updated ${this.draggedItem.name} position:`, { x, y });
+
+        // Update properties panel if visible
+        this.updatePropertiesPanel();
 
         // Trigger auto-save
         this.editor.saveCurrentWork();
