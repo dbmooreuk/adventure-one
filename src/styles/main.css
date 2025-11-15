@@ -2346,7 +2346,7 @@ button.prop {
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 700px;
-  max-height: 85vh;
+  height: 500px;
   background: #19545c;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);

@@ -159,19 +159,29 @@ export class PuzzleManager extends EventEmitter {
 
         const config = this.currentSceneData?.puzzleConfig || {}
 
-        // Award points
+        // Check if puzzle was already completed (shouldn't happen, but just in case)
+        const sceneState = this.game.sceneManager?.getSceneState(this.currentSceneData.sceneName)
+        const wasAlreadyCompleted = sceneState?.customState?.puzzleCompleted || false
+
+        // Award points only if this is the first completion
         const points = config.points || 50
         const achievementId = `puzzle_${this.currentSceneData.sceneName}_completed`
-        this.game.addScore(points, achievementId)
 
-        // Add achievement to journal if specified
-        if (this.currentSceneData.achievement) {
-            this.game.achievementManager?.addAchievement(
-                achievementId,
-                this.currentSceneData.achievement,
-                points,
-                'puzzle'
-            )
+        if (!wasAlreadyCompleted) {
+            console.log(`🏆 Awarding ${points} points for completing puzzle: ${this.currentSceneData.sceneName}`)
+            this.game.addScore(points, achievementId)
+
+            // Add achievement to journal if specified (check puzzleConfig.achievement)
+            if (config.achievement) {
+                this.game.achievementManager?.addAchievement(
+                    achievementId,
+                    config.achievement,
+                    points,
+                    'puzzle'
+                )
+            }
+        } else {
+            console.log(`ℹ️ Puzzle already completed previously, no points awarded`)
         }
 
         // Give reward item if specified
@@ -184,8 +194,7 @@ export class PuzzleManager extends EventEmitter {
         // Play success sound
         this.game.audioManager?.playSound('success')
 
-        // Mark puzzle as completed in scene state
-        const sceneState = this.game.sceneManager?.getSceneState(this.currentSceneData.sceneName)
+        // Mark puzzle as completed in scene state (reuse sceneState from above)
         if (sceneState) {
             sceneState.customState.puzzleCompleted = true
             sceneState.customState.completedAt = Date.now()

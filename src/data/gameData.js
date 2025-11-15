@@ -60,7 +60,8 @@ export const gameData = {
                                 "The last number is even"
                       ],
                       "reward": "gold_bars",
-                      "points": 50,
+                      "points": 25,
+                      "achievement": "YPuzzle complet!",
                       "returnScene": "scene2"
             }
         },
