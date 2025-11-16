@@ -144,16 +144,47 @@ export class LayersPanel {
             return;
         }
 
-        // Swap z-index values
+        // Reorder z-index values (shift items between dragged and target)
         const draggedData = this.editor.getItemByName(this.draggedItem.name);
         const targetData = this.editor.getItemByName(targetItem.name);
 
         if (draggedData && targetData) {
-            const tempZIndex = draggedData.zIndex || 1;
-            draggedData.zIndex = targetData.zIndex || 1;
-            targetData.zIndex = tempZIndex;
+            const draggedZIndex = draggedData.zIndex || 1;
+            const targetZIndex = targetData.zIndex || 1;
 
-            console.log(`Swapped z-index: ${this.draggedItem.name} (${draggedData.zIndex}) ↔ ${targetItem.name} (${targetData.zIndex})`);
+            // Get all items in the current scene
+            const sceneItems = this.currentScene.items.map(itemName => {
+                return this.editor.getItemByName(itemName);
+            }).filter(item => item); // Filter out any null/undefined
+
+            console.log(`Reordering: ${this.draggedItem.name} (z:${draggedZIndex}) → position of ${targetItem.name} (z:${targetZIndex})`);
+
+            // Determine direction of shift
+            if (draggedZIndex < targetZIndex) {
+                // Moving up in z-index (dragging from lower to higher)
+                // Shift items down between dragged and target
+                sceneItems.forEach(item => {
+                    const itemZ = item.zIndex || 1;
+                    if (itemZ > draggedZIndex && itemZ <= targetZIndex) {
+                        item.zIndex = itemZ - 1;
+                        console.log(`  Shifted ${item.name}: ${itemZ} → ${item.zIndex}`);
+                    }
+                });
+                draggedData.zIndex = targetZIndex;
+            } else {
+                // Moving down in z-index (dragging from higher to lower)
+                // Shift items up between target and dragged
+                sceneItems.forEach(item => {
+                    const itemZ = item.zIndex || 1;
+                    if (itemZ >= targetZIndex && itemZ < draggedZIndex) {
+                        item.zIndex = itemZ + 1;
+                        console.log(`  Shifted ${item.name}: ${itemZ} → ${item.zIndex}`);
+                    }
+                });
+                draggedData.zIndex = targetZIndex;
+            }
+
+            console.log(`  Final: ${draggedData.name} z-index = ${draggedData.zIndex}`);
 
             // Re-render layers and composer
             this.render();
@@ -162,12 +193,9 @@ export class LayersPanel {
             // Update properties panel if the currently selected item's z-index changed
             if (this.editor.propertiesPanel && this.editor.propertiesPanel.currentItem) {
                 const currentItemName = this.editor.propertiesPanel.currentItem.name;
-                if (currentItemName === draggedData.name || currentItemName === targetData.name) {
-                    // Refresh the properties panel to show updated z-index
-                    const updatedItem = this.editor.getItemByName(currentItemName);
-                    if (updatedItem) {
-                        this.editor.propertiesPanel.showItemProperties(updatedItem);
-                    }
+                const updatedItem = this.editor.getItemByName(currentItemName);
+                if (updatedItem) {
+                    this.editor.propertiesPanel.showItemProperties(updatedItem);
                 }
             }
         }

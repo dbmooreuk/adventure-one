@@ -142,6 +142,11 @@ export class SceneComposer {
         // Render scene items
         this.renderSceneItems();
 
+        // Update scene properties panel
+        if (this.editor.scenePropertiesPanel) {
+            this.editor.scenePropertiesPanel.showSceneProperties(scene);
+        }
+
         // Update layers panel
         if (this.editor.layersPanel) {
             this.editor.layersPanel.show(scene);
@@ -902,6 +907,11 @@ export class SceneComposer {
             }
         }
 
+        // Show scene properties panel
+        if (this.currentScene && this.editor.scenePropertiesPanel) {
+            this.editor.scenePropertiesPanel.showSceneProperties(this.currentScene);
+        }
+
         // Show layers panel
         if (this.currentScene && this.editor.layersPanel) {
             this.editor.layersPanel.show(this.currentScene);
@@ -920,6 +930,11 @@ export class SceneComposer {
         // Clear properties panel
         if (this.editor.propertiesPanel) {
             this.editor.propertiesPanel.clear();
+        }
+
+        // Clear scene properties panel
+        if (this.editor.scenePropertiesPanel) {
+            this.editor.scenePropertiesPanel.clear();
         }
 
         // Hide layers panel

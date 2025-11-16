@@ -14,6 +14,7 @@ import { AudioEditor } from './audio-editor.js';
 import { AssetsManager } from './assets-manager.js';
 import { SceneComposer } from './scene-composer.js';
 import { PropertiesPanel } from './properties-panel.js';
+import { ScenePropertiesPanel } from './scene-properties-panel.js';
 import { LayersPanel } from './layers-panel.js';
 import { FlowsVisualizer } from './flows-visualizer.js';
 
@@ -39,6 +40,7 @@ class GameDataEditor {
         this.assetsManager = new AssetsManager(this);
         this.sceneComposer = new SceneComposer(this);
         this.propertiesPanel = new PropertiesPanel(this);
+        this.scenePropertiesPanel = new ScenePropertiesPanel(this);
         this.layersPanel = new LayersPanel(this);
         this.flowsVisualizer = new FlowsVisualizer(this);
         this.storageManager = new StorageManager();
@@ -229,6 +231,8 @@ class GameDataEditor {
 
         if (tabName === 'properties') {
             document.getElementById('properties-content').classList.add('active');
+        } else if (tabName === 'scene') {
+            document.getElementById('scene-tab-content').classList.add('active');
         } else if (tabName === 'layers') {
             document.getElementById('layers-tab-content').classList.add('active');
         } else if (tabName === 'settings') {
@@ -301,16 +305,20 @@ class GameDataEditor {
      * Update visible tabs based on composer mode
      */
     updateTabsForComposerMode(isComposerMode) {
+        const sceneTab = document.querySelector('[data-preview-tab="scene"]');
         const layersTab = document.querySelector('[data-preview-tab="layers"]');
         const settingsTab = document.querySelector('[data-preview-tab="settings"]');
         const assetsTab = document.querySelector('[data-preview-tab="assets"]');
+        const sceneContent = document.getElementById('scene-tab-content');
         const layersContent = document.getElementById('layers-tab-content');
 
         if (isComposerMode) {
-            // Show Layers, hide Settings and Assets
+            // Show Scene and Layers, hide Settings and Assets
+            sceneTab.style.display = '';
             layersTab.style.display = '';
             settingsTab.style.display = 'none';
             assetsTab.style.display = 'none';
+            sceneContent.style.display = '';
             layersContent.style.display = '';
 
             // Switch to Properties tab if on Settings or Assets
@@ -319,15 +327,17 @@ class GameDataEditor {
                 this.switchPreviewTab('properties');
             }
         } else {
-            // Hide Layers, show Settings and Assets
+            // Hide Scene and Layers, show Settings and Assets
+            sceneTab.style.display = 'none';
             layersTab.style.display = 'none';
             settingsTab.style.display = '';
             assetsTab.style.display = '';
+            sceneContent.style.display = 'none';
             layersContent.style.display = 'none';
 
-            // Switch to Properties tab if on Layers
+            // Switch to Properties tab if on Scene or Layers
             const activeTab = document.querySelector('.preview-tab.active');
-            if (activeTab && activeTab.dataset.previewTab === 'layers') {
+            if (activeTab && (activeTab.dataset.previewTab === 'scene' || activeTab.dataset.previewTab === 'layers')) {
                 this.switchPreviewTab('properties');
             }
         }

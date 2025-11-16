@@ -319,6 +319,9 @@
                     <button class="preview-tab active" data-preview-tab="properties">
                         Properties
                     </button>
+                    <button class="preview-tab" data-preview-tab="scene" style="display: none;">
+                        Scene
+                    </button>
                     <button class="preview-tab" data-preview-tab="layers" style="display: none;">
                         Layers
                     </button>
@@ -344,6 +347,16 @@
                                 <p>Select an item in the composer to edit its properties</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Scene Tab (only visible in composer mode) -->
+                <div class="preview-tab-content" id="scene-tab-content" style="display: none;">
+                    <div class="scene-tab-header">
+                        <h3>Scene Properties</h3>
+                    </div>
+                    <div id="scene-properties-container" class="scene-properties-container">
+                        <!-- Scene properties form will be populated here -->
                     </div>
                 </div>
 

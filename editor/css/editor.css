@@ -2283,3 +2283,70 @@ body {
 .add-item-btn {
     flex-shrink: 0;
 }
+
+/* ========================================
+ * Scene Properties Panel
+ * ======================================== */
+
+.scene-tab-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--editor-border);
+}
+
+.scene-tab-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.scene-properties-container {
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    height: calc(100vh - var(--header-height) - 80px);
+}
+
+.scene-properties-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.scene-properties-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.scene-properties-form label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--editor-text);
+}
+
+.scene-properties-form .form-control {
+    padding: var(--spacing-sm);
+    background: var(--editor-bg);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    color: var(--editor-text);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.scene-properties-form .form-control:focus {
+    outline: none;
+    border-color: var(--editor-accent);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+
+.scene-properties-form .form-control.readonly {
+    background: var(--editor-bg-light);
+    color: var(--editor-text-dim);
+    cursor: not-allowed;
+}
+
+.scene-properties-form textarea.form-control {
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+}
