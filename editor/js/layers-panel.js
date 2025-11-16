@@ -7,6 +7,14 @@ export class LayersPanel {
         this.editor = editor;
         this.currentScene = null;
         this.draggedItem = null;
+        this.draggedElement = null;
+        this.touchDragging = false;
+        this.currentDropTarget = null;
+
+        // Bind touch handlers for document-level listeners
+        this.handleTouchMove = this.handleTouchMove.bind(this);
+        this.handleTouchEnd = this.handleTouchEnd.bind(this);
+
         this.setupEventListeners();
     }
 
@@ -44,7 +52,7 @@ export class LayersPanel {
         container.innerHTML = '';
 
         const sceneItems = this.currentScene.items || [];
-        
+
         if (sceneItems.length === 0) {
             container.innerHTML = '<p class="empty-message">No items in this scene</p>';
             return;
@@ -99,11 +107,14 @@ export class LayersPanel {
             this.editor.sceneComposer.selectItemByName(item.name);
         });
 
-        // Drag and drop events
+        // Drag and drop events (mouse / desktop)
         li.addEventListener('dragstart', (e) => this.handleDragStart(e, item));
         li.addEventListener('dragover', (e) => this.handleDragOver(e));
         li.addEventListener('drop', (e) => this.handleDrop(e, item));
         li.addEventListener('dragend', () => this.handleDragEnd());
+
+        // Touch-based drag-and-drop (for tablets)
+        li.addEventListener('touchstart', (e) => this.handleTouchStart(e, item, li), { passive: false });
 
         return li;
     }
@@ -123,7 +134,7 @@ export class LayersPanel {
     handleDragOver(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
-        
+
         const target = e.currentTarget;
         if (target.classList.contains('layer-item') && !target.classList.contains('dragging')) {
             target.classList.add('drag-over');
@@ -131,7 +142,7 @@ export class LayersPanel {
     }
 
     /**
-     * Handle drop
+     * Handle drop (mouse / desktop)
      */
     handleDrop(e, targetItem) {
         e.preventDefault();
@@ -140,12 +151,19 @@ export class LayersPanel {
         const target = e.currentTarget;
         target.classList.remove('drag-over');
 
-        if (!this.draggedItem || this.draggedItem.name === targetItem.name) {
+        this.reorderItems(this.draggedItem, targetItem);
+    }
+
+    /**
+     * Core reordering logic shared by mouse and touch DnD
+     */
+    reorderItems(draggedItem, targetItem) {
+        if (!draggedItem || !targetItem || draggedItem.name === targetItem.name) {
             return;
         }
 
         // Reorder z-index values (shift items between dragged and target)
-        const draggedData = this.editor.getItemByName(this.draggedItem.name);
+        const draggedData = this.editor.getItemByName(draggedItem.name);
         const targetData = this.editor.getItemByName(targetItem.name);
 
         if (draggedData && targetData) {
@@ -157,7 +175,7 @@ export class LayersPanel {
                 return this.editor.getItemByName(itemName);
             }).filter(item => item); // Filter out any null/undefined
 
-            console.log(`Reordering: ${this.draggedItem.name} (z:${draggedZIndex}) → position of ${targetItem.name} (z:${targetZIndex})`);
+            console.log(`Reordering: ${draggedItem.name} (z:${draggedZIndex}) → position of ${targetItem.name} (z:${targetZIndex})`);
 
             // Determine direction of shift
             if (draggedZIndex < targetZIndex) {
@@ -202,13 +220,97 @@ export class LayersPanel {
     }
 
     /**
-     * Handle drag end
+     * Handle drag end (mouse / desktop)
      */
     handleDragEnd() {
         document.querySelectorAll('.layer-item').forEach(item => {
             item.classList.remove('dragging', 'drag-over');
         });
         this.draggedItem = null;
+    }
+
+    /**
+     * Handle touch start (touch / tablet)
+     */
+    handleTouchStart(e, item, li) {
+        e.preventDefault(); // Prevent scrolling
+
+        this.draggedItem = item;
+        this.draggedElement = li;
+        this.touchDragging = true;
+
+        li.classList.add('dragging');
+
+        // Attach document-level touch listeners
+        document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+        document.addEventListener('touchend', this.handleTouchEnd);
+        document.addEventListener('touchcancel', this.handleTouchEnd);
+    }
+
+    /**
+     * Handle touch move (touch / tablet)
+     */
+    handleTouchMove(e) {
+        if (!this.touchDragging) return;
+
+        e.preventDefault(); // Prevent scrolling
+
+        const touch = e.touches[0];
+        const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        // Find the closest layer-item parent
+        let targetLayerItem = elementUnderTouch;
+        while (targetLayerItem && !targetLayerItem.classList.contains('layer-item')) {
+            targetLayerItem = targetLayerItem.parentElement;
+        }
+
+        // Remove drag-over from all items
+        document.querySelectorAll('.layer-item').forEach(item => {
+            if (item !== this.draggedElement) {
+                item.classList.remove('drag-over');
+            }
+        });
+
+        // Add drag-over to the target item
+        if (targetLayerItem && targetLayerItem !== this.draggedElement) {
+            targetLayerItem.classList.add('drag-over');
+            this.currentDropTarget = targetLayerItem;
+        } else {
+            this.currentDropTarget = null;
+        }
+    }
+
+    /**
+     * Handle touch end (touch / tablet)
+     */
+    handleTouchEnd(e) {
+        if (!this.touchDragging) return;
+
+        // Remove document-level touch listeners
+        document.removeEventListener('touchmove', this.handleTouchMove);
+        document.removeEventListener('touchend', this.handleTouchEnd);
+        document.removeEventListener('touchcancel', this.handleTouchEnd);
+
+        // If we have a valid drop target, perform the reorder
+        if (this.currentDropTarget) {
+            const targetItemName = this.currentDropTarget.dataset.itemName;
+            const targetItem = {
+                name: targetItemName,
+                zIndex: parseInt(this.currentDropTarget.dataset.zIndex, 10)
+            };
+
+            this.reorderItems(this.draggedItem, targetItem);
+        }
+
+        // Clean up
+        document.querySelectorAll('.layer-item').forEach(item => {
+            item.classList.remove('dragging', 'drag-over');
+        });
+
+        this.draggedItem = null;
+        this.draggedElement = null;
+        this.touchDragging = false;
+        this.currentDropTarget = null;
     }
 
     /**

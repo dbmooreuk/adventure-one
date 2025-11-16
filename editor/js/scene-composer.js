@@ -43,6 +43,41 @@ export class SceneComposer {
     }
 
     /**
+     * Get unified pointer position from mouse or touch event
+     */
+    getPointerPosition(e) {
+        if (e.touches && e.touches.length > 0) {
+            return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+        }
+        return { clientX: e.clientX, clientY: e.clientY };
+    }
+
+    /**
+     * Add both mouse and touch event listeners
+     */
+    addPointerListeners(element, handlers) {
+        if (handlers.down) {
+            element.addEventListener('mousedown', handlers.down);
+            element.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Prevent scrolling
+                handlers.down(e);
+            }, { passive: false });
+        }
+        if (handlers.move) {
+            element.addEventListener('mousemove', handlers.move);
+            element.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // Prevent scrolling
+                handlers.move(e);
+            }, { passive: false });
+        }
+        if (handlers.up) {
+            element.addEventListener('mouseup', handlers.up);
+            element.addEventListener('touchend', handlers.up);
+            element.addEventListener('touchcancel', handlers.up);
+        }
+    }
+
+    /**
      * Initialize the composer
      */
     init() {
@@ -342,12 +377,17 @@ export class SceneComposer {
             const handle = document.createElement('div');
             handle.className = `composer-resize-handle composer-resize-${position}`;
             handle.dataset.handle = position;
-            handle.addEventListener('mousedown', (e) => this.startResize(e, item, itemEl, position));
+
+            // Add both mouse and touch support for resize handles
+            this.addPointerListeners(handle, {
+                down: (e) => this.startResize(e, item, itemEl, position)
+            });
+
             itemEl.appendChild(handle);
         });
 
-        // Event listeners
-        itemEl.addEventListener('mousedown', (e) => {
+        // Event listeners for dragging items
+        const dragHandler = (e) => {
             // Don't start drag if hit areas are visible (editing mode)
             if (this.hitAreaVisible) {
                 return;
@@ -357,6 +397,10 @@ export class SceneComposer {
                 return;
             }
             this.startDrag(e, item, itemEl);
+        };
+
+        this.addPointerListeners(itemEl, {
+            down: dragHandler
         });
         itemEl.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -386,8 +430,9 @@ export class SceneComposer {
         // Store starting state
         const wrapper = document.querySelector('.composer-canvas-wrapper');
         const wrapperRect = wrapper.getBoundingClientRect();
-        this.resizeStartPos.x = (e.clientX - wrapperRect.left) / this.scale;
-        this.resizeStartPos.y = (e.clientY - wrapperRect.top) / this.scale;
+        const pointer = this.getPointerPosition(e);
+        this.resizeStartPos.x = (pointer.clientX - wrapperRect.left) / this.scale;
+        this.resizeStartPos.y = (pointer.clientY - wrapperRect.top) / this.scale;
 
         this.resizeStartSize.width = parseFloat(element.style.width) || 100;
         this.resizeStartSize.height = parseFloat(element.style.height) || 100;
@@ -400,9 +445,12 @@ export class SceneComposer {
 
         element.classList.add('resizing');
 
-        // Add document-level listeners
+        // Add document-level listeners for both mouse and touch
         document.addEventListener('mousemove', this.handleResizeMove);
         document.addEventListener('mouseup', this.handleResizeEnd);
+        document.addEventListener('touchmove', this.handleResizeMove, { passive: false });
+        document.addEventListener('touchend', this.handleResizeEnd);
+        document.addEventListener('touchcancel', this.handleResizeEnd);
     }
 
     /**
@@ -414,8 +462,9 @@ export class SceneComposer {
         const wrapper = document.querySelector('.composer-canvas-wrapper');
         const wrapperRect = wrapper.getBoundingClientRect();
 
-        const mouseCanvasX = (e.clientX - wrapperRect.left) / this.scale;
-        const mouseCanvasY = (e.clientY - wrapperRect.top) / this.scale;
+        const pointer = this.getPointerPosition(e);
+        const mouseCanvasX = (pointer.clientX - wrapperRect.left) / this.scale;
+        const mouseCanvasY = (pointer.clientY - wrapperRect.top) / this.scale;
 
         const deltaX = mouseCanvasX - this.resizeStartPos.x;
         const deltaY = mouseCanvasY - this.resizeStartPos.y;
@@ -518,9 +567,12 @@ export class SceneComposer {
         // Trigger auto-save
         this.editor.saveCurrentWork();
 
-        // Clean up
+        // Clean up - remove both mouse and touch listeners
         document.removeEventListener('mousemove', this.handleResizeMove);
         document.removeEventListener('mouseup', this.handleResizeEnd);
+        document.removeEventListener('touchmove', this.handleResizeMove);
+        document.removeEventListener('touchend', this.handleResizeEnd);
+        document.removeEventListener('touchcancel', this.handleResizeEnd);
 
         this.resizing = false;
         this.resizeHandle = null;
@@ -542,21 +594,25 @@ export class SceneComposer {
         const currentX = parseFloat(element.style.left) || 0;
         const currentY = parseFloat(element.style.top) || 0;
 
-        // Calculate mouse position in canvas coordinates
+        // Calculate pointer position in canvas coordinates
         const wrapper = document.querySelector('.composer-canvas-wrapper');
         const wrapperRect = wrapper.getBoundingClientRect();
-        const mouseCanvasX = (e.clientX - wrapperRect.left) / this.scale;
-        const mouseCanvasY = (e.clientY - wrapperRect.top) / this.scale;
+        const pointer = this.getPointerPosition(e);
+        const mouseCanvasX = (pointer.clientX - wrapperRect.left) / this.scale;
+        const mouseCanvasY = (pointer.clientY - wrapperRect.top) / this.scale;
 
-        // Calculate offset from mouse to item position
+        // Calculate offset from pointer to item position
         this.dragOffset.x = mouseCanvasX - currentX;
         this.dragOffset.y = mouseCanvasY - currentY;
 
         element.classList.add('dragging');
 
-        // Add document-level listeners
+        // Add document-level listeners for both mouse and touch
         document.addEventListener('mousemove', this.handleDragMove);
         document.addEventListener('mouseup', this.handleDragEnd);
+        document.addEventListener('touchmove', this.handleDragMove, { passive: false });
+        document.addEventListener('touchend', this.handleDragEnd);
+        document.addEventListener('touchcancel', this.handleDragEnd);
     }
 
     /**
@@ -568,9 +624,10 @@ export class SceneComposer {
         const wrapper = document.querySelector('.composer-canvas-wrapper');
         const wrapperRect = wrapper.getBoundingClientRect();
 
-        // Calculate mouse position in canvas coordinates
-        const mouseCanvasX = (e.clientX - wrapperRect.left) / this.scale;
-        const mouseCanvasY = (e.clientY - wrapperRect.top) / this.scale;
+        // Calculate pointer position in canvas coordinates
+        const pointer = this.getPointerPosition(e);
+        const mouseCanvasX = (pointer.clientX - wrapperRect.left) / this.scale;
+        const mouseCanvasY = (pointer.clientY - wrapperRect.top) / this.scale;
 
         // Apply the offset (already in canvas coordinates)
         let x = mouseCanvasX - this.dragOffset.x;
@@ -618,9 +675,12 @@ export class SceneComposer {
         // Trigger auto-save
         this.editor.saveCurrentWork();
 
-        // Clean up
+        // Clean up - remove both mouse and touch listeners
         document.removeEventListener('mousemove', this.handleDragMove);
         document.removeEventListener('mouseup', this.handleDragEnd);
+        document.removeEventListener('touchmove', this.handleDragMove);
+        document.removeEventListener('touchend', this.handleDragEnd);
+        document.removeEventListener('touchcancel', this.handleDragEnd);
 
         this.draggedItem = null;
         this.draggedElement = null;
@@ -1026,8 +1086,10 @@ export class SceneComposer {
             node.style.vectorEffect = 'non-scaling-stroke';
             node.dataset.nodeIndex = index;
 
-            // Add drag handlers for the node
-            node.addEventListener('mousedown', (e) => this.startPolygonNodeDrag(e, item, index, polygon));
+            // Add drag handlers for the node (both mouse and touch)
+            this.addPointerListeners(node, {
+                down: (e) => this.startPolygonNodeDrag(e, item, index, polygon)
+            });
 
             svg.appendChild(node);
         });
@@ -1045,14 +1107,15 @@ export class SceneComposer {
         const svg = polygon.parentElement;
         const itemEl = svg.parentElement;
 
-        const handleMouseMove = (e) => {
-            const wrapper = document.querySelector('.composer-canvas-wrapper');
-            const wrapperRect = wrapper.getBoundingClientRect();
-            const itemRect = itemEl.getBoundingClientRect();
+        const handlePointerMove = (e) => {
+            e.preventDefault();
 
-            // Calculate mouse position relative to item
-            const x = (e.clientX - itemRect.left) / this.scale;
-            const y = (e.clientY - itemRect.top) / this.scale;
+            const itemRect = itemEl.getBoundingClientRect();
+            const pointer = this.getPointerPosition(e);
+
+            // Calculate pointer position relative to item
+            const x = (pointer.clientX - itemRect.left) / this.scale;
+            const y = (pointer.clientY - itemRect.top) / this.scale;
 
             // Update the point in the data
             item.hitPolygon[nodeIndex] = [Math.round(x), Math.round(y)];
@@ -1072,17 +1135,23 @@ export class SceneComposer {
             }
         };
 
-        const handleMouseUp = () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
+        const handlePointerUp = () => {
+            document.removeEventListener('mousemove', handlePointerMove);
+            document.removeEventListener('mouseup', handlePointerUp);
+            document.removeEventListener('touchmove', handlePointerMove);
+            document.removeEventListener('touchend', handlePointerUp);
+            document.removeEventListener('touchcancel', handlePointerUp);
 
             // Trigger auto-save
             this.editor.saveCurrentWork();
             console.log(`📍 Updated polygon node ${nodeIndex} for ${item.name}`);
         };
 
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('mousemove', handlePointerMove);
+        document.addEventListener('mouseup', handlePointerUp);
+        document.addEventListener('touchmove', handlePointerMove, { passive: false });
+        document.addEventListener('touchend', handlePointerUp);
+        document.addEventListener('touchcancel', handlePointerUp);
     }
 
     /**
