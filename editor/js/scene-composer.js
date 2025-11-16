@@ -938,13 +938,23 @@ export class SceneComposer {
             this.animationFrameId = null;
         }
 
-        // Reset all item transforms
+        // Reset all item transforms and clean up clones
         this.animatedItems.forEach((state, itemName) => {
             const itemEl = this.itemsLayer.querySelector(`[data-item-name="${itemName}"]`);
             if (itemEl) {
                 itemEl.style.transform = '';
                 itemEl.style.opacity = '';
                 itemEl.style.backgroundPosition = '';
+                itemEl.style.pointerEvents = '';
+            }
+
+            // Clean up random animation clones
+            if (state.randomClones) {
+                state.randomClones.forEach(cloneState => {
+                    if (cloneState.element && cloneState.element.parentNode) {
+                        cloneState.element.parentNode.removeChild(cloneState.element);
+                    }
+                });
             }
         });
 
@@ -1047,45 +1057,83 @@ export class SceneComposer {
     }
 
     /**
-     * Animate random items (simplified for editor - just shows concept)
+     * Animate random items with multiple clones
      */
     animateRandomItem(itemEl, state, anim) {
-        // Initialize random state if not exists
-        if (!state.randomX) {
-            const speed = anim.speed || 1;
-            const randomness = anim.randomness || 50;
-            const rotation = anim.rotation !== undefined ? anim.rotation : 5;
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = (Math.random() * 0.5 + 0.5) * speed * randomness / 10;
+        const count = anim.count || 5;
+        const speed = anim.speed || 1;
+        const randomness = anim.randomness || 50;
+        const rotation = anim.rotation !== undefined ? anim.rotation : 5;
 
-            state.randomX = 0;
-            state.randomY = 0;
-            state.randomVX = Math.cos(angle) * velocity;
-            state.randomVY = Math.sin(angle) * velocity;
-            state.randomAngle = Math.random() * 360;
-            state.randomRotSpeed = rotation === 0 ? 0 : (Math.random() - 0.5) * rotation * 0.5;
+        // Initialize clones if not exists
+        if (!state.randomClones) {
+            // Hide the original element
+            itemEl.style.opacity = '0';
+            itemEl.style.pointerEvents = 'none';
+
+            state.randomClones = [];
+
+            // Get original item position and size
+            const itemRect = itemEl.getBoundingClientRect();
+            const itemsLayerRect = this.itemsLayer.getBoundingClientRect();
+            const itemLeft = parseFloat(itemEl.style.left) || 0;
+            const itemTop = parseFloat(itemEl.style.top) || 0;
+
+            // Create clones
+            for (let i = 0; i < count; i++) {
+                const clone = itemEl.cloneNode(true);
+                clone.classList.add('random-clone');
+                clone.style.opacity = '1';
+                clone.style.pointerEvents = 'none';
+
+                // Random starting position within ±100px from original
+                const startX = (Math.random() - 0.5) * 200;
+                const startY = (Math.random() - 0.5) * 200;
+
+                // Random velocity and direction
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = (Math.random() * 0.5 + 0.5) * speed * randomness / 10;
+
+                // Calculate rotation speed based on 0-9 scale
+                const rotationSpeed = rotation === 0 ? 0 : (Math.random() - 0.5) * rotation * 0.5;
+
+                state.randomClones.push({
+                    element: clone,
+                    x: startX,
+                    y: startY,
+                    vx: Math.cos(angle) * velocity,
+                    vy: Math.sin(angle) * velocity,
+                    angle: Math.random() * 360,
+                    rotationSpeed: rotationSpeed
+                });
+
+                this.itemsLayer.appendChild(clone);
+            }
         }
 
-        // Update position
-        state.randomX += state.randomVX;
-        state.randomY += state.randomVY;
+        // Update all clones
+        state.randomClones.forEach(cloneState => {
+            // Update position
+            cloneState.x += cloneState.vx;
+            cloneState.y += cloneState.vy;
 
-        // Bounce within reasonable bounds (±100px from origin)
-        if (state.randomX <= -100 || state.randomX >= 100) {
-            state.randomVX *= -1;
-            state.randomX = Math.max(-100, Math.min(100, state.randomX));
-        }
-        if (state.randomY <= -100 || state.randomY >= 100) {
-            state.randomVY *= -1;
-            state.randomY = Math.max(-100, Math.min(100, state.randomY));
-        }
+            // Bounce within reasonable bounds (±100px from origin)
+            if (cloneState.x <= -100 || cloneState.x >= 100) {
+                cloneState.vx *= -1;
+                cloneState.x = Math.max(-100, Math.min(100, cloneState.x));
+            }
+            if (cloneState.y <= -100 || cloneState.y >= 100) {
+                cloneState.vy *= -1;
+                cloneState.y = Math.max(-100, Math.min(100, cloneState.y));
+            }
 
-        // Update rotation
-        state.randomAngle += state.randomRotSpeed;
+            // Update rotation
+            cloneState.angle += cloneState.rotationSpeed;
 
-        // Apply transform (note: this shows movement of 1 item, not multiple clones)
-        const transform = `translate(${state.randomX}px, ${state.randomY}px) rotate(${state.randomAngle}deg)`;
-        itemEl.style.transform = transform;
+            // Apply transform
+            const transform = `translate(${cloneState.x}px, ${cloneState.y}px) rotate(${cloneState.angle}deg)`;
+            cloneState.element.style.transform = transform;
+        });
     }
 
     /**
