@@ -35,6 +35,11 @@ export class SceneComposer {
         // Canvas outline visualization
         this.canvasOutlineVisible = false;
 
+        // Animations
+        this.animationsEnabled = false;
+        this.animationFrameId = null;
+        this.animatedItems = new Map(); // Map of item name -> animation state
+
         // Hit area visualization
         this.hitAreaVisible = false;
 
@@ -125,6 +130,7 @@ export class SceneComposer {
         document.getElementById('composer-zoom-out')?.addEventListener('click', () => this.zoomOut());
         document.getElementById('composer-fit')?.addEventListener('click', () => this.fitToView());
         document.getElementById('composer-canvas-outline-toggle')?.addEventListener('click', () => this.toggleCanvasOutline());
+        document.getElementById('composer-animations-toggle')?.addEventListener('click', () => this.toggleAnimations());
         document.getElementById('composer-hitarea-toggle')?.addEventListener('click', () => this.toggleHitAreas());
 
         // Window resize handler - recalculate scale to maintain aspect ratio
@@ -175,6 +181,12 @@ export class SceneComposer {
 
         // Render scene items
         this.renderSceneItems();
+
+        // Restart animations if enabled
+        if (this.animationsEnabled) {
+            this.stopAnimations();
+            this.startAnimations();
+        }
 
         // Update scene properties panel
         if (this.editor.scenePropertiesPanel) {
@@ -267,6 +279,12 @@ export class SceneComposer {
 
         // Update items layer scale
         this.updateItemsLayerTransform();
+
+        // Restart animations if enabled
+        if (this.animationsEnabled) {
+            this.stopAnimations();
+            this.startAnimations();
+        }
     }
 
     /**
@@ -864,6 +882,163 @@ export class SceneComposer {
     }
 
     /**
+     * Toggle animations
+     */
+    toggleAnimations() {
+        this.animationsEnabled = !this.animationsEnabled;
+
+        const btn = document.getElementById('composer-animations-toggle');
+        if (btn) {
+            btn.classList.toggle('active', this.animationsEnabled);
+        }
+
+        if (this.animationsEnabled) {
+            this.startAnimations();
+        } else {
+            this.stopAnimations();
+        }
+    }
+
+    /**
+     * Start all animations
+     */
+    startAnimations() {
+        if (!this.currentScene) return;
+
+        // Initialize animation state for all items with animations
+        const sceneItems = this.currentScene.items || [];
+        sceneItems.forEach(itemName => {
+            const item = this.editor.data.sceneItems.find(i => i.name === itemName);
+            if (item && item.animation) {
+                this.animatedItems.set(item.name, {
+                    item: item,
+                    startTime: Date.now(),
+                    spriteFrameIndex: 0,
+                    lastFrameTime: 0
+                });
+            }
+        });
+
+        // Start animation loop
+        this.animateItems();
+    }
+
+    /**
+     * Stop all animations
+     */
+    stopAnimations() {
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
+        }
+
+        // Reset all item transforms
+        this.animatedItems.forEach((state, itemName) => {
+            const itemEl = this.itemsLayer.querySelector(`[data-item-name="${itemName}"]`);
+            if (itemEl) {
+                itemEl.style.transform = '';
+                itemEl.style.opacity = '';
+                itemEl.style.backgroundPosition = '';
+            }
+        });
+
+        this.animatedItems.clear();
+    }
+
+    /**
+     * Animation loop
+     */
+    animateItems() {
+        if (!this.animationsEnabled) return;
+
+        const currentTime = Date.now();
+
+        this.animatedItems.forEach((state, itemName) => {
+            const itemEl = this.itemsLayer.querySelector(`[data-item-name="${itemName}"]`);
+            if (!itemEl) return;
+
+            const anim = state.item.animation;
+            const elapsed = (currentTime - state.startTime) * (anim.speed || 1);
+            const t = elapsed / 1000; // Time in seconds
+
+            if (anim.type === 'sprite') {
+                this.animateSpriteItem(itemEl, state, anim, currentTime);
+            } else {
+                this.animateTransformItem(itemEl, state, anim, t);
+            }
+        });
+
+        this.animationFrameId = requestAnimationFrame(() => this.animateItems());
+    }
+
+    /**
+     * Animate sprite-based items
+     */
+    animateSpriteItem(itemEl, state, anim, currentTime) {
+        const fps = anim.fps || 12;
+        const frameDuration = 1000 / fps;
+
+        if (currentTime - state.lastFrameTime >= frameDuration) {
+            state.lastFrameTime = currentTime;
+
+            if (anim.frames && anim.frames.length > 0) {
+                // Frame-by-frame animation using image array
+                state.spriteFrameIndex = (state.spriteFrameIndex + 1) % anim.frames.length;
+                const framePath = `../src/assets/images/items/${anim.frames[state.spriteFrameIndex]}`;
+                itemEl.style.backgroundImage = `url('${framePath}')`;
+            } else if (anim.spriteSheet) {
+                // Sprite sheet animation using background-position
+                const frameCount = anim.frameCount || 1;
+                state.spriteFrameIndex = (state.spriteFrameIndex + 1) % frameCount;
+                const frameWidth = anim.frameWidth || state.item.size[0];
+                const xOffset = -(state.spriteFrameIndex * frameWidth);
+
+                const sheetPath = `../src/assets/images/items/${anim.spriteSheet}`;
+                itemEl.style.backgroundImage = `url('${sheetPath}')`;
+                itemEl.style.backgroundPosition = `${xOffset}px 0`;
+            }
+        }
+    }
+
+    /**
+     * Animate transform-based items (bob, pulse, spin, fade)
+     */
+    animateTransformItem(itemEl, state, anim, t) {
+        const amplitude = anim.amplitude || 10;
+        let transform = '';
+
+        switch (anim.type) {
+            case 'bob':
+                // Vertical bobbing motion
+                const bobY = Math.sin(t * 2) * amplitude;
+                transform = `translateY(${bobY}px)`;
+                break;
+
+            case 'pulse':
+                // Scale pulsing
+                const scale = 1 + (Math.sin(t * 2) * amplitude / 100);
+                transform = `scale(${scale})`;
+                break;
+
+            case 'spin':
+                // Continuous rotation
+                const rotation = (t * 60 * (anim.speed || 1)) % 360;
+                transform = `rotate(${rotation}deg)`;
+                break;
+
+            case 'fade':
+                // Opacity fading
+                const opacity = 0.5 + (Math.sin(t * 2) * 0.5);
+                itemEl.style.opacity = opacity;
+                break;
+        }
+
+        if (transform) {
+            itemEl.style.transform = transform;
+        }
+    }
+
+    /**
      * Toggle hit area visualization
      */
     toggleHitAreas() {
@@ -960,6 +1135,9 @@ export class SceneComposer {
         if (container) {
             container.classList.remove('active');
         }
+
+        // Stop animations
+        this.stopAnimations();
 
         // Clear properties panel
         if (this.editor.propertiesPanel) {
