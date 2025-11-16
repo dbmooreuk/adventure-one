@@ -32,9 +32,8 @@ export class SceneComposer {
         this.resizeStartSize = { width: 0, height: 0 };
         this.resizeStartItemPos = { x: 0, y: 0 };
 
-        // Grid settings
-        this.gridEnabled = false;
-        this.gridSize = 10;
+        // Canvas outline visualization
+        this.canvasOutlineVisible = false;
 
         // Hit area visualization
         this.hitAreaVisible = false;
@@ -125,7 +124,7 @@ export class SceneComposer {
         document.getElementById('composer-zoom-in')?.addEventListener('click', () => this.zoomIn());
         document.getElementById('composer-zoom-out')?.addEventListener('click', () => this.zoomOut());
         document.getElementById('composer-fit')?.addEventListener('click', () => this.fitToView());
-        document.getElementById('composer-grid-toggle')?.addEventListener('click', () => this.toggleGrid());
+        document.getElementById('composer-canvas-outline-toggle')?.addEventListener('click', () => this.toggleCanvasOutline());
         document.getElementById('composer-hitarea-toggle')?.addEventListener('click', () => this.toggleHitAreas());
 
         // Window resize handler - recalculate scale to maintain aspect ratio
@@ -244,35 +243,6 @@ export class SceneComposer {
         // Draw image on top if available
         if (this.backgroundImage) {
             this.ctx.drawImage(this.backgroundImage, 0, 0, this.baseWidth, this.baseHeight);
-        }
-
-        // Draw grid if enabled
-        if (this.gridEnabled) {
-            this.drawGrid();
-        }
-    }
-
-    /**
-     * Draw grid overlay
-     */
-    drawGrid() {
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        this.ctx.lineWidth = 1;
-
-        // Vertical lines
-        for (let x = 0; x <= this.baseWidth; x += this.gridSize) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, this.baseHeight);
-            this.ctx.stroke();
-        }
-
-        // Horizontal lines
-        for (let y = 0; y <= this.baseHeight; y += this.gridSize) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, y);
-            this.ctx.lineTo(this.baseWidth, y);
-            this.ctx.stroke();
         }
     }
 
@@ -633,12 +603,6 @@ export class SceneComposer {
         let x = mouseCanvasX - this.dragOffset.x;
         let y = mouseCanvasY - this.dragOffset.y;
 
-        // Snap to grid if enabled
-        if (this.gridEnabled) {
-            x = Math.round(x / this.gridSize) * this.gridSize;
-            y = Math.round(y / this.gridSize) * this.gridSize;
-        }
-
         // Update element position
         this.draggedElement.style.left = `${x}px`;
         this.draggedElement.style.top = `${y}px`;
@@ -750,12 +714,6 @@ export class SceneComposer {
         let x = (e.clientX - wrapperRect.left) / this.scale;
         let y = (e.clientY - wrapperRect.top) / this.scale;
 
-        // Snap to grid if enabled
-        if (this.gridEnabled) {
-            x = Math.round(x / this.gridSize) * this.gridSize;
-            y = Math.round(y / this.gridSize) * this.gridSize;
-        }
-
         // Update item position in the actual item data
         const actualItem = this.editor.data.sceneItems.find(i => i.name === itemData.name);
         if (actualItem) {
@@ -855,6 +813,17 @@ export class SceneComposer {
         this.itemsLayer.style.transformOrigin = '0 0';
         this.itemsLayer.style.width = `${this.baseWidth}px`;
         this.itemsLayer.style.height = `${this.baseHeight}px`;
+
+        // Update canvas outline position and scale
+        const outline = document.getElementById('composer-canvas-outline');
+        if (outline) {
+            outline.style.left = `${offsetX}px`;
+            outline.style.top = `${offsetY}px`;
+            outline.style.transform = `scale(${this.scale})`;
+            outline.style.transformOrigin = '0 0';
+            outline.style.width = `${this.baseWidth}px`;
+            outline.style.height = `${this.baseHeight}px`;
+        }
     }
 
     /**
@@ -877,15 +846,20 @@ export class SceneComposer {
     }
 
     /**
-     * Toggle grid
+     * Toggle canvas outline
      */
-    toggleGrid() {
-        this.gridEnabled = !this.gridEnabled;
-        this.drawBackground();
+    toggleCanvasOutline() {
+        this.canvasOutlineVisible = !this.canvasOutlineVisible;
 
-        const btn = document.getElementById('composer-grid-toggle');
+        const outline = document.getElementById('composer-canvas-outline');
+        const btn = document.getElementById('composer-canvas-outline-toggle');
+
+        if (outline) {
+            outline.classList.toggle('visible', this.canvasOutlineVisible);
+        }
+
         if (btn) {
-            btn.classList.toggle('active', this.gridEnabled);
+            btn.classList.toggle('active', this.canvasOutlineVisible);
         }
     }
 

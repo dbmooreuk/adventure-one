@@ -1492,6 +1492,20 @@ body {
     transform-origin: top left;
 }
 
+.composer-canvas-outline {
+    position: absolute;
+    display: none;
+    background: rgba(255, 255, 0, 0.1);
+    border: 1px solid red;
+    pointer-events: none;
+    transform-origin: top left;
+    z-index: 1000;
+}
+
+.composer-canvas-outline.visible {
+    display: block;
+}
+
 .composer-items-layer {
     position: absolute;
     pointer-events: none;
