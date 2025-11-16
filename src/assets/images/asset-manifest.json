@@ -1,0 +1,106 @@
+{
+  "generated": "2025-11-16T10:54:10.566Z",
+  "count": 20,
+  "assets": [
+    {
+      "name": "screen-splash.png",
+      "path": "backgrounds/screen-splash.png",
+      "category": "backgrounds"
+    },
+    {
+      "name": "screen-stasis.png",
+      "path": "backgrounds/screen-stasis.png",
+      "category": "backgrounds"
+    },
+    {
+      "name": "splash.png",
+      "path": "backgrounds/splash.png",
+      "category": "backgrounds"
+    },
+    {
+      "name": "boat-without-oar.png",
+      "path": "items/boat-without-oar.png",
+      "category": "items"
+    },
+    {
+      "name": "bottle-complete.png",
+      "path": "items/bottle-complete.png",
+      "category": "items"
+    },
+    {
+      "name": "butterfly1.png",
+      "path": "items/butterfly1.png",
+      "category": "items"
+    },
+    {
+      "name": "butterfly2.png",
+      "path": "items/butterfly2.png",
+      "category": "items"
+    },
+    {
+      "name": "butterfly3.png",
+      "path": "items/butterfly3.png",
+      "category": "items"
+    },
+    {
+      "name": "butterfly4.png",
+      "path": "items/butterfly4.png",
+      "category": "items"
+    },
+    {
+      "name": "butterfly5.png",
+      "path": "items/butterfly5.png",
+      "category": "items"
+    },
+    {
+      "name": "gear.png",
+      "path": "items/gear.png",
+      "category": "items"
+    },
+    {
+      "name": "karibiner.png",
+      "path": "items/karibiner.png",
+      "category": "items"
+    },
+    {
+      "name": "rope.png",
+      "path": "items/rope.png",
+      "category": "items"
+    },
+    {
+      "name": "sea-1.png",
+      "path": "items/sea-1.png",
+      "category": "items"
+    },
+    {
+      "name": "starburst-one.png",
+      "path": "items/starburst-one.png",
+      "category": "items"
+    },
+    {
+      "name": "torch.png",
+      "path": "items/torch.png",
+      "category": "items"
+    },
+    {
+      "name": "tower-one.png",
+      "path": "items/tower-one.png",
+      "category": "items"
+    },
+    {
+      "name": "fingerprint.svg",
+      "path": "ui/fingerprint.svg",
+      "category": "ui"
+    },
+    {
+      "name": "icon-monachus.png",
+      "path": "ui/icon-monachus.png",
+      "category": "ui"
+    },
+    {
+      "name": "icon-monachus.svg",
+      "path": "ui/icon-monachus.svg",
+      "category": "ui"
+    }
+  ]
+}

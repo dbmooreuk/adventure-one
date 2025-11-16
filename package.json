@@ -11,7 +11,8 @@
     "dev:network": "npm run sass:watch & vite --host",
     "build": "npm run sass:build && vite build",
     "preview": "vite preview",
-    "serve": "vite preview --port 3000"
+    "serve": "vite preview --port 3000",
+    "assets:scan": "node scripts/generate-asset-manifest.js"
   },
   "devDependencies": {
     "vite": "^5.0.0",

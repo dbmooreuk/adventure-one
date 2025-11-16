@@ -46,42 +46,67 @@ export class AssetsManager {
         try {
             this.showLoading();
 
-            // Known image files in the project
-            const knownAssets = [
-                // Backgrounds
-                'backgrounds/screen-splash.png',
-                'backgrounds/screen-stasis.png',
-                'backgrounds/splash.png',
-                // Items
-                'items/boat-without-oar.png',
-                'items/bottle-complete.png',
-                'items/butterfly1.png',
-                'items/butterfly2.png',
-                'items/butterfly3.png',
-                'items/butterfly4.png',
-                'items/butterfly5.png',
-                'items/gear.png',
-                'items/karibiner.png',
-                'items/rope.png',
-                'items/torch.png',
-                // UI
-                'ui/fingerprint.svg'
-            ];
+            // Try to fetch the asset manifest
+            const response = await fetch('../src/assets/images/asset-manifest.json');
 
-            // Convert to asset objects
-            this.assets = knownAssets.map(assetPath => ({
-                name: assetPath.split('/').pop(),
-                path: assetPath,
-                category: assetPath.split('/')[0]
-            }));
-
-            console.log(`✓ Found ${this.assets.length} assets`);
-            this.renderAssets();
+            if (response.ok) {
+                const manifest = await response.json();
+                this.assets = manifest.assets || [];
+                console.log(`✓ Loaded ${this.assets.length} assets from manifest`);
+                this.renderAssets();
+            } else {
+                // Fallback to hardcoded list if manifest doesn't exist
+                console.warn('Asset manifest not found, using fallback list');
+                this.loadFallbackAssets();
+            }
 
         } catch (error) {
             console.error('Error loading assets:', error);
-            this.showManualInstructions();
+            // Fallback to hardcoded list
+            this.loadFallbackAssets();
         }
+    }
+
+    /**
+     * Load fallback hardcoded asset list
+     */
+    loadFallbackAssets() {
+        // All image files in the project (updated list)
+        const knownAssets = [
+            // Backgrounds
+            'backgrounds/screen-splash.png',
+            'backgrounds/screen-stasis.png',
+            'backgrounds/splash.png',
+            // Items
+            'items/boat-without-oar.png',
+            'items/bottle-complete.png',
+            'items/butterfly1.png',
+            'items/butterfly2.png',
+            'items/butterfly3.png',
+            'items/butterfly4.png',
+            'items/butterfly5.png',
+            'items/gear.png',
+            'items/karibiner.png',
+            'items/rope.png',
+            'items/sea-1.png',
+            'items/starburst-one.png',
+            'items/torch.png',
+            'items/tower-one.png',
+            // UI
+            'ui/fingerprint.svg',
+            'ui/icon-monachus.png',
+            'ui/icon-monachus.svg'
+        ];
+
+        // Convert to asset objects
+        this.assets = knownAssets.map(assetPath => ({
+            name: assetPath.split('/').pop(),
+            path: assetPath,
+            category: assetPath.split('/')[0]
+        }));
+
+        console.log(`✓ Found ${this.assets.length} assets (fallback)`);
+        this.renderAssets();
     }
     
     /**
