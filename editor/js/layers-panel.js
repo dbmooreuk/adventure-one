@@ -158,6 +158,18 @@ export class LayersPanel {
             // Re-render layers and composer
             this.render();
             this.editor.sceneComposer.renderSceneItems();
+
+            // Update properties panel if the currently selected item's z-index changed
+            if (this.editor.propertiesPanel && this.editor.propertiesPanel.currentItem) {
+                const currentItemName = this.editor.propertiesPanel.currentItem.name;
+                if (currentItemName === draggedData.name || currentItemName === targetData.name) {
+                    // Refresh the properties panel to show updated z-index
+                    const updatedItem = this.editor.getItemByName(currentItemName);
+                    if (updatedItem) {
+                        this.editor.propertiesPanel.showItemProperties(updatedItem);
+                    }
+                }
+            }
         }
     }
 

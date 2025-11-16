@@ -381,6 +381,11 @@ export class PropertiesPanel {
                     this.showHitAreas();
                 }
             }
+
+            // Update the layers panel if it's active
+            if (this.editor.layersPanel && this.editor.layersPanel.currentScene) {
+                this.editor.layersPanel.render();
+            }
         }
     }
 
