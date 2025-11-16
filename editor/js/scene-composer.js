@@ -892,6 +892,12 @@ export class SceneComposer {
             btn.classList.toggle('active', this.animationsEnabled);
         }
 
+        // Show/hide update button in properties panel
+        const updateBtnContainer = document.getElementById('animation-update-btn-container');
+        if (updateBtnContainer) {
+            updateBtnContainer.style.display = this.animationsEnabled ? 'block' : 'none';
+        }
+
         if (this.animationsEnabled) {
             this.startAnimations();
         } else {
