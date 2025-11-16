@@ -569,6 +569,10 @@
                             <span class="legend-desc">CSS transform animations: bob (vertical), pulse (scale), spin (rotate), fade (opacity).</span>
                         </div>
                         <div class="legend-item">
+                            <span class="legend-label">Random:</span>
+                            <span class="legend-desc">Creates multiple clones of the item that move randomly around the screen with bouncing physics.</span>
+                        </div>
+                        <div class="legend-item">
                             <span class="legend-label">Sprite Frames:</span>
                             <span class="legend-desc">Array of image filenames that cycle through for frame-by-frame animation.</span>
                         </div>
@@ -587,6 +591,10 @@
                         <div class="legend-item">
                             <span class="legend-label">Speed:</span>
                             <span class="legend-desc">Speed multiplier for animations (default: 1).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Rotation:</span>
+                            <span class="legend-desc">Rotation speed for random animations, 0-9 scale (0=no rotation, 5=default, 9=fast).</span>
                         </div>
                     </div>
                 </div>
@@ -892,6 +900,24 @@
                                 <div class="item-detail-row">
                                     <span class="item-detail-label">Speed:</span>
                                     <span class="item-detail-value">${item.animation.speed}x</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.count ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Count:</span>
+                                    <span class="item-detail-value">${item.animation.count} items</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.randomness ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Randomness:</span>
+                                    <span class="item-detail-value">${item.animation.randomness}</span>
+                                </div>
+                            ` : ''}
+                            ${item.animation.rotation !== undefined ? `
+                                <div class="item-detail-row">
+                                    <span class="item-detail-label">Rotation:</span>
+                                    <span class="item-detail-value">${item.animation.rotation}</span>
                                 </div>
                             ` : ''}
                             ${item.animation.frames ? `

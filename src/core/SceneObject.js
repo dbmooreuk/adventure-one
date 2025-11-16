@@ -15,6 +15,10 @@ export class SceneObject {
         this.lastFrameTime = 0
         this.startTime = Date.now()
         this.isDestroyed = false
+
+        // For random animation type
+        this.clonedElements = []
+        this.randomStates = []
     }
 
     /**
@@ -228,9 +232,11 @@ export class SceneObject {
         if (!this.itemData.animation || !this.element) return
 
         const anim = this.itemData.animation
-        
+
         if (anim.type === 'sprite') {
             this.startSpriteAnimation()
+        } else if (anim.type === 'random') {
+            this.startRandomAnimation()
         } else {
             this.startTransformAnimation()
         }
@@ -328,6 +334,92 @@ export class SceneObject {
     }
 
     /**
+     * Start random animation (multiple clones moving randomly)
+     */
+    startRandomAnimation() {
+        const anim = this.itemData.animation
+        const count = anim.count || 5
+        const speed = anim.speed || 1
+        const randomness = anim.randomness || 50
+        const rotation = anim.rotation !== undefined ? anim.rotation : 5 // 0-9 scale, default 5
+
+        // Hide the original element
+        this.element.style.opacity = '0'
+        this.element.style.pointerEvents = 'none'
+
+        // Get scene dimensions (1280x720 virtual canvas)
+        const sceneWidth = 1280
+        const sceneHeight = 720
+        const itemWidth = this.itemData.size?.[0] || 50
+        const itemHeight = this.itemData.size?.[1] || 50
+
+        // Create cloned elements
+        for (let i = 0; i < count; i++) {
+            const clone = this.element.cloneNode(true)
+            clone.classList.add('random-clone')
+            clone.style.opacity = '1'
+            clone.style.pointerEvents = 'none'
+
+            // Random starting position
+            const startX = Math.random() * (sceneWidth - itemWidth)
+            const startY = Math.random() * (sceneHeight - itemHeight)
+
+            // Random velocity and direction
+            const angle = Math.random() * Math.PI * 2
+            const velocity = (Math.random() * 0.5 + 0.5) * speed * randomness / 10
+
+            // Calculate rotation speed based on 0-9 scale
+            const rotationSpeed = rotation === 0 ? 0 : (Math.random() - 0.5) * rotation * 0.5
+
+            this.randomStates.push({
+                element: clone,
+                x: startX,
+                y: startY,
+                vx: Math.cos(angle) * velocity,
+                vy: Math.sin(angle) * velocity,
+                angle: Math.random() * 360,
+                rotationSpeed: rotationSpeed
+            })
+
+            this.clonedElements.push(clone)
+            this.sceneContainer.appendChild(clone)
+        }
+
+        // Start animation loop
+        const animate = () => {
+            if (this.isDestroyed) return
+
+            this.randomStates.forEach(state => {
+                // Update position
+                state.x += state.vx
+                state.y += state.vy
+
+                // Bounce off edges
+                if (state.x <= 0 || state.x >= sceneWidth - itemWidth) {
+                    state.vx *= -1
+                    state.x = Math.max(0, Math.min(sceneWidth - itemWidth, state.x))
+                }
+                if (state.y <= 0 || state.y >= sceneHeight - itemHeight) {
+                    state.vy *= -1
+                    state.y = Math.max(0, Math.min(sceneHeight - itemHeight, state.y))
+                }
+
+                // Update rotation
+                state.angle += state.rotationSpeed
+
+                // Apply transform
+                state.element.style.left = `${state.x}px`
+                state.element.style.top = `${state.y}px`
+                state.element.style.transform = `rotate(${state.angle}deg)`
+            })
+
+            this.animationFrameId = requestAnimationFrame(animate)
+        }
+
+        this.animationFrameId = requestAnimationFrame(animate)
+    }
+
+    /**
      * Stop all animations
      */
     stopAnimation() {
@@ -335,6 +427,11 @@ export class SceneObject {
             cancelAnimationFrame(this.animationFrameId)
             this.animationFrameId = null
         }
+
+        // Clean up cloned elements
+        this.clonedElements.forEach(clone => clone.remove())
+        this.clonedElements = []
+        this.randomStates = []
     }
 
     /**

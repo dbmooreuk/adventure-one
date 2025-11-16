@@ -969,6 +969,8 @@ export class SceneComposer {
 
             if (anim.type === 'sprite') {
                 this.animateSpriteItem(itemEl, state, anim, currentTime);
+            } else if (anim.type === 'random') {
+                this.animateRandomItem(itemEl, state, anim);
             } else {
                 this.animateTransformItem(itemEl, state, anim, t);
             }
@@ -1042,6 +1044,48 @@ export class SceneComposer {
         if (transform) {
             itemEl.style.transform = transform;
         }
+    }
+
+    /**
+     * Animate random items (simplified for editor - just shows concept)
+     */
+    animateRandomItem(itemEl, state, anim) {
+        // Initialize random state if not exists
+        if (!state.randomX) {
+            const speed = anim.speed || 1;
+            const randomness = anim.randomness || 50;
+            const rotation = anim.rotation !== undefined ? anim.rotation : 5;
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = (Math.random() * 0.5 + 0.5) * speed * randomness / 10;
+
+            state.randomX = 0;
+            state.randomY = 0;
+            state.randomVX = Math.cos(angle) * velocity;
+            state.randomVY = Math.sin(angle) * velocity;
+            state.randomAngle = Math.random() * 360;
+            state.randomRotSpeed = rotation === 0 ? 0 : (Math.random() - 0.5) * rotation * 0.5;
+        }
+
+        // Update position
+        state.randomX += state.randomVX;
+        state.randomY += state.randomVY;
+
+        // Bounce within reasonable bounds (±100px from origin)
+        if (state.randomX <= -100 || state.randomX >= 100) {
+            state.randomVX *= -1;
+            state.randomX = Math.max(-100, Math.min(100, state.randomX));
+        }
+        if (state.randomY <= -100 || state.randomY >= 100) {
+            state.randomVY *= -1;
+            state.randomY = Math.max(-100, Math.min(100, state.randomY));
+        }
+
+        // Update rotation
+        state.randomAngle += state.randomRotSpeed;
+
+        // Apply transform (note: this shows movement of 1 item, not multiple clones)
+        const transform = `translate(${state.randomX}px, ${state.randomY}px) rotate(${state.randomAngle}deg)`;
+        itemEl.style.transform = transform;
     }
 
     /**

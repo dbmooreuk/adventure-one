@@ -344,7 +344,7 @@ export class ItemEditor {
         noneOption.textContent = '-- No Animation --';
         typeSelect.appendChild(noneOption);
 
-        ['bob', 'pulse', 'spin', 'fade', 'sprite'].forEach(type => {
+        ['bob', 'pulse', 'spin', 'fade', 'sprite', 'random'].forEach(type => {
             const option = document.createElement('option');
             option.value = type;
             option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
@@ -388,6 +388,14 @@ export class ItemEditor {
             // Speed only for spin and fade
             if (type === 'spin' || type === 'fade') {
                 fieldsContainer.appendChild(this.createNumberInput('animation-speed', 'Speed', animation?.speed || 1, type === 'spin' ? 'Rotations per second' : 'Fade cycle speed'));
+            }
+
+            // Random animation
+            if (type === 'random') {
+                fieldsContainer.appendChild(this.createNumberInput('animation-speed', 'Speed', animation?.speed !== undefined ? animation.speed : 1, 'Movement speed multiplier'));
+                fieldsContainer.appendChild(this.createNumberInput('animation-count', 'Count', animation?.count !== undefined ? animation.count : 5, 'Number of items on screen'));
+                fieldsContainer.appendChild(this.createNumberInput('animation-randomness', 'Randomness', animation?.randomness !== undefined ? animation.randomness : 50, 'How random the movement is (0-100)'));
+                fieldsContainer.appendChild(this.createNumberInput('animation-rotation', 'Rotation', animation?.rotation !== undefined ? animation.rotation : 5, 'Rotation speed (0=none, 9=fast)'));
             }
 
             // Sprite animation
@@ -780,6 +788,17 @@ export class ItemEditor {
             } else if (animationType === 'spin' || animationType === 'fade') {
                 const speed = getAnimField('animation-speed');
                 if (speed) animation.speed = Number(speed);
+            } else if (animationType === 'random') {
+                const speed = getAnimField('animation-speed');
+                const count = getAnimField('animation-count');
+                const randomness = getAnimField('animation-randomness');
+                const rotation = getAnimField('animation-rotation');
+                console.log('🎲 Random animation fields:', { speed, count, randomness, rotation });
+                if (speed !== undefined && speed !== '') animation.speed = Number(speed);
+                if (count !== undefined && count !== '') animation.count = Number(count);
+                if (randomness !== undefined && randomness !== '') animation.randomness = Number(randomness);
+                if (rotation !== undefined && rotation !== '') animation.rotation = Number(rotation);
+                console.log('🎲 Animation object:', animation);
             } else if (animationType === 'sprite') {
                 const spriteMode = form.querySelector('input[name="sprite-mode"]:checked')?.value;
                 console.log('🎬 Sprite Mode:', spriteMode);
