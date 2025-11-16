@@ -190,8 +190,18 @@ class GameDataEditor {
 
         if (tabName === 'scenes') {
             document.getElementById('scenes-list').classList.add('active');
+            // Load first scene if available
+            if (this.data && this.data.scenes.length > 0) {
+                const firstScene = this.data.scenes[0];
+                this.uiManager.selectScene(firstScene.sceneName);
+            }
         } else if (tabName === 'items') {
             document.getElementById('items-list').classList.add('active');
+            // Load first item if available
+            if (this.data && this.data.sceneItems.length > 0) {
+                const firstItem = this.data.sceneItems[0];
+                this.uiManager.selectItem(firstItem.name);
+            }
         } else if (tabName === 'audio') {
             document.getElementById('audio-list').classList.add('active');
             this.audioEditor.show();
