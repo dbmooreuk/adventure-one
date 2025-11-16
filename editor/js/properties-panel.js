@@ -14,8 +14,15 @@ export class PropertiesPanel {
      * Setup event listeners
      */
     setupEventListeners() {
-        // No event listeners needed here anymore
-        // Hit area toggle is handled by the composer
+        // Remove from scene button
+        const removeBtn = document.getElementById('remove-item-from-scene-btn');
+        if (removeBtn) {
+            removeBtn.addEventListener('click', () => {
+                if (this.currentItem && confirm(`Remove "${this.currentItem.longName || this.currentItem.name}" from this scene?`)) {
+                    this.editor.layersPanel.removeItemFromScene(this.currentItem.name);
+                }
+            });
+        }
     }
 
     /**
@@ -25,6 +32,12 @@ export class PropertiesPanel {
         this.currentItem = item;
         const container = document.getElementById('properties-form-container');
         if (!container) return;
+
+        // Show remove button
+        const removeBtn = document.getElementById('remove-item-from-scene-btn');
+        if (removeBtn) {
+            removeBtn.style.display = '';
+        }
 
         // Build the form
         container.innerHTML = '';
@@ -376,6 +389,13 @@ export class PropertiesPanel {
      */
     clear() {
         this.currentItem = null;
+
+        // Hide remove button
+        const removeBtn = document.getElementById('remove-item-from-scene-btn');
+        if (removeBtn) {
+            removeBtn.style.display = 'none';
+        }
+
         const container = document.getElementById('properties-form-container');
         if (container) {
             container.innerHTML = `

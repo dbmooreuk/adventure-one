@@ -14,6 +14,7 @@ import { AudioEditor } from './audio-editor.js';
 import { AssetsManager } from './assets-manager.js';
 import { SceneComposer } from './scene-composer.js';
 import { PropertiesPanel } from './properties-panel.js';
+import { LayersPanel } from './layers-panel.js';
 import { FlowsVisualizer } from './flows-visualizer.js';
 
 class GameDataEditor {
@@ -38,6 +39,7 @@ class GameDataEditor {
         this.assetsManager = new AssetsManager(this);
         this.sceneComposer = new SceneComposer(this);
         this.propertiesPanel = new PropertiesPanel(this);
+        this.layersPanel = new LayersPanel(this);
         this.flowsVisualizer = new FlowsVisualizer(this);
         this.storageManager = new StorageManager();
         this.projectManager = new ProjectManager(this, this.storageManager);
@@ -227,6 +229,8 @@ class GameDataEditor {
 
         if (tabName === 'properties') {
             document.getElementById('properties-content').classList.add('active');
+        } else if (tabName === 'layers') {
+            document.getElementById('layers-tab-content').classList.add('active');
         } else if (tabName === 'settings') {
             document.getElementById('settings-tab-content').classList.add('active');
         } else if (tabName === 'assets') {
@@ -274,6 +278,9 @@ class GameDataEditor {
             this.sceneComposer.hide();
             toggleBtn.classList.remove('active');
 
+            // Hide Layers tab, show Settings and Assets tabs
+            this.updateTabsForComposerMode(false);
+
             // Load the scene into the scene editor
             if (currentSceneName) {
                 this.sceneEditor.edit(currentSceneName);
@@ -284,6 +291,45 @@ class GameDataEditor {
             this.uiManager.showPanel('composer-container');
             toggleBtn.classList.add('active');
             this.sceneComposer.show();
+
+            // Show Layers tab, hide Settings and Assets tabs
+            this.updateTabsForComposerMode(true);
+        }
+    }
+
+    /**
+     * Update visible tabs based on composer mode
+     */
+    updateTabsForComposerMode(isComposerMode) {
+        const layersTab = document.querySelector('[data-preview-tab="layers"]');
+        const settingsTab = document.querySelector('[data-preview-tab="settings"]');
+        const assetsTab = document.querySelector('[data-preview-tab="assets"]');
+        const layersContent = document.getElementById('layers-tab-content');
+
+        if (isComposerMode) {
+            // Show Layers, hide Settings and Assets
+            layersTab.style.display = '';
+            settingsTab.style.display = 'none';
+            assetsTab.style.display = 'none';
+            layersContent.style.display = '';
+
+            // Switch to Properties tab if on Settings or Assets
+            const activeTab = document.querySelector('.preview-tab.active');
+            if (activeTab && (activeTab.dataset.previewTab === 'settings' || activeTab.dataset.previewTab === 'assets')) {
+                this.switchPreviewTab('properties');
+            }
+        } else {
+            // Hide Layers, show Settings and Assets
+            layersTab.style.display = 'none';
+            settingsTab.style.display = '';
+            assetsTab.style.display = '';
+            layersContent.style.display = 'none';
+
+            // Switch to Properties tab if on Layers
+            const activeTab = document.querySelector('.preview-tab.active');
+            if (activeTab && activeTab.dataset.previewTab === 'layers') {
+                this.switchPreviewTab('properties');
+            }
         }
     }
 

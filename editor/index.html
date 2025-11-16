@@ -313,11 +313,14 @@
                 </div>
             </main>
 
-            <!-- Right Sidebar - Properties/Settings/Assets -->
+            <!-- Right Sidebar - Properties/Settings/Assets/Layers -->
             <aside class="editor-preview">
                 <nav class="preview-nav">
                     <button class="preview-tab active" data-preview-tab="properties">
                         Properties
+                    </button>
+                    <button class="preview-tab" data-preview-tab="layers" style="display: none;">
+                        Layers
                     </button>
                     <button class="preview-tab" data-preview-tab="settings">
                         Settings
@@ -332,12 +335,28 @@
                     <div class="properties-panel">
                         <div class="properties-header">
                             <h3>Item Properties</h3>
+                            <button id="remove-item-from-scene-btn" class="btn btn-danger btn-sm" style="display: none;">
+                                Remove from Scene
+                            </button>
                         </div>
                         <div id="properties-form-container" class="properties-form-container">
                             <div class="properties-empty-state">
                                 <p>Select an item in the composer to edit its properties</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Layers Tab (only visible in composer mode) -->
+                <div class="preview-tab-content" id="layers-tab-content" style="display: none;">
+                    <div class="layers-tab-header">
+                        <h3>Scene Layers</h3>
+                        <button id="add-item-to-scene-btn" class="btn btn-primary btn-sm">
+                            + Add Item
+                        </button>
+                    </div>
+                    <div id="layers-list" class="layers-list">
+                        <p class="empty-message">No items in this scene</p>
                     </div>
                 </div>
 

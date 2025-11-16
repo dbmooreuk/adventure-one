@@ -142,6 +142,11 @@ export class SceneComposer {
         // Render scene items
         this.renderSceneItems();
 
+        // Update layers panel
+        if (this.editor.layersPanel) {
+            this.editor.layersPanel.show(scene);
+        }
+
         // Fit to view initially (with small delay to ensure layout is ready)
         setTimeout(() => this.fitToView(), 100);
     }
@@ -631,6 +636,11 @@ export class SceneComposer {
 
         console.log('✓ Selected item:', item.name);
 
+        // Highlight in layers panel
+        if (this.editor.layersPanel) {
+            this.editor.layersPanel.highlightItem(item.name);
+        }
+
         // Show properties in the properties panel
         if (this.editor.propertiesPanel) {
             // Switch to properties tab
@@ -891,6 +901,11 @@ export class SceneComposer {
                 this.loadScene(sceneId);
             }
         }
+
+        // Show layers panel
+        if (this.currentScene && this.editor.layersPanel) {
+            this.editor.layersPanel.show(this.currentScene);
+        }
     }
 
     /**
@@ -907,6 +922,11 @@ export class SceneComposer {
             this.editor.propertiesPanel.clear();
         }
 
+        // Hide layers panel
+        if (this.editor.layersPanel) {
+            this.editor.layersPanel.hide();
+        }
+
         // Clear selection
         this.selectedItem = null;
     }
@@ -920,10 +940,27 @@ export class SceneComposer {
             if (prevEl) prevEl.classList.remove('selected');
             this.selectedItem = null;
 
+            // Clear highlight in layers panel
+            if (this.editor.layersPanel) {
+                this.editor.layersPanel.highlightItem(null);
+            }
+
             // Clear properties panel
             if (this.editor.propertiesPanel) {
                 this.editor.propertiesPanel.clear();
             }
+        }
+    }
+
+    /**
+     * Select an item by name (called from layers panel)
+     */
+    selectItemByName(itemName) {
+        const itemEl = this.itemsLayer.querySelector(`[data-item-name="${itemName}"]`);
+        const item = this.editor.data.sceneItems.find(i => i.name === itemName);
+
+        if (item && itemEl) {
+            this.selectItem(item, itemEl);
         }
     }
 

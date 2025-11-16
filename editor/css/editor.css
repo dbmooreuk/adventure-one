@@ -2027,3 +2027,259 @@ body {
 .flows-canvas svg text {
     user-select: none;
 }
+
+/* ========================================
+ * Layers Panel
+ * ======================================== */
+
+.layers-tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--editor-border);
+}
+
+.layers-tab-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.layers-list {
+    padding: var(--spacing-sm);
+    overflow-y: auto;
+    height: calc(100vh - var(--header-height) - 80px);
+}
+
+.layers-list .empty-message {
+    text-align: center;
+    color: var(--editor-text-dim);
+    padding: var(--spacing-lg);
+    font-size: 14px;
+}
+
+.layer-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    background: var(--editor-bg-light);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.layer-item:hover {
+    background: var(--editor-bg-lighter);
+    border-color: var(--editor-accent);
+}
+
+.layer-item.selected {
+    background: var(--editor-bg-lighter);
+    border-color: var(--editor-accent);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+
+.layer-item.dragging {
+    opacity: 0.5;
+}
+
+.layer-item.drag-over {
+    border-color: var(--editor-success);
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.layer-item-drag-handle {
+    color: var(--editor-text-dim);
+    cursor: grab;
+    font-size: 12px;
+    user-select: none;
+}
+
+.layer-item-drag-handle:active {
+    cursor: grabbing;
+}
+
+.layer-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.layer-item-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.layer-item-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 12px;
+}
+
+.layer-item-zindex {
+    color: var(--editor-text-dim);
+    font-family: 'Courier New', monospace;
+}
+
+/* Properties panel header with remove button */
+.properties-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--editor-border);
+}
+
+.properties-header h3 {
+    margin: 0;
+}
+
+/* ========================================
+ * Add Item Modal
+ * ======================================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-dialog {
+    background: var(--editor-bg-light);
+    border: 1px solid var(--editor-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--editor-border);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: var(--editor-text-dim);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    background: var(--editor-bg-lighter);
+    color: var(--editor-text);
+}
+
+.modal-body {
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    flex: 1;
+}
+
+.add-item-search {
+    margin-bottom: var(--spacing-md);
+}
+
+.add-item-search input {
+    width: 100%;
+}
+
+.add-item-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.add-item-list .empty-message {
+    text-align: center;
+    color: var(--editor-text-dim);
+    padding: var(--spacing-lg);
+}
+
+.add-item-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--editor-bg);
+    border: 1px solid var(--editor-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-item-list-item:hover {
+    background: var(--editor-bg-lighter);
+    border-color: var(--editor-accent);
+}
+
+.add-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.add-item-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.add-item-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 12px;
+}
+
+.add-item-id {
+    color: var(--editor-text-dim);
+    font-family: 'Courier New', monospace;
+}
+
+.add-item-btn {
+    flex-shrink: 0;
+}
