@@ -389,6 +389,10 @@ export class PropertiesPanel {
         const radioContainer = document.createElement('div');
         radioContainer.className = 'radio-group';
 
+        // Multiple Images option
+        const multipleOption = document.createElement('label');
+        multipleOption.className = 'radio-label';
+
         const multipleRadio = document.createElement('input');
         multipleRadio.type = 'radio';
         multipleRadio.name = 'sprite-mode';
@@ -396,9 +400,15 @@ export class PropertiesPanel {
         multipleRadio.id = 'sprite-mode-multiple';
         multipleRadio.checked = animation?.frames && animation.frames.length > 0;
 
-        const multipleLabel = document.createElement('label');
-        multipleLabel.htmlFor = 'sprite-mode-multiple';
-        multipleLabel.textContent = 'Multiple Images';
+        const multipleText = document.createElement('span');
+        multipleText.textContent = 'Multiple Images';
+
+        multipleOption.appendChild(multipleRadio);
+        multipleOption.appendChild(multipleText);
+
+        // Sprite Sheet option
+        const sheetOption = document.createElement('label');
+        sheetOption.className = 'radio-label';
 
         const sheetRadio = document.createElement('input');
         sheetRadio.type = 'radio';
@@ -407,14 +417,14 @@ export class PropertiesPanel {
         sheetRadio.id = 'sprite-mode-sheet';
         sheetRadio.checked = animation?.spriteSheet;
 
-        const sheetLabel = document.createElement('label');
-        sheetLabel.htmlFor = 'sprite-mode-sheet';
-        sheetLabel.textContent = 'Sprite Sheet';
+        const sheetText = document.createElement('span');
+        sheetText.textContent = 'Sprite Sheet';
 
-        radioContainer.appendChild(multipleRadio);
-        radioContainer.appendChild(multipleLabel);
-        radioContainer.appendChild(sheetRadio);
-        radioContainer.appendChild(sheetLabel);
+        sheetOption.appendChild(sheetRadio);
+        sheetOption.appendChild(sheetText);
+
+        radioContainer.appendChild(multipleOption);
+        radioContainer.appendChild(sheetOption);
         modeGroup.appendChild(radioContainer);
         container.appendChild(modeGroup);
 
