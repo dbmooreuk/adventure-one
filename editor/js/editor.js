@@ -267,8 +267,17 @@ class GameDataEditor {
         if (composer.classList.contains('active')) {
             // Hide composer
             this.saveCurrentWork();
+
+            // Get the current scene from composer before hiding
+            const currentSceneName = this.sceneComposer.currentScene?.sceneName;
+
             this.sceneComposer.hide();
             toggleBtn.classList.remove('active');
+
+            // Load the scene into the scene editor
+            if (currentSceneName) {
+                this.sceneEditor.edit(currentSceneName);
+            }
         } else {
             // Show composer
             this.saveCurrentWork();
@@ -303,6 +312,15 @@ class GameDataEditor {
      * Save current work (scene, item, audio, or code) if any is being edited
      */
     saveCurrentWork() {
+        // Check if composer is active
+        // Note: Composer changes are already saved directly to the data model
+        // when dragging/resizing items, so no explicit save needed here
+        const composer = document.getElementById('composer-container');
+        if (composer && composer.classList.contains('active')) {
+            // Composer edits are auto-saved in real-time
+            console.log('Composer changes already saved to data model');
+        }
+
         // Check if scene editor is active
         const sceneEditor = document.getElementById('scene-editor');
         if (sceneEditor && sceneEditor.classList.contains('active')) {
