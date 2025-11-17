@@ -234,10 +234,6 @@ html {
   color: #063340;
 }
 
-.btn-action.inactive {
-  opacity: 0.5;
-}
-
 /* Button Look */
 .btn-look {
   width: 60px;
@@ -1556,7 +1552,7 @@ button.prop {
 .inventory-slot {
   width: 60px;
   height: 60px;
-  background: rgba(2, 16, 24, 0.9);
+  background: rgba(25, 84, 92, 0.6);
   backdrop-filter: blur(4px);
   transition: all 0.3s ease;
   pointer-events: none;
@@ -1577,7 +1573,7 @@ button.prop {
   /* When slot has an item */
 }
 .inventory-slot:not(:empty) {
-  background: rgba(65, 123, 123, 0.7);
+  background: rgba(111.0638297872, 178.9361702128, 178.9361702128, 0.8);
   pointer-events: all;
 }
 .inventory-slot:not(:empty)::before {
@@ -1623,7 +1619,7 @@ button.prop {
 /* Scene Container */
 .scene-container {
   flex: 1;
-  border: 1px solid #F4FED3;
+  border: 1px solid #063340;
   padding: 32px;
   background-size: cover;
   background-position: center;

@@ -16,7 +16,7 @@
 .inventory-slot {
     width: $inventory-slot;
     height: $inventory-slot;
-    background: rgba($darkest-marine, 0.9);
+    background: rgba($main-marine, 0.6);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
     pointer-events: none;
@@ -36,7 +36,8 @@
 
     /* When slot has an item */
     &:not(:empty) {
-        background: rgba($light-marine, 0.7); // 30% opacity - adjust as needed
+        // background: rgba(lighten($light-marine, 20%), 0.8);
+        background: rgba(lighten($light-marine, 20%), 0.8);
         pointer-events: all;
         &::before {
             display: none;
