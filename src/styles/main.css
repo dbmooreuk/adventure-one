@@ -342,7 +342,6 @@ button.prop {
   color: #F4FED3;
   cursor: pointer;
   transition: filter 0.2s ease-out;
-  backdrop-filter: blur(4px);
   /* Disable touch highlight effects */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;

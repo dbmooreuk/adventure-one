@@ -7,16 +7,18 @@
   "scripts": {
     "sass:watch": "sass --watch src/styles/main.scss:src/styles/main.css --style expanded",
     "sass:build": "sass src/styles/main.scss:src/styles/main.css --style compressed",
-    "dev": "npm run sass:watch & vite",
-    "dev:network": "npm run sass:watch & vite --host",
+    "assets:watch": "chokidar 'src/assets/images/**/*' -c 'node scripts/generate-asset-manifest.js'",
+    "dev": "npm run sass:watch & npm run assets:watch & vite",
+    "dev:network": "npm run sass:watch & npm run assets:watch & vite --host",
     "build": "npm run sass:build && vite build",
     "preview": "vite preview",
     "serve": "vite preview --port 3000",
     "assets:scan": "node scripts/generate-asset-manifest.js"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "sass": "^1.69.0"
+    "chokidar-cli": "^3.0.0",
+    "sass": "^1.69.0",
+    "vite": "^5.0.0"
   },
   "dependencies": {
     "workbox-precaching": "^7.0.0",

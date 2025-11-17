@@ -56,7 +56,8 @@ function scanDirectory(dir, baseDir = dir) {
  * Generate the manifest
  */
 function generateManifest() {
-    console.log('🔍 Scanning assets directory:', ASSETS_DIR);
+    const timestamp = new Date().toLocaleTimeString();
+    console.log(`\n[${timestamp}] 🔍 Scanning assets directory...`);
     
     if (!fs.existsSync(ASSETS_DIR)) {
         console.error('❌ Assets directory not found:', ASSETS_DIR);
@@ -81,20 +82,8 @@ function generateManifest() {
     
     // Write manifest file
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(manifest, null, 2));
-    
+
     console.log(`✅ Generated manifest with ${assets.length} assets`);
-    console.log(`📄 Output: ${OUTPUT_FILE}`);
-    
-    // Print summary by category
-    const categories = {};
-    assets.forEach(asset => {
-        categories[asset.category] = (categories[asset.category] || 0) + 1;
-    });
-    
-    console.log('\n📊 Assets by category:');
-    for (const [category, count] of Object.entries(categories)) {
-        console.log(`   ${category}: ${count}`);
-    }
 }
 
 // Run the script

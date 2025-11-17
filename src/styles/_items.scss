@@ -20,7 +20,7 @@
     color: $main-yellow;
     cursor: pointer;
     transition: filter 0.2s ease-out;
-    backdrop-filter: blur(4px);
+    // backdrop-filter: blur(4px);
 
     /* Disable touch highlight effects */
     -webkit-tap-highlight-color: transparent;
