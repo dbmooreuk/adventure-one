@@ -31,7 +31,9 @@ export const gameData = {
             sceneMusic: "ambient2",
             backgroundImage: "scene-stasis.png",
             backgroundColor: "#F4FED3",
-            items: ["glass_shard", "feather_suspended", "hollow_vessel", "sealed_door"]
+            items: ["glass_shard", "feather_suspended", "hollow_vessel", "sealed_door"],
+            locked: true,
+            unlockedBy: "crossing"
         },
         {
             sceneName: "scene_memory",
@@ -192,7 +194,8 @@ export const gameData = {
                                 "The last number is even"
                       ],
                       "reward": "gold_bars",
-                      "points": 50
+                      "points": 50,
+                      "unlockScene": "scene_stasis"
             }
         }
     ],
