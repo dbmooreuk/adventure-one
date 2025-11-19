@@ -1501,6 +1501,22 @@ button.prop {
   width: 22px;
 }
 
+.menu-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}
+.menu-container.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Menu Toggle Button */
 .menu-toggle {
   border: 2px solid #19545C;
@@ -1521,17 +1537,19 @@ button.prop {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.9);
   background: #021018;
   border-radius: 8px;
   padding: 16px;
   min-width: 200px;
   z-index: 500;
-  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
   box-shadow: 2px 2px 8px 2px rgba(2, 16, 24, 0.5);
 }
-.menu.active {
-  display: block;
+.menu-container.active .menu {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* Menu Item */

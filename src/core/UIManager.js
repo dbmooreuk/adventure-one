@@ -495,19 +495,8 @@ export class UIManager extends EventEmitter {
      */
     toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen
-
         this.elements.menuToggle?.classList.toggle('on', this.isMenuOpen)
-
-        if (this.isMenuOpen) {
-            this.elements.menuContainer?.style.setProperty('display', 'block')
-            this.elements.menu?.style.setProperty('display', 'block')
-            this.elements.menu?.animate([
-                { height: '0px', opacity: '0' },
-                { height: 'auto', opacity: '1' }
-            ], { duration: 300, easing: 'ease-out' })
-        } else {
-            this.closeMenu()
-        }
+        this.elements.menuContainer?.classList.toggle('active', this.isMenuOpen)
     }
 
     /**
@@ -516,8 +505,7 @@ export class UIManager extends EventEmitter {
     closeMenu() {
         this.isMenuOpen = false
         this.elements.menuToggle?.classList.remove('on')
-        this.elements.menu?.style.setProperty('display', 'none')
-        this.elements.menuContainer?.style.setProperty('display', 'none')
+        this.elements.menuContainer?.classList.remove('active')
     }
 
     /**
