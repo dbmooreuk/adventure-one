@@ -147,6 +147,18 @@ export class UIManager extends EventEmitter {
             }
         })
 
+        // Close journal when clicking outside
+        document.addEventListener('click', (e) => {
+            const isJournalOpen = this.elements.journalModal?.classList.contains('active')
+            const journalContainer = this.elements.journalModal?.querySelector('.journal-container')
+
+            if (isJournalOpen &&
+                !journalContainer?.contains(e.target) &&
+                !this.elements.journalBtn?.contains(e.target)) {
+                this.toggleJournal()
+            }
+        })
+
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e))
     }
