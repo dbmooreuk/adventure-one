@@ -1637,6 +1637,10 @@ button.prop {
   background-repeat: no-repeat;
   border-radius: 30px;
   overflow: hidden;
+  transition: opacity 0.4s ease-in-out;
+}
+.scene-container.scene-transitioning {
+  opacity: 0;
 }
 
 /* Scene Items Overlay */

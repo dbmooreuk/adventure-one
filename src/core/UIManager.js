@@ -116,7 +116,10 @@ export class UIManager extends EventEmitter {
         this.elements.btnClose?.addEventListener('click', () => this.closeMenu())
         this.elements.btnSave?.addEventListener('click', () => this.emit('saveRequested'))
         this.elements.btnLoad?.addEventListener('click', () => this.emit('loadRequested'))
-        this.elements.btnReset?.addEventListener('click', () => this.emit('resetRequested'))
+        this.elements.btnReset?.addEventListener('click', () => {
+            this.closeMenu()
+            this.emit('resetRequested')
+        })
         this.elements.btnMute?.addEventListener('click', () => this.toggleMute())
 
         // Dismiss button
@@ -532,57 +535,71 @@ export class UIManager extends EventEmitter {
     updateScene(sceneData) {
         console.log(`🎬 UIManager.updateScene called with:`, sceneData)
 
-        // Update body classes first
-        this.updateBodyClasses(sceneData)
+        // Fade out scene container
+        const sceneContainer = this.elements.sceneContainer
+        if (sceneContainer) {
+            sceneContainer.classList.add('scene-transitioning')
+        }
 
-        // Update UI visibility based on scene type BEFORE fadeIn
-        this.updateUIVisibility(sceneData)
+        // Wait for fade out, then update content
+        setTimeout(() => {
+            // Update body classes first
+            this.updateBodyClasses(sceneData)
 
-        // Update scene background image
-        this.updateSceneBackground(sceneData)
+            // Update UI visibility based on scene type BEFORE fadeIn
+            this.updateUIVisibility(sceneData)
 
-        // Update scene text
-        const isSplashScene = sceneData.sceneType === 'splash'
+            // Update scene background image
+            this.updateSceneBackground(sceneData)
 
-        if (this.elements.sceneTitle) {
-            this.elements.sceneTitle.innerHTML = sceneData.title || ''
-            if (!isSplashScene) {
-                this.elements.sceneTitle.style.display = 'block'
-                this.fadeIn(this.elements.sceneTitle)
+            // Update scene text
+            const isSplashScene = sceneData.sceneType === 'splash'
+
+            if (this.elements.sceneTitle) {
+                this.elements.sceneTitle.innerHTML = sceneData.title || ''
+                if (!isSplashScene) {
+                    this.elements.sceneTitle.style.display = 'block'
+                    this.fadeIn(this.elements.sceneTitle)
+                } else {
+                    // On splash, just show it without animation
+                    this.elements.sceneTitle.style.display = 'block'
+                    this.elements.sceneTitle.style.opacity = '1'
+                }
+            }
+
+            // Store and show scene text
+            if (sceneData.textOne) {
+                this.currentSceneText = sceneData.textOne
+
+                if (!isSplashScene) {
+                    // Show scene text with dismiss button for regular scenes
+                    this.showSceneText()
+                    this.updateLookButtonImage(true)
+                }
             } else {
-                // On splash, just show it without animation
-                this.elements.sceneTitle.style.display = 'block'
-                this.elements.sceneTitle.style.opacity = '1'
+                this.currentSceneText = ''
+                this.updateLookButtonImage(false)
             }
-        }
 
-        // Store and show scene text
-        if (sceneData.textOne) {
-            this.currentSceneText = sceneData.textOne
-
-            if (!isSplashScene) {
-                // Show scene text with dismiss button for regular scenes
-                this.showSceneText()
-                this.updateLookButtonImage(true)
+            // Update stage title
+            if (this.elements.stageTitle) {
+                this.elements.stageTitle.textContent = sceneData.stage || ''
             }
-        } else {
-            this.currentSceneText = ''
-            this.updateLookButtonImage(false)
-        }
 
-        // Update stage title
-        if (this.elements.stageTitle) {
-            this.elements.stageTitle.textContent = sceneData.stage || ''
-        }
+            // Update scene items
+            this.updateSceneItems()
 
-        // Update scene items
-        this.updateSceneItems()
+            // Update navigation buttons
+            this.updateNavigationButtons()
 
-        // Update navigation buttons
-        this.updateNavigationButtons()
+            // Update progress pips
+            this.updateProgressPips()
 
-        // Update progress pips
-        this.updateProgressPips()
+            // Fade back in
+            if (sceneContainer) {
+                sceneContainer.classList.remove('scene-transitioning')
+            }
+        }, 400) // Match CSS transition duration
     }
 
     /**

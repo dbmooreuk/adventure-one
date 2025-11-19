@@ -16,10 +16,10 @@ export const gameData = {
             stage: "The invitation",
             stageNumber: 1,
             sceneType: "scene",
-            sceneMusic: "ambient0",
+            sceneMusic: "ambient1",
             backgroundImage: "scene-tower.png",
             backgroundColor: "#F4FED3",
-            items: ["sigil_tri", "sigil_eye", "sigil_wave", "tower_panel", "tower_door", "sea-one", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale"]
+            items: ["sigil_tri", "sigil_eye", "sigil_wave", "tower_panel", "tower_door", "sea-one", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale", "safe_door"]
         },
         {
             sceneName: "scene_stasis",
@@ -28,7 +28,7 @@ export const gameData = {
             stage: "Stage 1",
             stageNumber: 1,
             sceneType: "scene",
-            sceneMusic: "ambient1",
+            sceneMusic: "ambient2",
             backgroundImage: "scene-stasis.png",
             backgroundColor: "#F4FED3",
             items: ["glass_shard", "feather_suspended", "hollow_vessel", "sealed_door"]
@@ -164,6 +164,36 @@ export const gameData = {
             sceneType: "scene",
             sceneMusic: "victory",
             items: []
+        },
+                {
+            sceneName: "safe_puzzle",
+            title: "Safe Combination Lock",
+            textOne: "Enter the correct combination to unlock the safe.",
+            stage: "Stage 2",
+            stageNumber: 2,
+            sceneType: "puzzle",
+            sceneMusic: "ambient2",
+            backgroundImage: "splash.png",
+            backgroundColor: "#000000",
+            items: ["rope", "key"],
+            puzzleModule: "SafeCombinationPuzzle",
+            puzzleConfig: {
+                      "solution": [
+                                3,
+                                7,
+                                2
+                      ],
+                      "maxAttempts": 10,
+                      "dialCount": 3,
+                      "dialMax": 9,
+                      "hints": [
+                                "The first number is less than 5",
+                                "The middle number is greater than 5",
+                                "The last number is even"
+                      ],
+                      "reward": "gold_bars",
+                      "points": 50
+            }
         }
     ],
 
@@ -183,6 +213,25 @@ export const gameData = {
             hitW: 0,
             hitH: 0,
             onClickEffect: "flash"
+        },
+               {
+            name: "safe_door",
+            longName: "Mysterious Safe",
+            shortName: "Safe",
+            type: "link",
+            lookAt: "A heavy safe with a combination lock. Maybe you can crack the code? (Hint: 3-7-2)",
+            linkToScene: "safe_puzzle",
+            image: "safe-small.png",
+            position: [1072, 319],
+            size: [150, 200],
+            zIndex: 6,
+            hitW: 0,
+            hitH: 0,
+            onClickEffect: "flash",
+            style: {
+                      "className": "item--safe",
+                      "hoverEffect": "pulse"
+            }
         },
         {
             name: "sigil_eye",
