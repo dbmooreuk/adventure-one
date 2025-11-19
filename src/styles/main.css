@@ -1608,19 +1608,6 @@ button.prop {
   color: #000000;
 }
 
-.intro-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  max-width: 600px;
-  padding: 48px;
-  background: rgba(2, 16, 24, 0.8);
-  border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
 .scene-title-wrapper {
   top: 16px;
   left: 16px;
@@ -1727,6 +1714,10 @@ button.prop {
     transform: translateY(0);
   }
 }
+.intro-logo {
+  width: 90%;
+}
+
 /* Intro/Splash Screen */
 .intro-container {
   width: 1280px;
@@ -1736,13 +1727,47 @@ button.prop {
   background-position: center;
   background-repeat: no-repeat;
   background-color: #F4FED3;
-  background-image: url("/assets/images/screen-splash.png");
+  background-image: url("/src/assets/images/ui/sunburst-intro.png");
   padding: 32px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 30px;
   overflow: hidden;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+}
+.intro-content img {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
+
+.intro-buttons {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  width: 500px;
+  transform: translate(-50%, -50%);
+}
+.intro-buttons button {
+  width: 50%;
+}
+
+.intro-text {
+  color: #19545C;
+  margin-bottom: 24px;
 }
 
 /* Win Screen */

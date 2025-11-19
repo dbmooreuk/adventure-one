@@ -2,28 +2,57 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
-
+.intro-logo{
+  width: 90%;
+}
 
 /* Intro/Splash Screen */
 .intro-container {
       width: $game-width;
   height: $game-height;
-    // flex: 1;
     position: relative;
-    // display: flex;
-    // flex-direction: column;
-    // justify-content: center;
-    // align-items: center;
-    // padding: $spacing-xl;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-color: $main-yellow;
-    background-image: url('/assets/images/screen-splash.png');
-    
+    background-image: url('/src/assets/images/ui/sunburst-intro.png');
     padding: $spacing-xl;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 30px;
-    overflow: hidden;}
+    overflow: hidden;
+  }
+
+  .intro-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    img{
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+    }
+}
+.intro-buttons{
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  width: 500px;
+  transform: translate(-50%, -50%);
+  button{
+    width: 50%;
+  }
+  
+}
+.intro-text{
+  color: $main-marine;
+  margin-bottom: $spacing-lg;
+}
