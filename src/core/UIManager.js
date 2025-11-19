@@ -104,7 +104,7 @@ export class UIManager extends EventEmitter {
         this.elements.btnGet?.addEventListener('click', () => this.setAction('get'))
         this.elements.btnUse?.addEventListener('click', () => this.setAction('use'))
         this.elements.btnCombine?.addEventListener('click', () => this.setAction('combine'))
-        this.elements.btnLook?.addEventListener('click', () => this.showSceneText())
+        this.elements.btnLook?.addEventListener('click', () => this.toggleSceneText())
 
         // Navigation buttons
         this.elements.btnBack?.addEventListener('click', () => this.navigateBack())
@@ -563,9 +563,11 @@ export class UIManager extends EventEmitter {
             if (!isSplashScene) {
                 // Show scene text with dismiss button for regular scenes
                 this.showSceneText()
+                this.updateLookButtonImage(true)
             }
         } else {
             this.currentSceneText = ''
+            this.updateLookButtonImage(false)
         }
 
         // Update stage title
@@ -781,6 +783,92 @@ export class UIManager extends EventEmitter {
     }
 
     /**
+     * Toggle scene text visibility
+     */
+    toggleSceneText() {
+        if (this.isSceneTextShowing) {
+            // Hide the text
+            this.dismissMessage()
+            this.updateLookButtonImage(false)
+        } else {
+            // Show the text
+            this.showSceneText()
+            this.updateLookButtonImage(true)
+        }
+    }
+
+    /**
+     * Update the look button image
+     * @param {boolean} isTextShowing - Whether the text is showing
+     */
+    updateLookButtonImage(isTextShowing) {
+        const lookIcon = this.elements.btnLook?.querySelector('.look-icon')
+        if (lookIcon) {
+            const imagePath = isTextShowing
+                ? 'src/assets/images/ui/look-open.png'   // Eye open when text is showing
+                : 'src/assets/images/ui/look-closed.png' // Eye closed when text is hidden
+            lookIcon.src = imagePath
+
+            // Start blinking if eye is open, stop if closed
+            if (isTextShowing) {
+                this.startEyeBlink()
+            } else {
+                this.stopEyeBlink()
+            }
+        }
+    }
+
+    /**
+     * Start random eye blink effect
+     */
+    startEyeBlink() {
+        // Clear any existing blink interval
+        this.stopEyeBlink()
+
+        const lookIcon = this.elements.btnLook?.querySelector('.look-icon')
+        if (!lookIcon) return
+
+        // Random blink every 2-5 seconds
+        const scheduleNextBlink = () => {
+            const delay = 2000 + Math.random() * 3000 // 2-5 seconds
+            this.blinkTimeout = setTimeout(() => {
+                this.doBlink()
+                scheduleNextBlink()
+            }, delay)
+        }
+
+        scheduleNextBlink()
+    }
+
+    /**
+     * Perform a single blink
+     */
+    doBlink() {
+        const lookIcon = this.elements.btnLook?.querySelector('.look-icon')
+        if (!lookIcon || !this.isSceneTextShowing) return
+
+        // Close eye briefly
+        lookIcon.src = 'src/assets/images/ui/look-closed.png'
+
+        // Open eye after 100-150ms
+        setTimeout(() => {
+            if (this.isSceneTextShowing) {
+                lookIcon.src = 'src/assets/images/ui/look-open.png'
+            }
+        }, 100 + Math.random() * 50)
+    }
+
+    /**
+     * Stop eye blink effect
+     */
+    stopEyeBlink() {
+        if (this.blinkTimeout) {
+            clearTimeout(this.blinkTimeout)
+            this.blinkTimeout = null
+        }
+    }
+
+    /**
      * Show scene text with dismiss button
      */
     showSceneText() {
@@ -836,6 +924,7 @@ export class UIManager extends EventEmitter {
     dismissMessage() {
         this.isSceneTextShowing = false
         this.clearMessage()
+        this.updateLookButtonImage(false)
     }
 
     /**
@@ -1154,6 +1243,9 @@ export class UIManager extends EventEmitter {
         this.isSceneTextShowing = false
         this.clearMessage()
 
+        // Stop eye blink effect
+        this.stopEyeBlink()
+
         console.log('✅ Scene UI cleared')
     }
 
@@ -1255,6 +1347,9 @@ export class UIManager extends EventEmitter {
         if (this.messageTimeout) {
             clearTimeout(this.messageTimeout)
         }
+
+        // Stop eye blink effect
+        this.stopEyeBlink()
 
         // Clean up all components
         this.components.forEach(component => component.destroy())
