@@ -244,7 +244,13 @@ html {
   z-index: 100;
   bottom: 16px;
   right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 2px 2px 8px 2px rgba(0, 0, 0, 0.5);
+}
+.btn-look image {
+  width: 80%;
 }
 
 .btn-journal {
