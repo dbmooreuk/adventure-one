@@ -84,14 +84,22 @@ export class ItemEditor {
         basicSection.appendChild(this.editor.uiManager.createFormField('longName', itemSchema.longName, item.longName, item));
         basicSection.appendChild(this.editor.uiManager.createFormField('shortName', itemSchema.shortName, item.shortName, item));
         basicSection.appendChild(this.editor.uiManager.createFormField('type', itemSchema.type, item.type, item));
+
+        // Link To Scene field - appears right after Type for link items
+        const linkField = this.editor.uiManager.createFormField('linkToScene', itemSchema.linkToScene, item.linkToScene, item);
+        if (linkField) basicSection.appendChild(linkField);
+
         form.appendChild(basicSection);
-        
+
         // Interaction Section
         const interactionSection = this.createSection('Interaction');
 
         // Conditional fields based on type - check for null before appending
         const lookAtField = this.editor.uiManager.createFormField('lookAt', itemSchema.lookAt, item.lookAt, item);
         if (lookAtField) interactionSection.appendChild(lookAtField);
+
+        const unlockedMsgField = this.editor.uiManager.createFormField('unlockedMessage', itemSchema.unlockedMessage, item.unlockedMessage, item);
+        if (unlockedMsgField) interactionSection.appendChild(unlockedMsgField);
 
         const pickUpField = this.editor.uiManager.createFormField('pickUpMessage', itemSchema.pickUpMessage, item.pickUpMessage, item);
         if (pickUpField) interactionSection.appendChild(pickUpField);
@@ -108,14 +116,8 @@ export class ItemEditor {
         const outcomeField = this.editor.uiManager.createFormField('outcome', itemSchema.outcome, item.outcome, item);
         if (outcomeField) interactionSection.appendChild(outcomeField);
 
-        const linkField = this.editor.uiManager.createFormField('linkToScene', itemSchema.linkToScene, item.linkToScene, item);
-        if (linkField) interactionSection.appendChild(linkField);
-
         const nextSceneField = this.editor.uiManager.createFormField('nextScene', itemSchema.nextScene, item.nextScene, item);
         if (nextSceneField) interactionSection.appendChild(nextSceneField);
-
-        const lockedMsgField = this.editor.uiManager.createFormField('lockedMessage', itemSchema.lockedMessage, item.lockedMessage, item);
-        if (lockedMsgField) interactionSection.appendChild(lockedMsgField);
 
         const pointsField = this.editor.uiManager.createFormField('points', itemSchema.points, item.points, item);
         if (pointsField) interactionSection.appendChild(pointsField);

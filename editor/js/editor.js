@@ -60,6 +60,9 @@ class GameDataEditor {
         try {
             await this.storageManager.init();
             console.log('✓ IndexedDB ready');
+
+            // Try to restore last opened project
+            await this.restoreLastSession();
         } catch (error) {
             console.error('IndexedDB initialization failed:', error);
             this.uiManager.setStatus('Warning: Project storage unavailable', 'warning');
@@ -67,6 +70,39 @@ class GameDataEditor {
 
         this.setupEventListeners();
         this.uiManager.updateCounts();
+    }
+
+    /**
+     * Restore last opened project from previous session
+     */
+    async restoreLastSession() {
+        const lastProjectId = this.storageManager.getLastOpenedProject();
+
+        if (!lastProjectId) {
+            console.log('No previous session to restore');
+            return;
+        }
+
+        try {
+            console.log('🔄 Restoring last session...');
+            this.uiManager.setStatus('Restoring last session...', 'info');
+
+            // Check if project still exists
+            const project = await this.storageManager.loadProject(lastProjectId);
+
+            if (project) {
+                console.log('✓ Restoring project:', project.name);
+                this.loadData(project.gameData);
+                this.projectManager.updateProjectTitle(project.name);
+                this.projectManager.startAutoSave();
+                this.uiManager.setStatus(`Restored: ${project.name}`, 'success');
+            }
+        } catch (error) {
+            console.warn('Failed to restore last session:', error);
+            // Clear invalid last project reference
+            this.storageManager.clearLastOpenedProject();
+            this.uiManager.setStatus('Could not restore last session', 'warning');
+        }
     }
     
     setupEventListeners() {

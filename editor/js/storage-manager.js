@@ -9,6 +9,7 @@ export class StorageManager {
         this.storeName = 'projects';
         this.db = null;
         this.currentProjectId = null;
+        this.lastProjectKey = 'lastOpenedProjectId';
     }
     
     /**
@@ -286,19 +287,60 @@ export class StorageManager {
      */
     async getStats() {
         const projects = await this.getAllProjects();
-        
+
         let totalSize = 0;
         projects.forEach(project => {
             const jsonStr = JSON.stringify(project.gameData);
             totalSize += jsonStr.length;
         });
-        
+
         return {
             projectCount: projects.length,
             totalSize: totalSize,
             totalSizeKB: (totalSize / 1024).toFixed(2),
             currentProjectId: this.currentProjectId
         };
+    }
+
+    /**
+     * Save last opened project ID to localStorage
+     */
+    setLastOpenedProject(projectId) {
+        try {
+            localStorage.setItem(this.lastProjectKey, projectId);
+            console.log('💾 Last opened project saved:', projectId);
+        } catch (error) {
+            console.warn('Failed to save last opened project:', error);
+        }
+    }
+
+    /**
+     * Get last opened project ID from localStorage
+     */
+    getLastOpenedProject() {
+        try {
+            const projectId = localStorage.getItem(this.lastProjectKey);
+            if (projectId) {
+                console.log('💾 Last opened project found:', projectId);
+                return parseInt(projectId, 10);
+            }
+            return null;
+        } catch (error) {
+            console.warn('Failed to get last opened project:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Clear last opened project from localStorage
+     */
+    clearLastOpenedProject() {
+        try {
+            localStorage.removeItem(this.lastProjectKey);
+            console.log('💾 Last opened project cleared');
+        } catch (error) {
+            console.warn('Failed to clear last opened project:', error);
+        }
     }
 }
 

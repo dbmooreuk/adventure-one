@@ -111,16 +111,17 @@ export class ProjectManager {
     async createNewProject() {
         const name = prompt('Enter project name:', 'New Game Project');
         if (!name) return;
-        
+
         const newData = {
             title: name,
             version: "1.0.0",
             scenes: [],
             sceneItems: []
         };
-        
+
         try {
             const id = await this.storage.saveProject(name, newData);
+            this.storage.setLastOpenedProject(id); // Save as last opened
             await this.loadProject(id);
             this.editor.uiManager.setStatus(`Created new project: ${name}`, 'success');
         } catch (error) {
@@ -148,7 +149,9 @@ export class ProjectManager {
                 console.log('Items count:', this.editor.data.sceneItems.length);
 
                 const id = await this.storage.saveProject(name, this.editor.data);
+                this.storage.setLastOpenedProject(id); // Save as last opened
                 this.updateProjectTitle(name);
+                this.startAutoSave(); // Start auto-save for new project
                 this.editor.uiManager.setStatus(`Project saved: ${name}`, 'success');
 
                 console.log('Project saved with ID:', id);
@@ -190,6 +193,7 @@ export class ProjectManager {
 
             this.editor.loadData(project.gameData);
             this.updateProjectTitle(project.name);
+            this.storage.setLastOpenedProject(id); // Save as last opened
             this.editor.uiManager.setStatus(`Loaded project: ${project.name}`, 'success');
 
             // Close modal if open
@@ -208,20 +212,21 @@ export class ProjectManager {
      */
     async deleteProject(id) {
         const project = await this.storage.loadProject(id);
-        
+
         if (!confirm(`Delete project "${project.name}"? This cannot be undone.`)) {
             return;
         }
-        
+
         try {
             await this.storage.deleteProject(id);
             this.editor.uiManager.setStatus(`Deleted project: ${project.name}`, 'success');
-            
+
             // Refresh modal
             this.showProjectsModal();
-            
-            // If we deleted the current project, clear editor
+
+            // If we deleted the current project, clear editor and last opened
             if (id === this.storage.currentProjectId) {
+                this.storage.clearLastOpenedProject(); // Clear last opened
                 this.editor.loadData({
                     title: "Adventure Game",
                     version: "2.0.0",

@@ -375,6 +375,26 @@ export class UIManager {
                 });
                 break;
 
+            case 'scene-select':
+                input = document.createElement('select');
+
+                // Add empty option
+                const emptySceneOption = document.createElement('option');
+                emptySceneOption.value = '';
+                emptySceneOption.textContent = '-- None --';
+                if (!value) emptySceneOption.selected = true;
+                input.appendChild(emptySceneOption);
+
+                // Add all scenes from game data
+                this.editor.data.scenes.forEach(scene => {
+                    const option = document.createElement('option');
+                    option.value = scene.sceneName;
+                    option.textContent = `${scene.title || scene.sceneName} (${scene.sceneName})`;
+                    if (value === scene.sceneName) option.selected = true;
+                    input.appendChild(option);
+                });
+                break;
+
             case 'boolean':
                 input = document.createElement('input');
                 input.type = 'checkbox';

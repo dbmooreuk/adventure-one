@@ -92,7 +92,7 @@ export const sceneSchema = {
         default: false
     },
     unlockedBy: {
-        type: 'string',
+        type: 'item-select',
         required: false,
         label: 'Unlocked By',
         help: 'Item name that unlocks this scene',
@@ -312,7 +312,7 @@ export const itemSchema = {
         min: 0
     },
     linkToScene: {
-        type: 'string',
+        type: 'scene-select',
         required: false,
         label: 'Link To Scene',
         help: 'Scene name to link to',
@@ -325,7 +325,7 @@ export const itemSchema = {
         }
     },
     nextScene: {
-        type: 'string',
+        type: 'scene-select',
         required: false,
         label: 'Next Scene',
         help: 'Scene to unlock when used',
