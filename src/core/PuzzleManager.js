@@ -208,9 +208,15 @@ export class PuzzleManager extends EventEmitter {
         // Emit completion event
         this.emit('puzzleCompleted', { result, sceneData: this.currentSceneData })
 
-        // Close puzzle overlay after a delay (stay on parent scene)
+        // Close puzzle overlay after a delay
         setTimeout(() => {
             this.unloadPuzzle()
+
+            // Navigate to returnScene if specified, otherwise stay on parent scene
+            if (config.returnScene) {
+                console.log(`🚪 Navigating to returnScene: ${config.returnScene}`)
+                this.game.sceneManager?.changeScene(config.returnScene)
+            }
         }, 1500)
     }
 
@@ -220,8 +226,16 @@ export class PuzzleManager extends EventEmitter {
     handlePuzzleCancel() {
         console.log('🚫 Puzzle cancelled')
 
-        // Just close the overlay (stay on parent scene)
+        const config = this.currentSceneData?.puzzleConfig || {}
+
+        // Close the overlay
         this.unloadPuzzle()
+
+        // Navigate to returnScene if specified, otherwise stay on parent scene
+        if (config.returnScene) {
+            console.log(`🚪 Navigating to returnScene: ${config.returnScene}`)
+            this.game.sceneManager?.changeScene(config.returnScene)
+        }
 
         this.emit('puzzleCancelled', { sceneData: this.currentSceneData })
     }

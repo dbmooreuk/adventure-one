@@ -331,11 +331,11 @@ export const itemSchema = {
         help: 'Scene to unlock when used',
         condition: (data) => data.outcome === 'scene'
     },
-    lockedMessage: {
+    unlockedMessage: {
         type: 'string',
         required: false,
-        label: 'Locked Message',
-        help: 'Message shown if link is locked',
+        label: 'Unlocked Message',
+        help: 'Message shown when examining this link after target scene is unlocked (replaces lookAt)',
         condition: (data) => data.type === 'link'
     },
     points: {

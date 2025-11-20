@@ -556,7 +556,11 @@
                         </div>
                         <div class="legend-item">
                             <span class="legend-label">Link To Scene:</span>
-                            <span class="legend-desc">For link-type items, the scene ID they navigate to when clicked.</span>
+                            <span class="legend-desc">For link-type items, the scene ID they navigate to when clicked (when unlocked).</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Unlocked Message:</span>
+                            <span class="legend-desc">For link items, message shown when examining after target scene is unlocked (replaces lookAt).</span>
                         </div>
                     </div>
                 </div>
@@ -617,6 +621,32 @@
                         <div class="legend-item">
                             <span class="legend-label">Journal:</span>
                             <span class="legend-desc">Players can view all achievements in the Journal modal. Journal button pulses when new achievement is added.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3 class="legend-heading">Puzzle System</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-label">Puzzle Scenes:</span>
+                            <span class="legend-desc">Scenes with sceneType: 'puzzle' display as overlays on top of the current scene.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">unlockScene:</span>
+                            <span class="legend-desc">In puzzleConfig, specifies which scene to unlock when puzzle is completed.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">returnScene:</span>
+                            <span class="legend-desc">In puzzleConfig, specifies which scene to navigate to when puzzle closes (completed or cancelled). If not specified, stays on parent scene.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">reward:</span>
+                            <span class="legend-desc">In puzzleConfig, item name to add to inventory when puzzle is completed.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">points:</span>
+                            <span class="legend-desc">In puzzleConfig, points awarded when puzzle is completed (first time only).</span>
                         </div>
                     </div>
                 </div>
@@ -855,6 +885,12 @@
                             <div class="item-detail-row">
                                 <span class="item-detail-label">Link To Scene:</span>
                                 <span class="item-detail-value">${item.linkToScene}</span>
+                            </div>
+                        ` : ''}
+                        ${item.unlockedMessage ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Unlocked Message:</span>
+                                <span class="item-detail-value"><em>"${item.unlockedMessage}"</em></span>
                             </div>
                         ` : ''}
                         ${item.nextScene ? `

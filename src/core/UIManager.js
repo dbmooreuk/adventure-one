@@ -287,8 +287,8 @@ export class UIManager extends EventEmitter {
             const targetSceneState = this.game.sceneManager?.getSceneState(itemData.linkToScene)
 
             if (targetSceneState?.locked) {
-                const message = itemData.lockedMessage || "The way is blocked."
-                this.showMessage(message)
+                // If locked, don't navigate - treat like any other item
+                this.showMessage("Choose an action first (Examine, Get, or Use).")
                 return
             }
 
@@ -383,7 +383,16 @@ export class UIManager extends EventEmitter {
         const itemData = this.game.inventoryManager?.getItemData(itemName)
 
         if (itemData) {
-            const message = itemData.lookAt || `You examine the ${itemData.longName || itemName}.`
+            let message = itemData.lookAt || `You examine the ${itemData.longName || itemName}.`
+
+            // For link items, check if target scene is unlocked and use unlockedMessage if available
+            if (itemData.type === 'link' && itemData.linkToScene && itemData.unlockedMessage) {
+                const targetSceneState = this.game.sceneManager?.getSceneState(itemData.linkToScene)
+                if (targetSceneState && !targetSceneState.locked) {
+                    message = itemData.unlockedMessage
+                }
+            }
+
             this.showMessage(message)
 
             // Check if this item has an achievement (for type: "item" or "decor")

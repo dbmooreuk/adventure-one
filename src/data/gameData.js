@@ -19,7 +19,7 @@ export const gameData = {
             sceneMusic: "ambient1",
             backgroundImage: "scene-tower.png",
             backgroundColor: "#F4FED3",
-            items: ["sigil_tri", "sigil_eye", "sigil_wave", "tower_panel", "tower_door", "sea-one", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale", "safe_door"]
+            items: ["revelation", "sigil_tri", "sigil_eye", "sigil_wave", "tower_panel", "tower_door", "sea-one", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale"]
         },
         {
             sceneName: "scene_stasis",
@@ -33,7 +33,7 @@ export const gameData = {
             backgroundColor: "#F4FED3",
             items: ["glass_shard", "feather_suspended", "hollow_vessel", "sealed_door"],
             locked: true,
-            unlockedBy: "crossing"
+            // unlockedBy: "crossing"
         },
         {
             sceneName: "scene_memory",
@@ -194,8 +194,10 @@ export const gameData = {
                                 "The last number is even"
                       ],
                       "reward": "gold_bars",
+                      "achievement": "Safe Cracked",
                       "points": 50,
-                      "unlockScene": "scene_stasis"
+                      "unlockScene": "scene_stasis",
+                    //   "returnScene": "scene_guardian"
             }
         }
     ],
@@ -218,7 +220,7 @@ export const gameData = {
             onClickEffect: "flash"
         },
                {
-            name: "safe_door",
+            name: "tower_panel",
             longName: "Mysterious Safe",
             shortName: "Safe",
             type: "link",
@@ -268,16 +270,16 @@ export const gameData = {
             hitH: 0,
             onClickEffect: "flash"
         },
-        {
-            name: "tower_panel",
-            longName: "Glyph Input Panel",
-            shortName: "Panel",
-            type: "puzzle",
-            lookAt: "Three empty circular sockets await a symbolic sequence.",
-            position: [797, 67],
-            size: [100, 100],
-            zIndex: 10
-        },
+        // {
+        //     name: "tower_panel",
+        //     longName: "Glyph Input Panel",
+        //     shortName: "Panel",
+        //     type: "puzzle",
+        //     lookAt: "Three empty circular sockets await a symbolic sequence.",
+        //     position: [797, 67],
+        //     size: [100, 100],
+        //     zIndex: 10
+        // },
         {
             name: "tower_door",
             longName: "Sealed Tower Door",
@@ -286,6 +288,7 @@ export const gameData = {
             lookAt: "A heavy metal door sealed shut.",
             linkToScene: "scene_stasis",
             lockedMessage: "The door remains firmly sealed.",
+            unlockedMessage: "The door is open now!!!",
             points: 5,
             achievement: "Threshold Crossed",
             position: [786, 258],
@@ -310,6 +313,20 @@ export const gameData = {
                       "amplitude": 10,
                       "speed": 0.5
             }
+        },
+                {
+            name: "revelation",
+            longName: "Hidden Passage",
+            type: "link",
+            lookAt: "A secret passage revealed by the crystal's light. It leads deeper into the chamber.",
+            outcome: "scene",
+            linkToScene: "scene_memory",
+            lockedMessage: "The passage is still hidden in darkness.",
+            points: 30,
+            image: "butterfly5.png",
+            position: [400, 200],
+            size: [100, 140],
+            zIndex: 30
         },
         {
             name: "starburst-one",
