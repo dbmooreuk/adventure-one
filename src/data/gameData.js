@@ -21,7 +21,7 @@ export const gameData = {
             achievement: "The Invitation",
             points: 10,
             backgroundColor: "#F4FED3",
-            items: ["sigil_tri", "tower_panel", "sigil_eye", "sigil_wave", "tower_door", "sea-one", "revelation", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale"]
+            items: ["bird", "sigil_tri", "tower_panel", "sigil_eye", "sigil_wave", "tower_door", "sea-one", "revelation", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale"]
         },
         {
             sceneName: "scene_stasis",
@@ -1013,6 +1013,14 @@ export const gameData = {
                       "speed": 0.4
             },
             onClickEffect: "flash"
+        },
+        ,
+        {
+            name: "bird",
+            longName: "A Bird",
+            shortName: "Bird",
+            type: "character",
+            lookAt: "This looks like a strange bird that may speak",
         }
     ],
 

@@ -1654,6 +1654,14 @@ button.prop {
   z-index: 50;
 }
 
+.sceneItems {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background: rgba(6, 51, 64, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+}
+
 /* Messages */
 .panel-text {
   position: fixed;

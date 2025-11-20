@@ -909,7 +909,7 @@ export class UIManager extends EventEmitter {
 
     /**
      * Get scene text with visible items appended
-     * @returns {string} Scene text with "You see: item1, item2" appended
+     * @returns {string} Scene text with "You see: item1, item2" appended in a div
      */
     getSceneTextWithItems() {
         let text = this.currentSceneText
@@ -919,7 +919,7 @@ export class UIManager extends EventEmitter {
 
         if (visibleItems.length > 0) {
             const itemNames = visibleItems.map(item => item.longName || item.name)
-            text += ` You see: ${itemNames.join(', ')}.`
+            text += ` <div class="sceneItems">You see: ${itemNames.join(', ')}.</div>`
         }
 
         return text
