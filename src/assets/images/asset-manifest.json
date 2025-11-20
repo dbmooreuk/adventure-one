@@ -1,6 +1,6 @@
 {
-  "generated": "2025-11-16T10:54:10.566Z",
-  "count": 20,
+  "generated": "2025-11-20T09:21:35.967Z",
+  "count": 31,
   "assets": [
     {
       "name": "screen-splash.png",
@@ -53,6 +53,16 @@
       "category": "items"
     },
     {
+      "name": "clouds-1.png",
+      "path": "items/clouds-1.png",
+      "category": "items"
+    },
+    {
+      "name": "clouds-2.png",
+      "path": "items/clouds-2.png",
+      "category": "items"
+    },
+    {
       "name": "gear.png",
       "path": "items/gear.png",
       "category": "items"
@@ -60,6 +70,16 @@
     {
       "name": "karibiner.png",
       "path": "items/karibiner.png",
+      "category": "items"
+    },
+    {
+      "name": "orb-1.png",
+      "path": "items/orb-1.png",
+      "category": "items"
+    },
+    {
+      "name": "orb-2.png",
+      "path": "items/orb-2.png",
       "category": "items"
     },
     {
@@ -83,8 +103,18 @@
       "category": "items"
     },
     {
+      "name": "tower-glow.png",
+      "path": "items/tower-glow.png",
+      "category": "items"
+    },
+    {
       "name": "tower-one.png",
       "path": "items/tower-one.png",
+      "category": "items"
+    },
+    {
+      "name": "whale.png",
+      "path": "items/whale.png",
       "category": "items"
     },
     {
@@ -100,6 +130,31 @@
     {
       "name": "icon-monachus.svg",
       "path": "ui/icon-monachus.svg",
+      "category": "ui"
+    },
+    {
+      "name": "look-closed.png",
+      "path": "ui/look-closed.png",
+      "category": "ui"
+    },
+    {
+      "name": "look-open.png",
+      "path": "ui/look-open.png",
+      "category": "ui"
+    },
+    {
+      "name": "look.png",
+      "path": "ui/look.png",
+      "category": "ui"
+    },
+    {
+      "name": "monachus-logo-lg.png",
+      "path": "ui/monachus-logo-lg.png",
+      "category": "ui"
+    },
+    {
+      "name": "sunburst-intro.png",
+      "path": "ui/sunburst-intro.png",
       "category": "ui"
     }
   ]

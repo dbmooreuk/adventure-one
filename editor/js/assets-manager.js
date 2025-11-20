@@ -25,7 +25,18 @@ export class AssetsManager {
         // Refresh button
         const refreshBtn = document.getElementById('refresh-assets-btn');
         if (refreshBtn) {
-            refreshBtn.addEventListener('click', () => this.loadAssets());
+            refreshBtn.addEventListener('click', async () => {
+                // Add visual feedback
+                const originalText = refreshBtn.textContent;
+                refreshBtn.textContent = '🔄 Refreshing...';
+                refreshBtn.disabled = true;
+
+                await this.loadAssets();
+
+                // Restore button
+                refreshBtn.textContent = originalText;
+                refreshBtn.disabled = false;
+            });
         }
 
         // Don't load assets immediately - wait for tab to be shown
@@ -46,8 +57,11 @@ export class AssetsManager {
         try {
             this.showLoading();
 
-            // Try to fetch the asset manifest
-            const response = await fetch('../src/assets/images/asset-manifest.json');
+            // Try to fetch the asset manifest with cache-busting
+            const cacheBuster = `?t=${Date.now()}`;
+            const response = await fetch(`../src/assets/images/asset-manifest.json${cacheBuster}`, {
+                cache: 'no-cache'
+            });
 
             if (response.ok) {
                 const manifest = await response.json();

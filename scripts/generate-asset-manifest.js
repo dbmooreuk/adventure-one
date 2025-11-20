@@ -79,11 +79,29 @@ function generateManifest() {
         count: assets.length,
         assets: assets
     };
-    
-    // Write manifest file
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(manifest, null, 2));
 
-    console.log(`✅ Generated manifest with ${assets.length} assets`);
+    const newContent = JSON.stringify(manifest, null, 2);
+
+    // Only write if content changed (excluding timestamp)
+    let shouldWrite = true;
+    if (fs.existsSync(OUTPUT_FILE)) {
+        const oldContent = fs.readFileSync(OUTPUT_FILE, 'utf8');
+        const oldManifest = JSON.parse(oldContent);
+
+        // Compare asset counts and paths (ignore timestamp)
+        if (oldManifest.count === manifest.count) {
+            const oldPaths = oldManifest.assets.map(a => a.path).sort();
+            const newPaths = manifest.assets.map(a => a.path).sort();
+            shouldWrite = JSON.stringify(oldPaths) !== JSON.stringify(newPaths);
+        }
+    }
+
+    if (shouldWrite) {
+        fs.writeFileSync(OUTPUT_FILE, newContent);
+        console.log(`✅ Generated manifest with ${assets.length} assets`);
+    } else {
+        console.log(`ℹ️  No changes detected (${assets.length} assets)`);
+    }
 }
 
 // Run the script
