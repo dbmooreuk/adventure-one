@@ -2420,7 +2420,7 @@ button.prop {
   justify-content: space-between;
   align-items: center;
   padding: 25px 30px;
-  background: rgba(2, 16, 24, 0.5);
+  background: rgba(2, 16, 24, 0.8);
 }
 
 .journal-entries {
@@ -2434,7 +2434,8 @@ button.prop {
 }
 
 .journal-entry {
-  background: rgba(244, 254, 211, 0.1);
+  background: rgba(65, 123, 123, 0.3);
+  border: 1px solid rgba(6, 51, 64, 0.6);
   border-radius: 8px;
   transition: all 0.2s ease;
 }
@@ -2446,16 +2447,6 @@ button.prop {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-}
-
-.journal-entry-type {
-  display: inline-block;
-  padding: 4px 10px;
-  background: rgba(244, 254, 211, 0.2);
-  color: #F4FED3;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
 }
 
 .journal-entry-points {
@@ -2466,7 +2457,6 @@ button.prop {
   color: #FFFFFF;
   font-size: 16px;
   line-height: 1.6;
-  margin-bottom: 8px;
 }
 
 .journal-entry-date {
@@ -2475,7 +2465,7 @@ button.prop {
 
 .journal-footer {
   padding: 20px 30px;
-  background: rgba(2, 16, 24, 0.5);
+  background: rgba(2, 16, 24, 0.8);
 }
 
 .journal-total {

@@ -1,4 +1,5 @@
 
+@use 'sass:color';
 @use 'variables' as *;
 @use 'mixins' as *;
 
@@ -36,8 +37,7 @@
 
     /* When slot has an item */
     &:not(:empty) {
-        // background: rgba(lighten($light-marine, 20%), 0.8);
-        background: rgba(lighten($light-marine, 20%), 0.8);
+        background: color.adjust($light-marine, $lightness: 20%, $alpha: -0.2);
         pointer-events: all;
         &::before {
             display: none;

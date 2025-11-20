@@ -77,7 +77,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 25px 30px;
-    background: rgba($darkest-marine, 0.5);
+    background: rgba($darkest-marine, 0.8);
 
 }
 
@@ -93,7 +93,8 @@
 }
 
 .journal-entry {
-    background: rgba($main-yellow, 0.1);
+    background: rgba($light-marine, 0.3);
+    border: 1px solid rgba($dark-marine, 0.6);
 
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -107,17 +108,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
 }
 
-.journal-entry-type {
-    display: inline-block;
-    padding: 4px 10px;
-    background: rgba($main-yellow, 0.2);
-    color: $main-yellow;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-}
+// .journal-entry-type {
+//     display: inline-block;
+//     padding: 4px 10px;
+//     background: rgba($main-yellow, 0.2);
+//     color: $main-yellow;
+//     border-radius: 4px;
+//     letter-spacing: 0.5px;
+// }
 
 .journal-entry-points {
     color: $main-yellow;
@@ -127,7 +128,7 @@
     color: $white;
     font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 8px;
+    // margin-bottom: 8px;
 }
 
 .journal-entry-date {
@@ -137,7 +138,7 @@
 // Journal Footer
 .journal-footer {
     padding: 20px 30px;
-        background: rgba($darkest-marine, 0.5);
+        background: rgba($darkest-marine, 0.8);
 }
 
 .journal-total {

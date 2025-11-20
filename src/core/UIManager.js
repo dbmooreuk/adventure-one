@@ -856,7 +856,7 @@ export class UIManager extends EventEmitter {
 
         // Random blink every 2-5 seconds
         const scheduleNextBlink = () => {
-            const delay = 2000 + Math.random() * 3000 // 2-5 seconds
+            const delay = 2000 + Math.random() * 6000 // 2-5 seconds
             this.blinkTimeout = setTimeout(() => {
                 this.doBlink()
                 scheduleNextBlink()
@@ -1331,7 +1331,7 @@ export class UIManager extends EventEmitter {
             points.className = 'journal-entry-points'
             points.textContent = entry.points > 0 ? `+${entry.points} pts` : ''
 
-            header.appendChild(type)
+            // header.appendChild(type)
             header.appendChild(points)
 
             const text = document.createElement('div')
@@ -1344,7 +1344,7 @@ export class UIManager extends EventEmitter {
 
             entryEl.appendChild(header)
             entryEl.appendChild(text)
-            entryEl.appendChild(date)
+            // entryEl.appendChild(date)
 
             this.elements.journalEntries.appendChild(entryEl)
         })
