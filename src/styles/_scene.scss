@@ -16,6 +16,11 @@
   padding-left: $spacing-md;
   @include shadow-custom(2px, 2px, 8px, 2px, rgba($darkest-marine, 0.5));
 }
+
+.bar-logo{
+  width: 200px;
+  margin-top: 6px;
+}
 .intro-title {
     font-size: $font-size-4xl;
     color: $main-yellow;
@@ -60,7 +65,10 @@
   margin-bottom: $spacing-md;
 background: rgba($dark-marine, 0.1);
 border-radius: $border-radius-md;
-padding: $spacing-sm;
+padding: $spacing-md;
+li{
+  margin-left: 20px;
+}
 }
 
 

@@ -1633,6 +1633,11 @@ button.prop {
   box-shadow: 2px 2px 8px 2px rgba(2, 16, 24, 0.5);
 }
 
+.bar-logo {
+  width: 200px;
+  margin-top: 6px;
+}
+
 .intro-title {
   font-size: 48px;
   color: #F4FED3;
@@ -1675,7 +1680,10 @@ button.prop {
   margin-bottom: 16px;
   background: rgba(6, 51, 64, 0.1);
   border-radius: 8px;
-  padding: 8px;
+  padding: 16px;
+}
+.sceneItems li {
+  margin-left: 20px;
 }
 
 /* Messages */

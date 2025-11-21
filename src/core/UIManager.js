@@ -1058,14 +1058,31 @@ export class UIManager extends EventEmitter {
      * @returns {string} Scene text with "You see: item1, item2" appended in a div
      */
     getSceneTextWithItems() {
-        let text = this.currentSceneText
+        let text = ''
+
+        // Get current scene data
+        const currentScene = this.game.sceneManager?.currentScene
+
+        // Prepend stage title and scene title if available
+        if (currentScene) {
+            if (currentScene.stage) {
+                text += `<h1 class="stage-title body-lg text-main-marine text-uppercase">${currentScene.stage}</h1>`
+            }
+            if (currentScene.title) {
+                text += `<h2 class="scene-title body-md text-light-marine text-uppercase">${currentScene.title}</h2>`
+            }
+        }
+
+        // Add the scene text
+        text += this.currentSceneText
 
         // Get visible items (non-decor items in current scene)
         const visibleItems = this.getVisibleSceneItems()
 
         if (visibleItems.length > 0) {
             const itemNames = visibleItems.map(item => item.longName || item.name)
-            text += ` <div class="sceneItems">You see: ${itemNames.join(', ')}.</div>`
+            const itemListItems = itemNames.map(name => `<li>${name}</li>`).join('');
+            text += ` <div class="sceneItems"><strong>Items of interest:</strong><ul>${itemListItems}</ul></div>`
         }
 
         return text
