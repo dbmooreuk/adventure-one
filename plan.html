@@ -236,6 +236,11 @@
             color: white;
         }
 
+        .type-character {
+            background: #a29bfe;
+            color: white;
+        }
+
         .item-details {
             display: grid;
             gap: 8px;
@@ -496,6 +501,10 @@
                             <span class="item-type type-decor">decor</span>
                             <span class="legend-desc">Decorative objects that can be examined but not picked up or used. Adds atmosphere to scenes.</span>
                         </div>
+                        <div class="legend-item">
+                            <span class="item-type type-character">character</span>
+                            <span class="legend-desc">Interactive quiz characters. Click to answer a question. Correct answer awards points, achievement, and optional reward item. One attempt only.</span>
+                        </div>
                     </div>
                 </div>
 
@@ -516,7 +525,11 @@
                         </div>
                         <div class="legend-item">
                             <span class="outcome-scene">scene</span>
-                            <span class="legend-desc">Using this item/link triggers scene navigation or unlocks a new scene.</span>
+                            <span class="legend-desc">Using this item/link triggers scene navigation or unlocks a new scene. For character type: reward item appears in the scene instead of inventory.</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Character:</span>
+                            <span class="legend-desc">For character type, outcome determines where the reward item goes: "keep" = inventory (default), "scene" = appears in scene.</span>
                         </div>
                         <div class="legend-item">
                             <span class="legend-label">Multiple:</span>
@@ -877,10 +890,34 @@
                                 <span class="item-detail-value">${item.useResult || '-'}</span>
                             </div>
                         ` : ''}
-                        <div class="item-detail-row">
-                            <span class="item-detail-label">Outcome:</span>
-                            <span class="item-detail-value">${formatOutcome(item.outcome)}</span>
-                        </div>
+                        ${item.type === 'character' ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Question:</span>
+                                <span class="item-detail-value"><em>"${item.question || '-'}"</em></span>
+                            </div>
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Answers:</span>
+                                <span class="item-detail-value">${item.answers ? item.answers.map(a => `${a.text}${a.isCorrect ? ' ✓' : ''}`).join(', ') : '-'}</span>
+                            </div>
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Correct Message:</span>
+                                <span class="item-detail-value"><em>"${item.correctMessage || '-'}"</em></span>
+                            </div>
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Incorrect Message:</span>
+                                <span class="item-detail-value"><em>"${item.incorrectMessage || '-'}"</em></span>
+                            </div>
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Reward:</span>
+                                <span class="item-detail-value">${item.reward || '-'}</span>
+                            </div>
+                        ` : ''}
+                        ${item.outcome ? `
+                            <div class="item-detail-row">
+                                <span class="item-detail-label">Outcome:</span>
+                                <span class="item-detail-value">${formatOutcome(item.outcome)}</span>
+                            </div>
+                        ` : ''}
                         ${item.linkToScene ? `
                             <div class="item-detail-row">
                                 <span class="item-detail-label">Link To Scene:</span>

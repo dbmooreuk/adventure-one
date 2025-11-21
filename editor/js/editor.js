@@ -485,7 +485,9 @@ class GameDataEditor {
     updateItem(itemName, updatedItem) {
         const index = this.data.sceneItems.findIndex(i => i.name === itemName);
         if (index !== -1) {
-            this.data.sceneItems[index] = updatedItem;
+            // Merge with existing item to preserve fields not in the form
+            const existingItem = this.data.sceneItems[index];
+            this.data.sceneItems[index] = { ...existingItem, ...updatedItem };
             this.uiManager.renderItemList();
         }
     }

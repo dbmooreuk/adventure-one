@@ -276,8 +276,8 @@ export const itemSchema = {
         required: false,
         label: 'Outcome',
         options: OUTCOMES,
-        help: 'What happens after using the item (can select multiple)',
-        condition: (data) => ['item', 'target', 'link'].includes(data.type),
+        help: 'What happens after using the item (can select multiple). For character type: determines if reward goes to inventory (keep) or scene (scene)',
+        condition: (data) => ['item', 'target', 'link', 'character'].includes(data.type),
         validate: (value, data) => {
             if (['item', 'target', 'link'].includes(data.type) && !value) {
                 return 'Outcome is required for this item type';

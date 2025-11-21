@@ -308,9 +308,40 @@ export class DataManager {
             output += `            points: ${item.points},\n`;
         }
 
-        // Achievement (optional for item, target, link, decor)
+        // Achievement (optional for item, target, link, decor, character)
         if (item.achievement) {
             output += `            achievement: "${this.escapeString(item.achievement)}",\n`;
+        }
+
+        // Character-specific quiz fields
+        if (item.type === 'character') {
+            if (item.question) {
+                output += `            question: "${this.escapeString(item.question)}",\n`;
+            }
+            if (item.answers && Array.isArray(item.answers) && item.answers.length > 0) {
+                output += `            answers: [\n`;
+                item.answers.forEach((answer, index) => {
+                    const isLast = index === item.answers.length - 1;
+                    output += `                { text: "${this.escapeString(answer.text)}", isCorrect: ${answer.isCorrect} }${isLast ? '' : ','}\n`;
+                });
+                output += `            ],\n`;
+            }
+            if (item.correctMessage) {
+                output += `            correctMessage: "${this.escapeString(item.correctMessage)}",\n`;
+            }
+            if (item.incorrectMessage) {
+                output += `            incorrectMessage: "${this.escapeString(item.incorrectMessage)}",\n`;
+            }
+            if (item.reward) {
+                output += `            reward: "${item.reward}",\n`;
+            }
+            if (item.outcome) {
+                if (Array.isArray(item.outcome)) {
+                    output += `            outcome: [${item.outcome.map(o => `"${o}"`).join(', ')}],\n`;
+                } else {
+                    output += `            outcome: "${item.outcome}",\n`;
+                }
+            }
         }
 
         // Mandatory visual properties (all items)

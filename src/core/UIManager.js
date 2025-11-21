@@ -572,11 +572,25 @@ export class UIManager extends EventEmitter {
 
                     // Give reward item
                     if (itemData.reward) {
-                        const rewardAdded = this.game.inventoryManager?.addItem(itemData.reward)
-                        if (rewardAdded) {
+                        // Normalize outcome to array for easier checking
+                        const outcomes = Array.isArray(itemData.outcome) ? itemData.outcome : [itemData.outcome]
+
+                        // Determine where to add the reward based on outcome
+                        if (outcomes.includes('scene')) {
+                            // Add to scene
+                            this.game.sceneManager?.addItemToScene(itemData.reward)
+                            this.updateSceneItems()
                             const rewardData = this.game.inventoryManager?.getItemData(itemData.reward)
-                            const rewardMessage = `You received: ${rewardData?.longName || itemData.reward}`
+                            const rewardMessage = `${rewardData?.longName || itemData.reward} appeared in the scene!`
                             setTimeout(() => this.showMessage(rewardMessage), 2000)
+                        } else {
+                            // Default: add to inventory (keep)
+                            const rewardAdded = this.game.inventoryManager?.addItem(itemData.reward)
+                            if (rewardAdded) {
+                                const rewardData = this.game.inventoryManager?.getItemData(itemData.reward)
+                                const rewardMessage = `You received: ${rewardData?.longName || itemData.reward}`
+                                setTimeout(() => this.showMessage(rewardMessage), 2000)
+                            }
                         }
                     }
                 } else {

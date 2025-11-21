@@ -62,13 +62,27 @@ export class ItemEditor {
 
         const item = this.editor.getItemByName(itemName);
         if (!item) return;
-        
+
         this.currentItem = itemName;
         this.renderForm(item);
         this.editor.uiManager.showPanel('item-editor');
-        
+
         // Update title
-        document.getElementById('item-editor-title').textContent = `Edit Item: ${item.longName || item.name}`;
+        this.updateTitle();
+    }
+
+    /**
+     * Update the panel title with current item name
+     */
+    updateTitle() {
+        const form = document.getElementById('item-form');
+        if (!form) return;
+
+        const longName = form.querySelector('[name="longName"]')?.value;
+        const name = form.querySelector('[name="name"]')?.value;
+        const displayName = longName || name || 'Item';
+
+        document.getElementById('item-editor-title').textContent = `Edit Item: ${displayName}`;
     }
     
     /**
@@ -124,10 +138,46 @@ export class ItemEditor {
 
         form.appendChild(interactionSection);
 
-        // Achievement Section
-        const achievementSection = this.createSection('Achievement');
-        achievementSection.appendChild(this.editor.uiManager.createFormField('achievement', itemSchema.achievement, item.achievement, item));
-        form.appendChild(achievementSection);
+        // Character Quiz Section (for character type)
+        if (item.type === 'character') {
+            const quizSection = this.createSection('Character Quiz');
+
+            const questionField = this.editor.uiManager.createFormField('question', itemSchema.question, item.question, item);
+            if (questionField) quizSection.appendChild(questionField);
+
+            // Custom answers field (array of objects)
+            quizSection.appendChild(this.createAnswersListField(item.answers || []));
+
+            const correctMsgField = this.editor.uiManager.createFormField('correctMessage', itemSchema.correctMessage, item.correctMessage, item);
+            if (correctMsgField) quizSection.appendChild(correctMsgField);
+
+            const incorrectMsgField = this.editor.uiManager.createFormField('incorrectMessage', itemSchema.incorrectMessage, item.incorrectMessage, item);
+            if (incorrectMsgField) quizSection.appendChild(incorrectMsgField);
+
+            const rewardField = this.editor.uiManager.createFormField('reward', itemSchema.reward, item.reward, item);
+            if (rewardField) quizSection.appendChild(rewardField);
+
+            const outcomeField = this.editor.uiManager.createFormField('outcome', itemSchema.outcome, item.outcome, item);
+            if (outcomeField) quizSection.appendChild(outcomeField);
+
+            const charAchievementField = this.editor.uiManager.createFormField('achievement', itemSchema.achievement, item.achievement, item);
+            if (charAchievementField) quizSection.appendChild(charAchievementField);
+
+            const charPointsField = this.editor.uiManager.createFormField('points', itemSchema.points, item.points, item);
+            if (charPointsField) quizSection.appendChild(charPointsField);
+
+            form.appendChild(quizSection);
+        }
+
+        // Achievement Section (for non-character types)
+        if (item.type !== 'character') {
+            const achievementSection = this.createSection('Achievement');
+            const achievementField = this.editor.uiManager.createFormField('achievement', itemSchema.achievement, item.achievement, item);
+            if (achievementField) {
+                achievementSection.appendChild(achievementField);
+                form.appendChild(achievementSection);
+            }
+        }
 
         // Combine Section
         const combineSection = this.createSection('Combine Properties (Optional)');
@@ -197,13 +247,29 @@ export class ItemEditor {
                 this.renderForm(formData);
             });
         }
-        
+
         // Add change listener for outcome to re-render form
         const outcomeSelect = form.querySelector('[name="outcome"]');
         if (outcomeSelect) {
             outcomeSelect.addEventListener('change', () => {
                 const formData = this.getFormData();
                 this.renderForm(formData);
+            });
+        }
+
+        // Add change listener for longName to update title
+        const longNameInput = form.querySelector('[name="longName"]');
+        if (longNameInput) {
+            longNameInput.addEventListener('input', () => {
+                this.updateTitle();
+            });
+        }
+
+        // Add change listener for name to update title (fallback if no longName)
+        const nameInput = form.querySelector('[name="name"]');
+        if (nameInput) {
+            nameInput.addEventListener('input', () => {
+                this.updateTitle();
             });
         }
     }
@@ -636,6 +702,90 @@ export class ItemEditor {
     }
 
     /**
+     * Create answers list field for character quiz
+     */
+    createAnswersListField(answers) {
+        const container = document.createElement('div');
+        container.className = 'form-group answers-list-container';
+
+        const label = document.createElement('label');
+        label.textContent = 'Answer Options';
+        container.appendChild(label);
+
+        const help = document.createElement('div');
+        help.className = 'form-help';
+        help.textContent = 'Add answer options. Mark one as correct.';
+        container.appendChild(help);
+
+        const answersList = document.createElement('div');
+        answersList.className = 'answers-list';
+        answersList.dataset.name = 'answers';
+
+        // Render existing answers
+        if (answers && answers.length > 0) {
+            answers.forEach((answer, index) => {
+                answersList.appendChild(this.createAnswerItem(answer, index));
+            });
+        } else {
+            // Add two default empty answers
+            answersList.appendChild(this.createAnswerItem({ text: '', isCorrect: false }, 0));
+            answersList.appendChild(this.createAnswerItem({ text: '', isCorrect: false }, 1));
+        }
+
+        container.appendChild(answersList);
+
+        // Add answer button
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'btn btn-secondary btn-sm';
+        addBtn.textContent = '+ Add Answer';
+        addBtn.addEventListener('click', () => {
+            const index = answersList.children.length;
+            answersList.appendChild(this.createAnswerItem({ text: '', isCorrect: false }, index));
+        });
+        container.appendChild(addBtn);
+
+        return container;
+    }
+
+    /**
+     * Create a single answer item
+     */
+    createAnswerItem(answer, index) {
+        const item = document.createElement('div');
+        item.className = 'answer-item';
+
+        // Radio button for correct answer (styled like checkbox)
+        const checkbox = document.createElement('input');
+        checkbox.type = 'radio';
+        checkbox.name = 'answer-correct';
+        checkbox.value = index;
+        checkbox.checked = answer.isCorrect || false;
+        checkbox.title = 'Mark as correct answer';
+        item.appendChild(checkbox);
+
+        // Text input
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = `answer-${index}`;
+        input.value = answer.text || '';
+        input.placeholder = `Answer option ${index + 1}`;
+        item.appendChild(input);
+
+        // Remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-danger btn-sm';
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', () => {
+            item.remove();
+        });
+        item.appendChild(removeBtn);
+
+        return item;
+    }
+
+    /**
      * Create style field
      */
     createStyleField(style) {
@@ -721,6 +871,7 @@ export class ItemEditor {
             if (name === 'position-x' || name === 'position-y' ||
                 name === 'size-w' || name === 'size-h' ||
                 name.startsWith('frame-') || name === 'sprite-mode' ||
+                name.startsWith('answer-') || name === 'answer-correct' ||
                 name.startsWith('style-')) {
                 return; // Handle separately
             }
@@ -861,6 +1012,39 @@ export class ItemEditor {
             if (styleHoverEffect) formData.style.hoverEffect = styleHoverEffect;
         } else {
             formData.style = null;
+        }
+
+        // Build answers array from answer fields (for character type)
+        const answersList = form.querySelector('.answers-list');
+        if (answersList) {
+            const answers = [];
+            const answerItems = answersList.querySelectorAll('.answer-item');
+
+            // Find which answer item has the checked radio button
+            let correctItemIndex = -1;
+            answerItems.forEach((answerItem, idx) => {
+                const radio = answerItem.querySelector('input[type="radio"]');
+                if (radio && radio.checked) {
+                    correctItemIndex = idx;
+                }
+            });
+
+            // Build answers array
+            answerItems.forEach((answerItem, index) => {
+                const textInput = answerItem.querySelector('input[type="text"]');
+                const text = textInput?.value?.trim();
+
+                if (text) {
+                    answers.push({
+                        text: text,
+                        isCorrect: index === correctItemIndex
+                    });
+                }
+            });
+
+            if (answers.length > 0) {
+                formData.answers = answers;
+            }
         }
 
         return formData;

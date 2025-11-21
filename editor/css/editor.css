@@ -708,6 +708,45 @@ body {
     justify-content: center;
 }
 
+/* Answers List (for character quiz) */
+.answers-list-container {
+    margin-top: var(--spacing-md);
+}
+
+.answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.answer-item {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.answer-item input[type="radio"] {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.answer-item input[type="text"] {
+    flex: 1;
+}
+
+.answer-item .btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Form Row */
 .form-row {
     display: grid;
