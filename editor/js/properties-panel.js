@@ -50,16 +50,76 @@ export class PropertiesPanel {
         const basicSection = this.createSection('Basic Information');
         basicSection.appendChild(this.createField('name', 'Name', item.name, 'text', true));
         basicSection.appendChild(this.createField('longName', 'Display Name', item.longName || '', 'text'));
+        basicSection.appendChild(this.createField('shortName', 'Short Name', item.shortName || '', 'text'));
+        basicSection.appendChild(this.createTypeField(item));
+
+        // Link To Scene field - appears for link items
+        if (item.type === 'link') {
+            basicSection.appendChild(this.createSceneSelectField('linkToScene', 'Link To Scene', item.linkToScene || ''));
+        }
+
         form.appendChild(basicSection);
 
-        // Description Section
-        const descSection = this.createSection('Descriptions');
-        descSection.appendChild(this.createField('lookAt', 'Look At Description', item.lookAt || '', 'textarea'));
-        descSection.appendChild(this.createField('pickUpMessage', 'Pick Up Message', item.pickUpMessage || '', 'textarea'));
-        form.appendChild(descSection);
+        // Interaction Section
+        const interactionSection = this.createSection('Interaction');
+
+        // Conditional fields based on type
+        if (item.type !== 'decor') {
+            interactionSection.appendChild(this.createField('lookAt', 'Look At Description', item.lookAt || '', 'textarea'));
+        }
+
+        if (item.type === 'item' || item.type === 'target') {
+            interactionSection.appendChild(this.createField('pickUpMessage', 'Pick Up Message', item.pickUpMessage || '', 'textarea'));
+            interactionSection.appendChild(this.createField('unlockedMessage', 'Unlocked Message', item.unlockedMessage || '', 'textarea'));
+        }
+
+        if (item.type === 'target') {
+            interactionSection.appendChild(this.createField('useWith', 'Use With Item', item.useWith || '', 'text'));
+            interactionSection.appendChild(this.createField('useMessage', 'Use Message', item.useMessage || '', 'textarea'));
+            interactionSection.appendChild(this.createField('useResult', 'Use Result Item', item.useResult || '', 'text'));
+            interactionSection.appendChild(this.createOutcomeField(item));
+            interactionSection.appendChild(this.createSceneSelectField('nextScene', 'Next Scene', item.nextScene || ''));
+            interactionSection.appendChild(this.createField('points', 'Points', item.points || '', 'number'));
+        }
+
+        if (interactionSection.children.length > 1) { // More than just the title
+            form.appendChild(interactionSection);
+        }
+
+        // Character Quiz Section (for character type)
+        if (item.type === 'character') {
+            const quizSection = this.createSection('Character Quiz');
+            quizSection.appendChild(this.createField('question', 'Question', item.question || '', 'textarea'));
+            quizSection.appendChild(this.createAnswersListField(item.answers || []));
+            quizSection.appendChild(this.createField('correctMessage', 'Correct Message', item.correctMessage || '', 'textarea'));
+            quizSection.appendChild(this.createField('incorrectMessage', 'Incorrect Message', item.incorrectMessage || '', 'textarea'));
+            quizSection.appendChild(this.createField('reward', 'Reward Item', item.reward || '', 'text'));
+            quizSection.appendChild(this.createOutcomeField(item));
+            quizSection.appendChild(this.createField('achievement', 'Achievement', item.achievement || '', 'text'));
+            quizSection.appendChild(this.createField('points', 'Points', item.points || '', 'number'));
+            form.appendChild(quizSection);
+        }
+
+        // Achievement Section (for non-character types)
+        if (item.type !== 'character' && item.type !== 'decor') {
+            const achievementSection = this.createSection('Achievement');
+            achievementSection.appendChild(this.createField('achievement', 'Achievement', item.achievement || '', 'text'));
+            form.appendChild(achievementSection);
+        }
+
+        // Combine Section
+        const combineSection = this.createSection('Combine Properties');
+        combineSection.appendChild(this.createField('combineWith', 'Combine With', item.combineWith || '', 'text'));
+        combineSection.appendChild(this.createField('combineResult', 'Combine Result', item.combineResult || '', 'text'));
+        combineSection.appendChild(this.createField('combineMessage', 'Combine Message', item.combineMessage || '', 'textarea'));
+        combineSection.appendChild(this.createField('combinePoints', 'Combine Points', item.combinePoints || '', 'number'));
+        form.appendChild(combineSection);
 
         // Visual Properties Section
         const visualSection = this.createSection('Visual Properties');
+
+        // Image
+        visualSection.appendChild(this.createField('image', 'Image', item.image || '', 'text'));
 
         // Z-Index - show actual value or empty string if not set
         const zIndexValue = item.zIndex !== undefined && item.zIndex !== null ? item.zIndex : '';
@@ -90,9 +150,21 @@ export class PropertiesPanel {
         const animationSection = this.createAnimationSection(item);
         form.appendChild(animationSection);
 
+        // Effects Section
+        const effectsSection = this.createSection('Effects');
+        effectsSection.appendChild(this.createField('onClickEffect', 'On Click Effect', item.onClickEffect || '', 'text'));
+        effectsSection.appendChild(this.createField('onClickSound', 'On Click Sound', item.onClickSound || '', 'text'));
+        form.appendChild(effectsSection);
+
+        // Style Section
+        const styleSection = this.createSection('Style');
+        styleSection.appendChild(this.createStyleField(item.style));
+        form.appendChild(styleSection);
+
         // Add change listeners to all inputs
-        form.querySelectorAll('input, textarea').forEach(input => {
+        form.querySelectorAll('input, textarea, select').forEach(input => {
             input.addEventListener('input', () => this.handlePropertyChange());
+            input.addEventListener('change', () => this.handlePropertyChange());
         });
 
         container.appendChild(form);
@@ -650,6 +722,305 @@ export class PropertiesPanel {
     }
 
     /**
+     * Create type select field
+     */
+    createTypeField(item) {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const label = document.createElement('label');
+        label.textContent = 'Type';
+        formGroup.appendChild(label);
+
+        const select = document.createElement('select');
+        select.name = 'type';
+        select.innerHTML = `
+            <option value="item">Item</option>
+            <option value="target">Target</option>
+            <option value="link">Link</option>
+            <option value="decor">Decor</option>
+            <option value="character">Character</option>
+        `;
+        select.value = item.type || 'item';
+        formGroup.appendChild(select);
+
+        return formGroup;
+    }
+
+    /**
+     * Create outcome select field
+     */
+    createOutcomeField(item) {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const label = document.createElement('label');
+        label.textContent = 'Outcome';
+        formGroup.appendChild(label);
+
+        const select = document.createElement('select');
+        select.name = 'outcome';
+        select.innerHTML = `
+            <option value="">-- Select Outcome --</option>
+            <option value="keep">Keep (stays in inventory)</option>
+            <option value="remove">Remove (consumed after use)</option>
+            <option value="removeTarget">Remove Target (removes target from scene)</option>
+            <option value="scene">Scene (adds result to scene)</option>
+        `;
+        select.value = item.outcome || '';
+        formGroup.appendChild(select);
+
+        return formGroup;
+    }
+
+    /**
+     * Create scene select field
+     */
+    createSceneSelectField(name, label, value) {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const labelEl = document.createElement('label');
+        labelEl.textContent = label;
+        formGroup.appendChild(labelEl);
+
+        const select = document.createElement('select');
+        select.name = name;
+
+        // Add empty option
+        const emptyOption = document.createElement('option');
+        emptyOption.value = '';
+        emptyOption.textContent = '-- Select Scene --';
+        select.appendChild(emptyOption);
+
+        // Add scene options
+        if (this.editor.data && this.editor.data.scenes) {
+            this.editor.data.scenes.forEach(scene => {
+                const option = document.createElement('option');
+                option.value = scene.sceneName;
+                option.textContent = scene.sceneName;
+                select.appendChild(option);
+            });
+        }
+
+        select.value = value || '';
+        formGroup.appendChild(select);
+
+        return formGroup;
+    }
+
+    /**
+     * Create style field (JSON object)
+     */
+    createStyleField(style) {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const label = document.createElement('label');
+        label.textContent = 'Style (JSON)';
+        formGroup.appendChild(label);
+
+        const textarea = document.createElement('textarea');
+        textarea.name = 'style';
+        textarea.rows = 3;
+        textarea.placeholder = '{"cursor": "pointer", "filter": "brightness(1.2)"}';
+
+        if (style && Object.keys(style).length > 0) {
+            textarea.value = JSON.stringify(style, null, 2);
+        } else {
+            textarea.value = '';
+        }
+
+        formGroup.appendChild(textarea);
+
+        const help = document.createElement('div');
+        help.className = 'form-help';
+        help.textContent = 'CSS styles as JSON object';
+        formGroup.appendChild(help);
+
+        return formGroup;
+    }
+
+    /**
+     * Create answers list field for character quiz
+     */
+    createAnswersListField(answers) {
+        const container = document.createElement('div');
+        container.className = 'form-group answers-list-container';
+
+        const label = document.createElement('label');
+        label.textContent = 'Answer Options';
+        container.appendChild(label);
+
+        const help = document.createElement('div');
+        help.className = 'form-help';
+        help.textContent = 'Add answer options. Mark one as correct.';
+        container.appendChild(help);
+
+        const answersList = document.createElement('div');
+        answersList.className = 'answers-list';
+        answersList.dataset.name = 'answers';
+
+        // Render existing answers
+        if (answers && answers.length > 0) {
+            answers.forEach((answer, index) => {
+                const answerItem = this.createAnswerItem(answer, index);
+                answersList.appendChild(answerItem);
+
+                // Add event listeners to answer inputs
+                const input = answerItem.querySelector('input[type="text"]');
+                const radio = answerItem.querySelector('input[type="radio"]');
+
+                if (input) {
+                    input.addEventListener('input', () => {
+                        this.updateAnswers();
+                    });
+                }
+
+                if (radio) {
+                    radio.addEventListener('change', () => {
+                        this.updateAnswers();
+                    });
+                }
+            });
+        } else {
+            // Add two default empty answers
+            for (let i = 0; i < 2; i++) {
+                const answerItem = this.createAnswerItem({ text: '', isCorrect: false }, i);
+                answersList.appendChild(answerItem);
+
+                // Add event listeners
+                const input = answerItem.querySelector('input[type="text"]');
+                const radio = answerItem.querySelector('input[type="radio"]');
+
+                if (input) {
+                    input.addEventListener('input', () => {
+                        this.updateAnswers();
+                    });
+                }
+
+                if (radio) {
+                    radio.addEventListener('change', () => {
+                        this.updateAnswers();
+                    });
+                }
+            }
+        }
+
+        container.appendChild(answersList);
+
+        // Add answer button
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'btn btn-secondary btn-sm';
+        addBtn.textContent = '+ Add Answer';
+        addBtn.addEventListener('click', () => {
+            const index = answersList.children.length;
+            const answerItem = this.createAnswerItem({ text: '', isCorrect: false }, index);
+            answersList.appendChild(answerItem);
+
+            // Add event listeners to new answer
+            const input = answerItem.querySelector('input[type="text"]');
+            const radio = answerItem.querySelector('input[type="radio"]');
+
+            if (input) {
+                input.addEventListener('input', () => {
+                    this.updateAnswers();
+                });
+            }
+
+            if (radio) {
+                radio.addEventListener('change', () => {
+                    this.updateAnswers();
+                });
+            }
+        });
+        container.appendChild(addBtn);
+
+        return container;
+    }
+
+    /**
+     * Create a single answer item
+     */
+    createAnswerItem(answer, index) {
+        const item = document.createElement('div');
+        item.className = 'answer-item';
+
+        // Radio button for correct answer
+        const checkbox = document.createElement('input');
+        checkbox.type = 'radio';
+        checkbox.name = 'answer-correct';
+        checkbox.value = index;
+        checkbox.checked = answer.isCorrect || false;
+        checkbox.title = 'Mark as correct answer';
+        item.appendChild(checkbox);
+
+        // Text input
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = `answer-${index}`;
+        input.value = answer.text || '';
+        input.placeholder = `Answer option ${index + 1}`;
+        item.appendChild(input);
+
+        // Remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-danger btn-sm';
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', () => {
+            item.remove();
+            // Auto-save when answer is removed
+            this.updateAnswers();
+        });
+        item.appendChild(removeBtn);
+
+        return item;
+    }
+
+    /**
+     * Update answers array from form inputs
+     */
+    updateAnswers() {
+        if (!this.currentItem) return;
+
+        const answersList = document.querySelector('.answers-list');
+        if (!answersList) return;
+
+        const answers = [];
+        const answerItems = answersList.querySelectorAll('.answer-item');
+        const correctIndex = document.querySelector('input[name="answer-correct"]:checked')?.value;
+
+        answerItems.forEach((item, index) => {
+            const input = item.querySelector('input[type="text"]');
+            const text = input?.value.trim();
+
+            if (text) {
+                answers.push({
+                    text: text,
+                    isCorrect: String(index) === correctIndex
+                });
+            }
+        });
+
+        // Update the item in the data
+        const itemIndex = this.editor.data.sceneItems.findIndex(i => i.name === this.currentItem.name);
+        if (itemIndex !== -1) {
+            this.editor.data.sceneItems[itemIndex].answers = answers;
+            this.currentItem = this.editor.data.sceneItems[itemIndex];
+
+            // Trigger auto-save
+            this.editor.saveCurrentWork();
+
+            // Refresh code editor if it's visible
+            if (this.editor.codeEditor) {
+                this.editor.codeEditor.refresh();
+            }
+        }
+    }
+
+    /**
      * Handle hit area type change
      */
     handleHitAreaTypeChange(type, item) {
@@ -866,11 +1237,31 @@ export class PropertiesPanel {
                 // Handle hit dimensions
                 if (key === 'hitW') updates.hitW = Number(value);
                 if (key === 'hitH') updates.hitH = Number(value);
-            } else if (key === 'zIndex') {
-                updates[key] = Number(value);
-                console.log(`🎨 Z-Index in updates object:`, updates[key]);
+            } else if (key === 'zIndex' || key === 'points' || key === 'combinePoints') {
+                // Handle numeric fields - only set if not empty
+                if (value !== '') {
+                    updates[key] = Number(value);
+                }
+                if (key === 'zIndex') {
+                    console.log(`🎨 Z-Index in updates object:`, updates[key]);
+                }
+            } else if (key === 'style') {
+                // Parse JSON style
+                if (value.trim()) {
+                    try {
+                        updates.style = JSON.parse(value);
+                    } catch (e) {
+                        console.warn('Invalid JSON in style field:', e);
+                        // Keep the old style if JSON is invalid
+                    }
+                } else {
+                    updates.style = {};
+                }
             } else {
-                updates[key] = value;
+                // Regular text fields - only set if not empty
+                if (value !== '') {
+                    updates[key] = value;
+                }
             }
         }
 
