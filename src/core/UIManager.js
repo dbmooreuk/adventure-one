@@ -220,7 +220,7 @@ export class UIManager extends EventEmitter {
         }
 
         // Look for scene items (both SceneItem components and SceneObjects)
-        const item = e.target.closest('.scene-item, .scene-target, .scene-link, .scene-decor, .scene-object')
+        const item = e.target.closest('.scene-item, .scene-target, .scene-link, .scene-decor, .scene-character, .scene-object')
         if (!item) return
 
         // Check if item has a polygon hit area
@@ -235,6 +235,25 @@ export class UIManager extends EventEmitter {
 
         const itemName = this.getItemNameFromElement(item)
         const itemType = this.getItemTypeFromElement(item)
+
+        // Special handling for character type - show quiz when clicked (no action needed)
+        if (itemType === 'character') {
+            const itemData = this.game.inventoryManager?.getItemData(itemName)
+
+            // If no action selected, show the quiz
+            if (!this.currentAction) {
+                this.showCharacterQuiz(itemName, itemData)
+                return
+            }
+            // If examine action, show lookAt text
+            if (this.currentAction === 'examine') {
+                this.examineSceneItem(itemName, itemType)
+                return
+            }
+            // Other actions not allowed on characters
+            this.showMessage("You can't do that with a character.")
+            return
+        }
 
         // Special handling for links with linkToScene - they navigate when clicked
         if (itemType === 'link') {
@@ -430,7 +449,7 @@ export class UIManager extends EventEmitter {
         // Check item type - only 'item' type can be picked up
         const itemData = this.game.inventoryManager?.getItemData(itemName)
 
-        if (itemType === 'target' || itemType === 'link' || itemData?.type === 'decor') {
+        if (itemType === 'target' || itemType === 'link' || itemType === 'character' || itemData?.type === 'decor') {
             this.showMessage("You can't get this.")
             return
         }
@@ -474,6 +493,106 @@ export class UIManager extends EventEmitter {
         } else {
             this.showMessage("You can only use one item at a time on targets.")
         }
+    }
+
+    /**
+     * Show character quiz dialog
+     * @param {string} itemName - Character item name
+     * @param {Object} itemData - Character item data
+     */
+    showCharacterQuiz(itemName, itemData) {
+        if (!itemData || !itemData.question || !itemData.answers) {
+            this.showMessage("This character has nothing to say.")
+            return
+        }
+
+        // Check if already answered
+        const answeredKey = `character_${itemName}_answered`
+        const alreadyAnswered = this.game.stateManager?.getState(answeredKey)
+
+        if (alreadyAnswered) {
+            this.showMessage(itemData.lookAt || "You've already spoken with this character.")
+            return
+        }
+
+        // Create quiz modal
+        const modal = document.createElement('div')
+        modal.className = 'character-quiz-modal'
+        modal.innerHTML = `
+            <div class="character-quiz-container">
+                <div class="character-quiz-question">${itemData.question}</div>
+                <div class="character-quiz-answers">
+                    ${itemData.answers.map((answer, index) => `
+                        <button class="character-quiz-answer" data-index="${index}">
+                            ${answer.text}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `
+
+        // Add to DOM
+        document.body.appendChild(modal)
+
+        // Handle answer clicks
+        const answerButtons = modal.querySelectorAll('.character-quiz-answer')
+        answerButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const answerIndex = parseInt(button.dataset.index)
+                const selectedAnswer = itemData.answers[answerIndex]
+
+                // Mark as answered
+                this.game.stateManager?.setState(answeredKey, true)
+
+                // Remove modal
+                modal.remove()
+
+                // Handle correct/incorrect
+                if (selectedAnswer.isCorrect) {
+                    // Show correct message
+                    const message = itemData.correctMessage || "Correct!"
+                    this.showMessage(message)
+
+                    // Award points
+                    if (itemData.points) {
+                        const achievementId = `character_${itemName}_correct`
+                        this.game.addScore(itemData.points, achievementId)
+                    }
+
+                    // Add achievement
+                    if (itemData.achievement) {
+                        const achievementId = `character_${itemName}_achievement`
+                        this.game.achievementManager?.addAchievement(
+                            achievementId,
+                            itemData.achievement,
+                            itemData.points || 0,
+                            'character'
+                        )
+                    }
+
+                    // Give reward item
+                    if (itemData.reward) {
+                        const rewardAdded = this.game.inventoryManager?.addItem(itemData.reward)
+                        if (rewardAdded) {
+                            const rewardData = this.game.inventoryManager?.getItemData(itemData.reward)
+                            const rewardMessage = `You received: ${rewardData?.longName || itemData.reward}`
+                            setTimeout(() => this.showMessage(rewardMessage), 2000)
+                        }
+                    }
+                } else {
+                    // Show incorrect message
+                    const message = itemData.incorrectMessage || "That's not correct."
+                    this.showMessage(message)
+                }
+            })
+        })
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove()
+            }
+        })
     }
 
     /**
@@ -1180,8 +1299,8 @@ export class UIManager extends EventEmitter {
         // Fallback to class-based detection
         const classes = Array.from(element.classList)
         // Exclude common UI classes and prefixed classes
-        const excludedClasses = ['icon-font', 'scene-item', 'scene-target', 'scene-link', 'inventory-item', 'prop', 'scene-object']
-        const excludedPrefixes = ['icon-', 'scene-object-', 'item--', 'target--', 'link--']
+        const excludedClasses = ['icon-font', 'scene-item', 'scene-target', 'scene-link', 'scene-character', 'scene-decor', 'inventory-item', 'prop', 'scene-object']
+        const excludedPrefixes = ['icon-', 'scene-object-', 'item--', 'target--', 'link--', 'character--']
 
         return classes.find(cls => {
             // Skip if in excluded list
@@ -1202,6 +1321,7 @@ export class UIManager extends EventEmitter {
         if (element.classList.contains('scene-target')) return 'target'
         if (element.classList.contains('scene-link')) return 'link'
         if (element.classList.contains('scene-decor')) return 'decor'
+        if (element.classList.contains('scene-character')) return 'character'
         if (element.classList.contains('inventory-item')) return 'inventory'
 
         // For SceneObjects, check the actual item data

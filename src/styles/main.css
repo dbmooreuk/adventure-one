@@ -395,6 +395,10 @@ button.prop {
   border-color: #19545C;
 }
 
+.scene-item--character {
+  border-color: #417B7B;
+}
+
 /* Type-specific hover borders for scene items (matching SceneObject behavior) */
 .scene-item.scene-item:hover:not([style*="pointer-events: none"]) {
   box-shadow: inset 0 0 0 2px #F4FED3;
@@ -406,6 +410,10 @@ button.prop {
 
 .scene-item.scene-link:hover:not([style*="pointer-events: none"]) {
   box-shadow: inset 0 0 0 2px #19545C;
+}
+
+.scene-item.scene-character:hover:not([style*="pointer-events: none"]) {
+  box-shadow: inset 0 0 0 2px #417B7B;
 }
 
 /* Inventory Items */
@@ -689,6 +697,14 @@ button.prop {
 .scene-object-type-decor {
   /* Decor items can be examined but not picked up */
   /* Cursor and pointer events are handled normally */
+}
+
+.scene-object-type-character {
+  box-shadow: inset 0 0 0 2px transparent;
+  transition: box-shadow 0.2s ease-out;
+}
+.scene-object-type-character:hover:not([style*="pointer-events: none"]) {
+  box-shadow: inset 0 0 0 2px #417B7B;
 }
 
 /* Click Effect Animations */
@@ -2497,6 +2513,71 @@ button.prop {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Character Quiz Modal */
+.character-quiz-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 16, 24, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+.character-quiz-container {
+  background: #063340;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.character-quiz-question {
+  font-size: 20px;
+  color: #F4FED3;
+  margin-bottom: 16px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.character-quiz-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.character-quiz-answer {
+  background: transparent;
+  border: 2px solid #19545C;
+  color: #417B7B;
+  padding: 16px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+.character-quiz-answer:hover {
+  border-color: #F4FED3;
+  transform: translateX(10px);
+}
+.character-quiz-answer:active {
+  transform: translateX(10px) scale(0.98);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 /*General stuff*/
 * {
   margin: 0;

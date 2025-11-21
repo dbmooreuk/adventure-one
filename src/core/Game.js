@@ -314,7 +314,7 @@ export class Game extends EventEmitter {
             journal: this.achievementManager.getJournal(), // Save journal entries
             inventory: this.inventoryManager.getItems(),
             sceneStates: this.sceneManager.getSceneStates(),
-            customState: this.stateManager.getState('customState') || {},
+            stateManagerData: this.stateManager.getAllState(), // Save all state manager data
             timestamp: Date.now()
         }
         console.log('💾 Getting game state for save:', { score: state.score, achievements: state.achievements, journalEntries: state.journal.length })
@@ -345,9 +345,13 @@ export class Game extends EventEmitter {
                 this.sceneManager.setSceneStates(saveData.sceneStates)
             }
 
-            // Restore custom state
-            if (saveData.customState) {
-                this.stateManager.setState('customState', saveData.customState)
+            // Restore state manager data
+            if (saveData.stateManagerData) {
+                this.stateManager.setMultipleState(saveData.stateManagerData, true)
+            }
+            // Legacy support: restore old customState format
+            else if (saveData.customState) {
+                this.stateManager.setState('customState', saveData.customState, true)
             }
 
             // Change to saved scene

@@ -21,7 +21,7 @@ export const gameData = {
             achievement: "The Invitation",
             points: 10,
             backgroundColor: "#F4FED3",
-            items: ["bird", "sigil_tri", "tower_panel", "sigil_eye", "sigil_wave", "tower_door", "sea-one", "revelation", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale"]
+            items: ["butterfly", "bird", "sigil_tri", "tower_panel", "sigil_eye", "sigil_wave", "tower_door", "sea-one", "revelation", "starburst-one", "tower-glow", "sea-two", "tower-one", "orb-1", "orb-2", "clouds-1", "clouds-2", "whale"]
         },
         {
             sceneName: "scene_stasis",
@@ -1014,13 +1014,54 @@ export const gameData = {
             },
             onClickEffect: "flash"
         },
-        ,
         {
             name: "bird",
             longName: "A Bird",
             shortName: "Bird",
             type: "character",
             lookAt: "This looks like a strange bird that may speak",
+            image: "butterfly1.png",
+            position: [740, 300],
+            size: [100, 100],
+            hitW: 100,
+            hitH: 100,
+            zIndex: 60,
+            question: "What is the airspeed velocity of an unladen swallow?",
+            answers: [
+                { text: "African or European?", isCorrect: true },
+                { text: "24 miles per hour", isCorrect: false },
+                { text: "I don't know that!", isCorrect: false },
+                { text: "What do you mean?", isCorrect: false }
+            ],
+            correctMessage: "Correct! You know your Monty Python!",
+            incorrectMessage: "Wrong! You have been cast into the Gorge of Eternal Peril!",
+            reward: "torch",
+            achievement: "Answered the Bridge Keeper's riddle",
+            points: 50
+        },
+           {
+            name: "butterfly",
+            longName: "Butterfly",
+            shortName: "Butterfly",
+            type: "item",
+            points: 0,
+            position: [460, 215],
+            size: [64, 64],
+            image: "butterfly1.png",
+            zIndex: 11,
+            animation: {
+                      "type": "sprite",
+                      "frames": [
+                                "butterfly1.png",
+                                "butterfly2.png",
+                                "butterfly3.png",
+                                "butterfly4.png",
+                                "butterfly5.png"
+                      ],
+                      "fps": 20
+            },
+            onClickEffect: "bounce",
+            onClickSound: "success"
         }
     ],
 

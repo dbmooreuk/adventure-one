@@ -16,7 +16,7 @@ export class SceneItem {
      */
     render() {
         const element = document.createElement('button')
-        
+
         // Add classes
         element.className = `${this.itemData.name} icon-font icon-${this.itemData.name} scene-${this.itemData.type} prop`
         

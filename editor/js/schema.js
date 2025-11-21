@@ -3,7 +3,7 @@
  * Defines the structure and validation rules for game data
  */
 
-export const ITEM_TYPES = ['item', 'target', 'link', 'decor'];
+export const ITEM_TYPES = ['item', 'target', 'link', 'decor', 'character'];
 export const SCENE_TYPES = ['scene', 'puzzle'];
 export const ANIMATION_TYPES = ['bob', 'pulse', 'spin', 'fade', 'sprite'];
 export const HOVER_EFFECTS = ['glow', 'pulse', 'shine', 'swing'];
@@ -471,6 +471,75 @@ export const itemSchema = {
         required: false,
         label: 'Style',
         help: 'CSS class and hover effect'
+    },
+    // Character-specific fields (quiz)
+    question: {
+        type: 'textarea',
+        required: false,
+        label: 'Quiz Question',
+        help: 'Question to ask when character is clicked',
+        condition: (data) => data.type === 'character',
+        validate: (value, data) => {
+            if (data.type === 'character' && !value) {
+                return 'Question is required for character type';
+            }
+            return null;
+        }
+    },
+    answers: {
+        type: 'array',
+        required: false,
+        label: 'Answer Options',
+        help: 'Array of answer objects with text and isCorrect properties',
+        condition: (data) => data.type === 'character',
+        validate: (value, data) => {
+            if (data.type === 'character') {
+                if (!value || !Array.isArray(value) || value.length < 2) {
+                    return 'At least 2 answers are required for character type';
+                }
+                const correctAnswers = value.filter(a => a.isCorrect);
+                if (correctAnswers.length !== 1) {
+                    return 'Exactly one answer must be marked as correct';
+                }
+            }
+            return null;
+        }
+    },
+    correctMessage: {
+        type: 'textarea',
+        required: false,
+        label: 'Correct Answer Message',
+        help: 'Message shown when user selects correct answer',
+        condition: (data) => data.type === 'character'
+    },
+    incorrectMessage: {
+        type: 'textarea',
+        required: false,
+        label: 'Incorrect Answer Message',
+        help: 'Message shown when user selects wrong answer',
+        condition: (data) => data.type === 'character'
+    },
+    reward: {
+        type: 'item-select',
+        required: false,
+        label: 'Reward Item',
+        help: 'Item to give when question answered correctly',
+        condition: (data) => data.type === 'character'
+    },
+    achievement: {
+        type: 'string',
+        required: false,
+        label: 'Achievement Text',
+        help: 'Achievement text for answering correctly',
+        condition: (data) => data.type === 'character'
+    },
+    points: {
+        type: 'number',
+        required: false,
+        label: 'Points',
+        help: 'Points awarded for correct answer',
+        min: 0,
+        condition: (data) => data.type === 'character'
     }
 };
 
