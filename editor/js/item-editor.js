@@ -1283,6 +1283,11 @@ export class ItemEditor {
         this.currentItem = formData.name;
         console.log('Item auto-saved');
 
+        // Refresh code editor if it's visible
+        if (this.editor.codeEditor) {
+            this.editor.codeEditor.refresh();
+        }
+
         // Show subtle feedback
         this.showAutoSaveFeedback();
     }

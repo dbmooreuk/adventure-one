@@ -295,7 +295,26 @@ export class CodeEditor {
             this.updateStatus();
         }
     }
-    
+
+    /**
+     * Refresh code from current data (if code editor is visible and not dirty)
+     */
+    refresh() {
+        // Only refresh if code editor is active and there are no unsaved changes
+        const codeEditor = document.getElementById('code-editor');
+        if (!codeEditor || !codeEditor.classList.contains('active')) {
+            return; // Code editor not visible, no need to refresh
+        }
+
+        if (this.isDirty) {
+            return; // User has unsaved changes, don't overwrite
+        }
+
+        // Regenerate code from current data
+        const code = this.generateCode();
+        this.setCode(code);
+    }
+
     /**
      * Check if there are unsaved changes
      */

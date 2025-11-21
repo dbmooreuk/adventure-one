@@ -298,6 +298,11 @@ export class SceneEditor {
         this.currentScene = formData.sceneName;
         console.log('Scene auto-saved');
 
+        // Refresh code editor if it's visible
+        if (this.editor.codeEditor) {
+            this.editor.codeEditor.refresh();
+        }
+
         // Show subtle feedback
         this.showAutoSaveFeedback();
     }

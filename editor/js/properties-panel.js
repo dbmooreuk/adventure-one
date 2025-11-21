@@ -247,42 +247,72 @@ export class PropertiesPanel {
     }
 
     /**
-     * Create animation section
+     * Create animation section (new layered format)
      */
     createAnimationSection(item) {
         const section = this.createSection('Animation');
 
-        const animation = item.animation || {};
+        // Normalize animation format (convert legacy to new format)
+        const animation = this.normalizeAnimationFormat(item.animation || {});
 
-        // Animation type selector
-        const typeGroup = document.createElement('div');
-        typeGroup.className = 'form-group';
+        // Base Animation Section
+        const baseGroup = document.createElement('div');
+        baseGroup.className = 'form-group';
 
-        const typeLabel = document.createElement('label');
-        typeLabel.textContent = 'Animation Type';
-        typeGroup.appendChild(typeLabel);
+        const baseLabel = document.createElement('label');
+        baseLabel.textContent = 'Base Animation';
+        baseGroup.appendChild(baseLabel);
 
-        const typeSelect = document.createElement('select');
-        typeSelect.name = 'animation-type';
-        typeSelect.className = 'animation-type-select';
+        const baseRadioContainer = document.createElement('div');
+        baseRadioContainer.className = 'radio-group';
 
-        const noneOption = document.createElement('option');
-        noneOption.value = '';
-        noneOption.textContent = '-- No Animation --';
-        typeSelect.appendChild(noneOption);
-
-        ['bob', 'pulse', 'spin', 'fade', 'sprite', 'random'].forEach(type => {
-            const option = document.createElement('option');
-            option.value = type;
-            option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
-            if (animation && animation.type === type) {
-                option.selected = true;
-            }
-            typeSelect.appendChild(option);
+        // Base animation options: None, Sprite, Random
+        ['none', 'sprite', 'random'].forEach(baseType => {
+            const label = document.createElement('label');
+            label.className = 'radio-label';
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'animation-base';
+            radio.value = baseType;
+            radio.checked = (animation.base || 'none') === baseType;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(' ' + baseType.charAt(0).toUpperCase() + baseType.slice(1)));
+            baseRadioContainer.appendChild(label);
         });
 
-        typeGroup.appendChild(typeSelect);
-        section.appendChild(typeGroup);
+        baseGroup.appendChild(baseRadioContainer);
+        section.appendChild(baseGroup);
+
+        // Transform Modifiers Section
+        const transformGroup = document.createElement('div');
+        transformGroup.className = 'form-group';
+
+        const transformLabel = document.createElement('label');
+        transformLabel.textContent = 'Transform Modifiers';
+        transformGroup.appendChild(transformLabel);
+
+        const transformCheckboxContainer = document.createElement('div');
+        transformCheckboxContainer.className = 'checkbox-group';
+
+        // Transform options: Bob, Pulse, Spin, Fade
+        ['bob', 'pulse', 'spin', 'fade'].forEach(transform => {
+            const label = document.createElement('label');
+            label.className = 'checkbox-label';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = 'animation-transforms';
+            checkbox.value = transform;
+            checkbox.checked = animation.transforms && animation.transforms.includes(transform);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(' ' + transform.charAt(0).toUpperCase() + transform.slice(1)));
+            transformCheckboxContainer.appendChild(label);
+        });
+
+        transformGroup.appendChild(transformCheckboxContainer);
+        section.appendChild(transformGroup);
+
+        // Global Speed
+        section.appendChild(this.createNumberInput('animation-speed', 'Speed', animation.speed || 1, 'Animation speed multiplier'));
 
         // Container for conditional fields
         const fieldsContainer = document.createElement('div');
@@ -303,37 +333,32 @@ export class PropertiesPanel {
         updateBtnContainer.appendChild(updateBtn);
         section.appendChild(updateBtnContainer);
 
-        // Update fields when type changes
+        // Update fields when base or transforms change
         const updateFields = () => {
-            const type = typeSelect.value;
+            const base = section.querySelector('input[name="animation-base"]:checked')?.value;
+            const transforms = Array.from(section.querySelectorAll('input[name="animation-transforms"]:checked')).map(cb => cb.value);
+
             fieldsContainer.innerHTML = '';
 
-            if (!type) {
-                return;
-            }
-
-            // Common fields for bob and pulse
-            if (type === 'bob' || type === 'pulse') {
-                fieldsContainer.appendChild(this.createNumberInput('animation-amplitude', 'Amplitude', animation?.amplitude || 10, 'Pixels to move (bob) or percentage to scale (pulse)'));
-                fieldsContainer.appendChild(this.createNumberInput('animation-speed', 'Speed', animation?.speed || 1, 'Speed multiplier'));
-            }
-
-            // Speed only for spin and fade
-            if (type === 'spin' || type === 'fade') {
-                fieldsContainer.appendChild(this.createNumberInput('animation-speed', 'Speed', animation?.speed || 1, type === 'spin' ? 'Rotations per second' : 'Fade cycle speed'));
-            }
-
-            // Random animation
-            if (type === 'random') {
-                fieldsContainer.appendChild(this.createNumberInput('animation-speed', 'Speed', animation?.speed !== undefined ? animation.speed : 1, 'Movement speed multiplier'));
-                fieldsContainer.appendChild(this.createNumberInput('animation-count', 'Count', animation?.count !== undefined ? animation.count : 5, 'Number of items on screen'));
-                fieldsContainer.appendChild(this.createNumberInput('animation-randomness', 'Randomness', animation?.randomness !== undefined ? animation.randomness : 50, 'How random the movement is (0-100)'));
-                fieldsContainer.appendChild(this.createNumberInput('animation-rotation', 'Rotation', animation?.rotation !== undefined ? animation.rotation : 5, 'Rotation speed (0=none, 9=fast)'));
-            }
-
-            // Sprite animation
-            if (type === 'sprite') {
+            // Base-specific fields
+            if (base === 'sprite') {
                 fieldsContainer.appendChild(this.createSpriteFields(animation));
+            } else if (base === 'random') {
+                fieldsContainer.appendChild(this.createNumberInput('animation-count', 'Count', animation.count || 5, 'Number of items on screen'));
+                fieldsContainer.appendChild(this.createNumberInput('animation-randomness', 'Randomness', animation.randomness || 50, 'How random the movement is (0-100)'));
+                fieldsContainer.appendChild(this.createNumberInput('animation-rotation', 'Rotation', animation.rotation || 5, 'Rotation speed (0=none, 9=fast)'));
+            }
+
+            // Transform-specific fields
+            if (transforms.includes('bob')) {
+                fieldsContainer.appendChild(this.createNumberInput('animation-bobAmplitude', 'Bob Amplitude', animation.bobAmplitude || 10, 'Vertical movement distance in pixels'));
+            }
+            if (transforms.includes('pulse')) {
+                fieldsContainer.appendChild(this.createNumberInput('animation-pulseAmplitude', 'Pulse Amplitude', animation.pulseAmplitude || 10, 'Scale change percentage'));
+            }
+            if (transforms.includes('fade')) {
+                fieldsContainer.appendChild(this.createNumberInput('animation-fadeMin', 'Fade Min Opacity', animation.fadeMin || 0.5, 'Minimum opacity (0-1)'));
+                fieldsContainer.appendChild(this.createNumberInput('animation-fadeMax', 'Fade Max Opacity', animation.fadeMax || 1, 'Maximum opacity (0-1)'));
             }
 
             // Show update button if animations are enabled in composer
@@ -342,12 +367,58 @@ export class PropertiesPanel {
             }
         };
 
-        typeSelect.addEventListener('change', updateFields);
+        // Add event listeners
+        section.querySelectorAll('input[name="animation-base"]').forEach(radio => {
+            radio.addEventListener('change', updateFields);
+        });
+        section.querySelectorAll('input[name="animation-transforms"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateFields);
+        });
 
         // Initial render
         updateFields();
 
         return section;
+    }
+
+    /**
+     * Normalize animation format (convert legacy to new format)
+     */
+    normalizeAnimationFormat(anim) {
+        if (!anim || Object.keys(anim).length === 0) {
+            return { base: 'none', transforms: [] };
+        }
+
+        // If already in new format, return as-is
+        if (anim.base !== undefined || anim.transforms !== undefined) {
+            return {
+                base: anim.base || 'none',
+                transforms: anim.transforms || [],
+                ...anim
+            };
+        }
+
+        // Convert legacy format
+        const legacy = anim.type;
+        if (!legacy) return { base: 'none', transforms: [], ...anim };
+
+        // Legacy sprite or random becomes base
+        if (legacy === 'sprite' || legacy === 'random') {
+            return {
+                base: legacy,
+                transforms: [],
+                ...anim
+            };
+        }
+
+        // Legacy transform types become transforms
+        return {
+            base: 'none',
+            transforms: [legacy],
+            bobAmplitude: legacy === 'bob' ? anim.amplitude : undefined,
+            pulseAmplitude: legacy === 'pulse' ? anim.amplitude : undefined,
+            ...anim
+        };
     }
 
     /**
@@ -391,11 +462,15 @@ export class PropertiesPanel {
         modeGroup.className = 'form-group';
 
         const modeLabel = document.createElement('label');
-        modeLabel.textContent = 'Sprite Mode';
+        modeLabel.textContent = 'Sprite Type';
         modeGroup.appendChild(modeLabel);
 
         const radioContainer = document.createElement('div');
         radioContainer.className = 'radio-group';
+
+        // Determine current sprite type
+        const isMultiple = animation?.frames && Array.isArray(animation.frames);
+        const isSpriteSheet = animation?.spriteSheet;
 
         // Multiple Images option
         const multipleOption = document.createElement('label');
@@ -405,14 +480,10 @@ export class PropertiesPanel {
         multipleRadio.type = 'radio';
         multipleRadio.name = 'sprite-mode';
         multipleRadio.value = 'multiple';
-        multipleRadio.id = 'sprite-mode-multiple';
-        multipleRadio.checked = animation?.frames && animation.frames.length > 0;
-
-        const multipleText = document.createElement('span');
-        multipleText.textContent = 'Multiple Images';
+        multipleRadio.checked = isMultiple || (!isMultiple && !isSpriteSheet);
 
         multipleOption.appendChild(multipleRadio);
-        multipleOption.appendChild(multipleText);
+        multipleOption.appendChild(document.createTextNode(' Multiple Images (Frames)'));
 
         // Sprite Sheet option
         const sheetOption = document.createElement('label');
@@ -422,14 +493,10 @@ export class PropertiesPanel {
         sheetRadio.type = 'radio';
         sheetRadio.name = 'sprite-mode';
         sheetRadio.value = 'spritesheet';
-        sheetRadio.id = 'sprite-mode-sheet';
-        sheetRadio.checked = animation?.spriteSheet;
-
-        const sheetText = document.createElement('span');
-        sheetText.textContent = 'Sprite Sheet';
+        sheetRadio.checked = isSpriteSheet;
 
         sheetOption.appendChild(sheetRadio);
-        sheetOption.appendChild(sheetText);
+        sheetOption.appendChild(document.createTextNode(' Sprite Sheet (Single Image)'));
 
         radioContainer.appendChild(multipleOption);
         radioContainer.appendChild(sheetOption);
@@ -443,26 +510,16 @@ export class PropertiesPanel {
 
         // Update sprite fields based on radio selection
         const updateSpriteFields = () => {
-            const mode = document.querySelector('input[name="sprite-mode"]:checked')?.value;
+            // Query within the container, not the entire document
+            const mode = container.querySelector('input[name="sprite-mode"]:checked')?.value;
             spriteFieldsContainer.innerHTML = '';
 
             if (mode === 'multiple') {
                 // FPS input
                 spriteFieldsContainer.appendChild(this.createNumberInput('animation-fps', 'FPS', animation?.fps || 12, 'Frames per second'));
 
-                // Frames list (simplified - just a textarea for now)
-                const framesGroup = document.createElement('div');
-                framesGroup.className = 'form-group';
-                const framesLabel = document.createElement('label');
-                framesLabel.textContent = 'Frame Images (one per line)';
-                framesGroup.appendChild(framesLabel);
-                const framesTextarea = document.createElement('textarea');
-                framesTextarea.name = 'animation-frames';
-                framesTextarea.rows = 4;
-                framesTextarea.placeholder = 'butterfly-1.png\nbutterfly-2.png\nbutterfly-3.png';
-                framesTextarea.value = animation?.frames ? animation.frames.join('\n') : '';
-                framesGroup.appendChild(framesTextarea);
-                spriteFieldsContainer.appendChild(framesGroup);
+                // Frames list
+                spriteFieldsContainer.appendChild(this.createFramesListField(animation?.frames || []));
             } else if (mode === 'spritesheet') {
                 // Sprite sheet image
                 const sheetGroup = document.createElement('div');
@@ -497,6 +554,99 @@ export class PropertiesPanel {
         updateSpriteFields();
 
         return container;
+    }
+
+    /**
+     * Create frames list field for multiple sprite images
+     */
+    createFramesListField(frames) {
+        const container = document.createElement('div');
+        container.className = 'form-group frames-list-container';
+
+        const label = document.createElement('label');
+        label.textContent = 'Frame Images';
+        container.appendChild(label);
+
+        const framesList = document.createElement('div');
+        framesList.className = 'frames-list';
+        framesList.dataset.name = 'animation-frames';
+
+        // Render existing frames
+        if (frames && frames.length > 0) {
+            frames.forEach((frame, index) => {
+                const frameItem = this.createFrameItem(frame, index);
+                framesList.appendChild(frameItem);
+
+                // Add input listener to existing frame inputs
+                const input = frameItem.querySelector('input');
+                if (input) {
+                    input.addEventListener('input', () => {
+                        // Auto-save animation when frame value changes
+                        this.updateAnimation(this.currentItem);
+                    });
+                }
+            });
+        }
+
+        container.appendChild(framesList);
+
+        // Add frame button
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'btn btn-secondary btn-sm';
+        addBtn.textContent = '+ Add Frame';
+        addBtn.addEventListener('click', () => {
+            const newIndex = framesList.children.length;
+            const newFrameItem = this.createFrameItem('', newIndex);
+            framesList.appendChild(newFrameItem);
+
+            // Add input listener to the new frame input
+            const newInput = newFrameItem.querySelector('input');
+            if (newInput) {
+                newInput.addEventListener('input', () => {
+                    // Auto-save animation when frame value changes
+                    this.updateAnimation(this.currentItem);
+                });
+            }
+        });
+        container.appendChild(addBtn);
+
+        const help = document.createElement('div');
+        help.className = 'form-help';
+        help.textContent = 'Add image filenames for each frame of the animation';
+        container.appendChild(help);
+
+        return container;
+    }
+
+    /**
+     * Create a single frame item with input and remove button
+     */
+    createFrameItem(frameName, index) {
+        const item = document.createElement('div');
+        item.className = 'frame-item';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = `frame-${index}`;
+        input.value = frameName;
+        input.placeholder = `e.g., butterfly-frame-${index + 1}.png`;
+        item.appendChild(input);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-danger btn-sm';
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', () => {
+            item.remove();
+            // Auto-save animation when frame is removed
+            if (this.currentItem) {
+                this.updateAnimation(this.currentItem);
+            }
+        });
+        item.appendChild(removeBtn);
+
+        return item;
     }
 
     /**
@@ -557,49 +707,53 @@ export class PropertiesPanel {
     }
 
     /**
-     * Update animation in real-time
+     * Update animation in real-time (new layered format)
      */
     updateAnimation(item) {
         const form = document.getElementById('item-properties-form');
         if (!form) return;
 
-        const animationType = form.querySelector('[name="animation-type"]')?.value;
+        // Get base and transforms
+        const animationBase = form.querySelector('input[name="animation-base"]:checked')?.value;
+        const animationTransforms = Array.from(form.querySelectorAll('input[name="animation-transforms"]:checked')).map(cb => cb.value);
 
-        if (!animationType) {
-            // Remove animation
-            delete item.animation;
-        } else {
-            // Build animation object
-            const animation = { type: animationType };
+        // Helper to get animation field value
+        const getAnimField = (name) => {
+            const input = form.querySelector(`[name="${name}"]`);
+            return input ? input.value : null;
+        };
 
-            const getAnimField = (name) => form.querySelector(`[name="${name}"]`)?.value;
+        // Only create animation object if there's a base or transforms
+        if ((animationBase && animationBase !== 'none') || animationTransforms.length > 0) {
+            const animation = {};
 
-            // Add fields based on type
-            if (animationType === 'bob' || animationType === 'pulse') {
-                const amplitude = getAnimField('animation-amplitude');
-                const speed = getAnimField('animation-speed');
-                if (amplitude) animation.amplitude = Number(amplitude);
-                if (speed) animation.speed = Number(speed);
-            } else if (animationType === 'spin' || animationType === 'fade') {
-                const speed = getAnimField('animation-speed');
-                if (speed) animation.speed = Number(speed);
-            } else if (animationType === 'random') {
-                const speed = getAnimField('animation-speed');
-                const count = getAnimField('animation-count');
-                const randomness = getAnimField('animation-randomness');
-                const rotation = getAnimField('animation-rotation');
-                console.log('🎲 Random animation fields (properties):', { speed, count, randomness, rotation });
-                if (speed !== undefined && speed !== '') animation.speed = Number(speed);
-                if (count !== undefined && count !== '') animation.count = Number(count);
-                if (randomness !== undefined && randomness !== '') animation.randomness = Number(randomness);
-                if (rotation !== undefined && rotation !== '') animation.rotation = Number(rotation);
-                console.log('🎲 Animation object (properties):', animation);
-            } else if (animationType === 'sprite') {
+            // Set base (only if not 'none')
+            if (animationBase && animationBase !== 'none') {
+                animation.base = animationBase;
+            }
+
+            // Set transforms (only if any selected)
+            if (animationTransforms.length > 0) {
+                animation.transforms = animationTransforms;
+            }
+
+            // Global speed
+            const speed = getAnimField('animation-speed');
+            if (speed) animation.speed = Number(speed);
+
+            // Base-specific fields
+            if (animationBase === 'sprite') {
                 const spriteMode = form.querySelector('input[name="sprite-mode"]:checked')?.value;
 
                 if (spriteMode === 'multiple') {
-                    const framesText = getAnimField('animation-frames');
-                    const frames = framesText ? framesText.split('\n').map(f => f.trim()).filter(f => f) : [];
+                    // Collect frames from frame inputs
+                    const frames = [];
+                    const frameInputs = form.querySelectorAll('.frames-list input[type="text"]');
+                    frameInputs.forEach((input) => {
+                        if (input.value.trim()) {
+                            frames.push(input.value.trim());
+                        }
+                    });
                     if (frames.length > 0) animation.frames = frames;
 
                     const fps = getAnimField('animation-fps');
@@ -617,9 +771,35 @@ export class PropertiesPanel {
                     if (frameCount) animation.frameCount = Number(frameCount);
                     if (fps) animation.fps = Number(fps);
                 }
+            } else if (animationBase === 'random') {
+                const count = getAnimField('animation-count');
+                const randomness = getAnimField('animation-randomness');
+                const rotation = getAnimField('animation-rotation');
+                if (count !== undefined && count !== '') animation.count = Number(count);
+                if (randomness !== undefined && randomness !== '') animation.randomness = Number(randomness);
+                if (rotation !== undefined && rotation !== '') animation.rotation = Number(rotation);
+            }
+
+            // Transform-specific fields
+            if (animationTransforms.includes('bob')) {
+                const bobAmplitude = getAnimField('animation-bobAmplitude');
+                if (bobAmplitude) animation.bobAmplitude = Number(bobAmplitude);
+            }
+            if (animationTransforms.includes('pulse')) {
+                const pulseAmplitude = getAnimField('animation-pulseAmplitude');
+                if (pulseAmplitude) animation.pulseAmplitude = Number(pulseAmplitude);
+            }
+            if (animationTransforms.includes('fade')) {
+                const fadeMin = getAnimField('animation-fadeMin');
+                const fadeMax = getAnimField('animation-fadeMax');
+                if (fadeMin !== null && fadeMin !== '') animation.fadeMin = Number(fadeMin);
+                if (fadeMax !== null && fadeMax !== '') animation.fadeMax = Number(fadeMax);
             }
 
             item.animation = animation;
+        } else {
+            // No animation
+            delete item.animation;
         }
 
         // Update the item in the data
@@ -630,6 +810,11 @@ export class PropertiesPanel {
 
             // Trigger auto-save
             this.editor.saveCurrentWork();
+
+            // Refresh code editor if it's visible
+            if (this.editor.codeEditor) {
+                this.editor.codeEditor.refresh();
+            }
 
             // Restart animations in composer if enabled
             if (this.editor.sceneComposer && this.editor.sceneComposer.animationsEnabled) {
@@ -714,6 +899,11 @@ export class PropertiesPanel {
 
             // Trigger auto-save
             this.editor.saveCurrentWork();
+
+            // Refresh code editor if it's visible
+            if (this.editor.codeEditor) {
+                this.editor.codeEditor.refresh();
+            }
 
             // Update the composer if it's active
             if (this.editor.sceneComposer && this.editor.sceneComposer.currentScene) {
