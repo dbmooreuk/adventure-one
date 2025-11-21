@@ -9,7 +9,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba($darkest-marine, 0.9);
+    // background: rgba($darkest-marine, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,10 +43,11 @@
 }
 
 .character-quiz-answer {
+    font-family: $font-family-mono;
     // background: color.adjust($light-marine, $lightness: 10%, $alpha: -0.3);
     background: transparent;
     border: 2px solid $main-marine;
-    color: $light-marine;
+    color: $dark-yellow;
     padding: $spacing-md $spacing-md;
     border-radius: $border-radius-md;
     font-size: 14px;
@@ -62,6 +63,24 @@
 
     &:active {
         transform: translateX(10px) scale(0.98);
+    }
+
+    &.wrong-answer {
+        background: rgba(255, 0, 0, 0.3);
+        // border-color: #ff0000;
+        animation: shake 0.5s ease;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
     }
 }
 

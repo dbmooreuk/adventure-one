@@ -506,7 +506,7 @@ export class UIManager extends EventEmitter {
             return
         }
 
-        // Check if already answered
+        // Check if already answered correctly
         const answeredKey = `character_${itemName}_answered`
         const alreadyAnswered = this.game.stateManager?.getState(answeredKey)
 
@@ -541,25 +541,25 @@ export class UIManager extends EventEmitter {
                 const answerIndex = parseInt(button.dataset.index)
                 const selectedAnswer = itemData.answers[answerIndex]
 
-                // Mark as answered
-                this.game.stateManager?.setState(answeredKey, true)
-
-                // Remove modal
-                modal.remove()
-
                 // Handle correct/incorrect
                 if (selectedAnswer.isCorrect) {
+                    // Mark as answered correctly
+                    this.game.stateManager?.setState(answeredKey, true)
+
+                    // Remove modal
+                    modal.remove()
+
                     // Show correct message
                     const message = itemData.correctMessage || "Correct!"
                     this.showMessage(message)
 
-                    // Award points
+                    // Award points if specified
                     if (itemData.points) {
                         const achievementId = `character_${itemName}_correct`
                         this.game.addScore(itemData.points, achievementId)
                     }
 
-                    // Add achievement
+                    // Add achievement (with or without points)
                     if (itemData.achievement) {
                         const achievementId = `character_${itemName}_achievement`
                         this.game.achievementManager?.addAchievement(
@@ -594,9 +594,22 @@ export class UIManager extends EventEmitter {
                         }
                     }
                 } else {
-                    // Show incorrect message
-                    const message = itemData.incorrectMessage || "That's not correct."
+                    // Wrong answer - deduct 25 points
+                    const currentScore = this.game.score || 0
+                    const newScore = Math.max(0, currentScore - 25)
+                    this.game.score = newScore
+                    this.updateScore()
+
+                    // Show incorrect message with point penalty
+                    const message = itemData.incorrectMessage || "That's not correct. -25 points!"
                     this.showMessage(message)
+
+                    // Modal stays open - user can try again
+                    // Optionally add visual feedback to the wrong button
+                    button.classList.add('wrong-answer')
+                    setTimeout(() => {
+                        button.classList.remove('wrong-answer')
+                    }, 500)
                 }
             })
         })

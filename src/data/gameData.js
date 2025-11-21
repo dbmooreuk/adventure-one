@@ -1037,7 +1037,7 @@ export const gameData = {
                 { text: "dfddfddffdff", isCorrect: false }
             ],
             correctMessage: "Correct! You know your Monty Python!",
-            incorrectMessage: "Wrong! You have been cast into the Gorge of Eternal Peril!",
+            incorrectMessage: "You lose 25 points!",
             reward: "floor_recess",
             outcome: "keep",
             image: "butterfly1.png",
