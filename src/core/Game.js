@@ -171,6 +171,9 @@ export class Game extends EventEmitter {
         // Stop all audio
         this.audioManager.stopAmbient()
 
+        // Play reset transition sequence
+        await this.playResetTransition()
+
         // Clear saved game
         await this.saveManager.clearSave()
 
@@ -189,6 +192,73 @@ export class Game extends EventEmitter {
         await this.introManager.show()
 
         this.emit('gameReset')
+    }
+
+    /**
+     * Play reset transition sequence
+     * Fade to black -> Show icon -> Fade to intro
+     */
+    async playResetTransition() {
+        return new Promise((resolve) => {
+            // Hide scene container immediately to prevent flash
+            const sceneContainer = document.querySelector('.scene-container')
+            if (sceneContainer) {
+                sceneContainer.style.display = 'none'
+            }
+
+            // Create transition overlay
+            const overlay = document.createElement('div')
+            overlay.className = 'reset-transition-overlay'
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                opacity: 0;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: opacity 1s ease;
+            `
+
+            // Create icon element (using SVG)
+            const icon = document.createElement('img')
+            icon.src = 'src/assets/images/ui/icon-monachus.svg'
+            icon.style.cssText = `
+                width: 120px;
+                height: 120px;
+                opacity: 0;
+                transition: opacity 1s ease;
+            `
+            overlay.appendChild(icon)
+
+            document.body.appendChild(overlay)
+
+            // Sequence: Fade to black (1s) -> Show icon (1s) -> Hold (1s) -> Fade out (1s)
+            setTimeout(() => {
+                // Fade to black
+                overlay.style.opacity = '1'
+            }, 50)
+
+            setTimeout(() => {
+                // Fade in icon
+                icon.style.opacity = '1'
+            }, 1100)
+
+            setTimeout(() => {
+                // Start fading out
+                overlay.style.opacity = '0'
+            }, 3100)
+
+            setTimeout(() => {
+                // Remove overlay and resolve
+                document.body.removeChild(overlay)
+                resolve()
+            }, 4200)
+        })
     }
 
     /**

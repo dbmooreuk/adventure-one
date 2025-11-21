@@ -119,6 +119,9 @@ export class IntroManager extends EventEmitter {
         // Play button click sound to unlock audio context
         this.game.audioManager?.playSound(audio.buttonClickSound)
 
+        // Play transition sequence
+        await this.playStartTransition()
+
         // Hide intro screen
         this.hide()
 
@@ -136,6 +139,9 @@ export class IntroManager extends EventEmitter {
 
         // Play button click sound to unlock audio context
         this.game.audioManager?.playSound(audio.buttonClickSound)
+
+        // Play transition sequence
+        await this.playStartTransition()
 
         // Hide intro screen
         this.hide()
@@ -227,6 +233,72 @@ export class IntroManager extends EventEmitter {
 
         // Refresh saved game check
         await this.checkSavedGame()
+    }
+
+    /**
+     * Play start transition sequence
+     * Fade to black -> Show icon -> Fade to game
+     */
+    async playStartTransition() {
+        return new Promise((resolve) => {
+            // Hide intro container immediately to prevent flash
+            if (this.elements.introContainer) {
+                this.elements.introContainer.style.display = 'none'
+            }
+
+            // Create transition overlay
+            const overlay = document.createElement('div')
+            overlay.className = 'start-transition-overlay'
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                opacity: 0;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: opacity 1s ease;
+            `
+
+            // Create icon element (using SVG)
+            const icon = document.createElement('img')
+            icon.src = 'src/assets/images/ui/icon-monachus.svg'
+            icon.style.cssText = `
+                width: 120px;
+                height: 120px;
+                opacity: 0;
+                transition: opacity 1s ease;
+            `
+            overlay.appendChild(icon)
+
+            document.body.appendChild(overlay)
+
+            // Sequence: Fade to black (1s) -> Show icon (1s) -> Hold (1s) -> Fade out (1s)
+            setTimeout(() => {
+                // Fade to black
+                overlay.style.opacity = '1'
+            }, 50)
+
+            setTimeout(() => {
+                // Fade in icon
+                icon.style.opacity = '1'
+            }, 1100)
+
+            setTimeout(() => {
+                // Start fading out
+                overlay.style.opacity = '0'
+            }, 3100)
+
+            setTimeout(() => {
+                // Remove overlay and resolve
+                document.body.removeChild(overlay)
+                resolve()
+            }, 4200)
+        })
     }
 }
 
