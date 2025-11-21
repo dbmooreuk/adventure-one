@@ -977,16 +977,61 @@ export class SceneComposer {
             const elapsed = (currentTime - state.startTime) * (anim.speed || 1);
             const t = elapsed / 1000; // Time in seconds
 
-            if (anim.type === 'sprite') {
-                this.animateSpriteItem(itemEl, state, anim, currentTime);
-            } else if (anim.type === 'random') {
-                this.animateRandomItem(itemEl, state, anim);
-            } else {
-                this.animateTransformItem(itemEl, state, anim, t);
+            // Normalize animation format (convert legacy to new)
+            const normalizedAnim = this.normalizeAnimationFormat(anim);
+
+            // Animate base (sprite or random)
+            if (normalizedAnim.base === 'sprite') {
+                this.animateSpriteItem(itemEl, state, normalizedAnim, currentTime);
+            } else if (normalizedAnim.base === 'random') {
+                this.animateRandomItem(itemEl, state, normalizedAnim);
+            }
+
+            // Animate transforms (can run alongside base)
+            if (normalizedAnim.transforms && normalizedAnim.transforms.length > 0) {
+                this.animateTransformItem(itemEl, state, normalizedAnim, t);
             }
         });
 
         this.animationFrameId = requestAnimationFrame(() => this.animateItems());
+    }
+
+    /**
+     * Normalize animation format - convert legacy to new format
+     * @param {Object} anim - Animation configuration
+     * @returns {Object} Normalized animation config
+     */
+    normalizeAnimationFormat(anim) {
+        // If already in new format, return as-is
+        if (anim.base !== undefined || anim.transforms !== undefined) {
+            return {
+                base: anim.base || 'none',
+                transforms: anim.transforms || [],
+                ...anim
+            };
+        }
+
+        // Convert legacy format
+        const legacy = anim.type;
+        if (!legacy) return { base: 'none', transforms: [], ...anim };
+
+        // Legacy sprite or random becomes base
+        if (legacy === 'sprite' || legacy === 'random') {
+            return {
+                base: legacy,
+                transforms: [],
+                ...anim
+            };
+        }
+
+        // Legacy transform types (bob, pulse, spin, fade) become transforms
+        return {
+            base: 'none',
+            transforms: [legacy],
+            bobAmplitude: legacy === 'bob' ? anim.amplitude : undefined,
+            pulseAmplitude: legacy === 'pulse' ? anim.amplitude : undefined,
+            ...anim
+        };
     }
 
     /**
@@ -1020,40 +1065,58 @@ export class SceneComposer {
 
     /**
      * Animate transform-based items (bob, pulse, spin, fade)
+     * Can combine multiple transforms
      */
     animateTransformItem(itemEl, state, anim, t) {
-        const amplitude = anim.amplitude || 10;
-        let transform = '';
+        const transforms = anim.transforms || [];
+        const transformParts = [];
+        let opacity = 1;
 
-        switch (anim.type) {
-            case 'bob':
-                // Vertical bobbing motion
-                const bobY = Math.sin(t * 2) * amplitude;
-                transform = `translateY(${bobY}px)`;
-                break;
+        // Apply each transform
+        transforms.forEach(transformType => {
+            switch (transformType) {
+                case 'bob': {
+                    // Vertical bobbing motion
+                    const bobAmplitude = anim.bobAmplitude || 10;
+                    const bobY = Math.sin(t * 2) * bobAmplitude;
+                    transformParts.push(`translateY(${bobY}px)`);
+                    break;
+                }
 
-            case 'pulse':
-                // Scale pulsing
-                const scale = 1 + (Math.sin(t * 2) * amplitude / 100);
-                transform = `scale(${scale})`;
-                break;
+                case 'pulse': {
+                    // Scale pulsing
+                    const pulseAmplitude = anim.pulseAmplitude || 10;
+                    const scale = 1 + (Math.sin(t * 2) * pulseAmplitude / 100);
+                    transformParts.push(`scale(${scale})`);
+                    break;
+                }
 
-            case 'spin':
-                // Continuous rotation
-                const rotation = (t * 60 * (anim.speed || 1)) % 360;
-                transform = `rotate(${rotation}deg)`;
-                break;
+                case 'spin': {
+                    // Continuous rotation
+                    const speed = anim.speed || 1;
+                    const rotation = (t * 60 * speed) % 360;
+                    transformParts.push(`rotate(${rotation}deg)`);
+                    break;
+                }
 
-            case 'fade':
-                // Opacity fading
-                const opacity = 0.5 + (Math.sin(t * 2) * 0.5);
-                itemEl.style.opacity = opacity;
-                break;
+                case 'fade': {
+                    // Opacity fading
+                    const fadeMin = anim.fadeMin !== undefined ? anim.fadeMin : 0.5;
+                    const fadeMax = anim.fadeMax !== undefined ? anim.fadeMax : 1.0;
+                    const fadeRange = fadeMax - fadeMin;
+                    opacity = fadeMin + (Math.sin(t * 2) * 0.5 + 0.5) * fadeRange;
+                    break;
+                }
+            }
+        });
+
+        // Apply combined transforms
+        if (transformParts.length > 0) {
+            itemEl.style.transform = transformParts.join(' ');
         }
 
-        if (transform) {
-            itemEl.style.transform = transform;
-        }
+        // Apply opacity (fade)
+        itemEl.style.opacity = opacity;
     }
 
     /**

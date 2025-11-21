@@ -227,26 +227,73 @@ export class SceneObject {
 
     /**
      * Start animation based on itemData.animation configuration
+     * Supports both new layered format (base + transforms) and legacy format (type)
      */
     startAnimation() {
         if (!this.itemData.animation || !this.element) return
 
         const anim = this.itemData.animation
 
-        if (anim.type === 'sprite') {
-            this.startSpriteAnimation()
-        } else if (anim.type === 'random') {
-            this.startRandomAnimation()
-        } else {
-            this.startTransformAnimation()
+        // Convert legacy format to new format if needed
+        const normalizedAnim = this.normalizeAnimationFormat(anim)
+
+        // Start base animation (sprite or random)
+        if (normalizedAnim.base === 'sprite') {
+            this.startSpriteAnimation(normalizedAnim)
+        } else if (normalizedAnim.base === 'random') {
+            this.startRandomAnimation(normalizedAnim)
+        }
+
+        // Start transform animations (can run alongside base)
+        if (normalizedAnim.transforms && normalizedAnim.transforms.length > 0) {
+            this.startTransformAnimation(normalizedAnim)
+        }
+    }
+
+    /**
+     * Normalize animation format - convert legacy to new format
+     * @param {Object} anim - Animation configuration
+     * @returns {Object} Normalized animation config
+     */
+    normalizeAnimationFormat(anim) {
+        // If already in new format, return as-is
+        if (anim.base !== undefined || anim.transforms !== undefined) {
+            return {
+                base: anim.base || 'none',
+                transforms: anim.transforms || [],
+                ...anim
+            }
+        }
+
+        // Convert legacy format
+        const legacy = anim.type
+        if (!legacy) return { base: 'none', transforms: [], ...anim }
+
+        // Legacy sprite or random becomes base
+        if (legacy === 'sprite' || legacy === 'random') {
+            return {
+                base: legacy,
+                transforms: [],
+                ...anim
+            }
+        }
+
+        // Legacy transform types (bob, pulse, spin, fade) become transforms
+        return {
+            base: 'none',
+            transforms: [legacy],
+            // Map legacy amplitude to specific transform amplitude
+            bobAmplitude: legacy === 'bob' ? anim.amplitude : undefined,
+            pulseAmplitude: legacy === 'pulse' ? anim.amplitude : undefined,
+            ...anim
         }
     }
 
     /**
      * Start sprite-based animation (frame sequence or sprite sheet)
+     * @param {Object} anim - Normalized animation configuration
      */
-    startSpriteAnimation() {
-        const anim = this.itemData.animation
+    startSpriteAnimation(anim) {
         const fps = anim.fps || 12
         const frameDuration = 1000 / fps
 
@@ -268,26 +315,27 @@ export class SceneObject {
                     this.spriteFrameIndex = (this.spriteFrameIndex + 1) % frameCount
                     const frameWidth = anim.frameWidth || this.itemData.size[0]
                     const xOffset = -(this.spriteFrameIndex * frameWidth)
-                    
+
                     const sheetPath = `/src/assets/images/items/${anim.spriteSheet}`
                     this.element.style.backgroundImage = `url('${sheetPath}')`
                     this.element.style.backgroundPosition = `${xOffset}px 0`
                 }
             }
 
-            this.animationFrameId = requestAnimationFrame(animate)
+            this.spriteAnimationFrameId = requestAnimationFrame(animate)
         }
 
-        this.animationFrameId = requestAnimationFrame(animate)
+        this.spriteAnimationFrameId = requestAnimationFrame(animate)
     }
 
     /**
-     * Start transform-based animation (bob, pulse, spin, fade)
+     * Start transform-based animations (bob, pulse, spin, fade)
+     * Can combine multiple transforms
+     * @param {Object} anim - Normalized animation configuration
      */
-    startTransformAnimation() {
-        const anim = this.itemData.animation
+    startTransformAnimation(anim) {
         const speed = anim.speed || 1
-        const amplitude = anim.amplitude || 10
+        const transforms = anim.transforms || []
 
         const animate = () => {
             if (this.isDestroyed || !this.element) return
@@ -295,49 +343,65 @@ export class SceneObject {
             const elapsed = (Date.now() - this.startTime) * speed
             const t = elapsed / 1000 // Time in seconds
 
-            let transform = ''
+            const transformParts = []
+            let opacity = 1
 
-            switch (anim.type) {
-                case 'bob':
-                    // Vertical bobbing motion
-                    const bobY = Math.sin(t * 2) * amplitude
-                    transform = `translateY(${bobY}px)`
-                    break
+            // Apply each transform
+            transforms.forEach(transformType => {
+                switch (transformType) {
+                    case 'bob': {
+                        // Vertical bobbing motion
+                        const bobAmplitude = anim.bobAmplitude || 10
+                        const bobY = Math.sin(t * 2) * bobAmplitude
+                        transformParts.push(`translateY(${bobY}px)`)
+                        break
+                    }
 
-                case 'pulse':
-                    // Scale pulsing
-                    const scale = 1 + (Math.sin(t * 2) * amplitude / 100)
-                    transform = `scale(${scale})`
-                    break
+                    case 'pulse': {
+                        // Scale pulsing
+                        const pulseAmplitude = anim.pulseAmplitude || 10
+                        const scale = 1 + (Math.sin(t * 2) * pulseAmplitude / 100)
+                        transformParts.push(`scale(${scale})`)
+                        break
+                    }
 
-                case 'spin':
-                    // Continuous rotation
-                    const rotation = (t * 60 * speed) % 360
-                    transform = `rotate(${rotation}deg)`
-                    break
+                    case 'spin': {
+                        // Continuous rotation
+                        const rotation = (t * 60 * speed) % 360
+                        transformParts.push(`rotate(${rotation}deg)`)
+                        break
+                    }
 
-                case 'fade':
-                    // Opacity fading
-                    const opacity = 0.5 + (Math.sin(t * 2) * 0.5)
-                    this.element.style.opacity = opacity
-                    break
+                    case 'fade': {
+                        // Opacity fading
+                        const fadeMin = anim.fadeMin !== undefined ? anim.fadeMin : 0.5
+                        const fadeMax = anim.fadeMax !== undefined ? anim.fadeMax : 1.0
+                        const fadeRange = fadeMax - fadeMin
+                        opacity = fadeMin + (Math.sin(t * 2) * 0.5 + 0.5) * fadeRange
+                        break
+                    }
+                }
+            })
+
+            // Apply combined transforms
+            if (transformParts.length > 0) {
+                this.element.style.transform = transformParts.join(' ')
             }
 
-            if (transform) {
-                this.element.style.transform = transform
-            }
+            // Apply opacity (fade)
+            this.element.style.opacity = opacity
 
-            this.animationFrameId = requestAnimationFrame(animate)
+            this.transformAnimationFrameId = requestAnimationFrame(animate)
         }
 
-        this.animationFrameId = requestAnimationFrame(animate)
+        this.transformAnimationFrameId = requestAnimationFrame(animate)
     }
 
     /**
      * Start random animation (multiple clones moving randomly)
+     * @param {Object} anim - Normalized animation configuration
      */
-    startRandomAnimation() {
-        const anim = this.itemData.animation
+    startRandomAnimation(anim) {
         const count = anim.count || 5
         const speed = anim.speed || 1
         const randomness = anim.randomness || 50
@@ -423,12 +487,25 @@ export class SceneObject {
      * Stop all animations
      */
     stopAnimation() {
+        // Stop sprite animation
+        if (this.spriteAnimationFrameId) {
+            cancelAnimationFrame(this.spriteAnimationFrameId)
+            this.spriteAnimationFrameId = null
+        }
+
+        // Stop transform animation
+        if (this.transformAnimationFrameId) {
+            cancelAnimationFrame(this.transformAnimationFrameId)
+            this.transformAnimationFrameId = null
+        }
+
+        // Stop legacy animation frame ID
         if (this.animationFrameId) {
             cancelAnimationFrame(this.animationFrameId)
             this.animationFrameId = null
         }
 
-        // Clean up cloned elements
+        // Clean up cloned elements (from random animation)
         this.clonedElements.forEach(clone => clone.remove())
         this.clonedElements = []
         this.randomStates = []

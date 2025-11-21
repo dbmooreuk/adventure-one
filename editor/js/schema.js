@@ -5,7 +5,9 @@
 
 export const ITEM_TYPES = ['item', 'target', 'link', 'decor', 'character'];
 export const SCENE_TYPES = ['scene', 'puzzle'];
-export const ANIMATION_TYPES = ['bob', 'pulse', 'spin', 'fade', 'sprite'];
+export const ANIMATION_TYPES = ['bob', 'pulse', 'spin', 'fade', 'sprite']; // Legacy - kept for backward compatibility
+export const ANIMATION_BASE_TYPES = ['sprite', 'random'];
+export const ANIMATION_TRANSFORM_TYPES = ['bob', 'pulse', 'spin', 'fade'];
 export const HOVER_EFFECTS = ['glow', 'pulse', 'shine', 'swing'];
 export const CLICK_EFFECTS = ['flash', 'bounce', 'shake'];
 export const OUTCOMES = ['keep', 'remove', 'scene', 'removeTarget'];
@@ -544,52 +546,148 @@ export const itemSchema = {
 };
 
 /**
- * Animation Schema (nested)
+ * Animation Schema (nested) - Layered System
  */
 export const animationSchema = {
-    type: {
+    // Base animation (sprite, random, or none)
+    base: {
         type: 'select',
-        required: true,
-        label: 'Animation Type',
-        options: ANIMATION_TYPES
+        required: false,
+        label: 'Base Animation',
+        options: ['none', ...ANIMATION_BASE_TYPES],
+        help: 'Primary animation type (sprite frames or random movement)',
+        default: 'none'
     },
+
+    // Transform modifiers (can combine multiple)
+    transforms: {
+        type: 'multi-select',
+        required: false,
+        label: 'Transform Modifiers',
+        options: ANIMATION_TRANSFORM_TYPES,
+        help: 'Secondary effects that can be combined (bob, pulse, spin, fade)'
+    },
+
+    // Global settings
     speed: {
         type: 'number',
         required: false,
         label: 'Speed',
-        help: 'Animation speed multiplier',
+        help: 'Animation speed multiplier (applies to all transforms)',
         default: 1,
         min: 0.1,
         max: 5,
-        step: 0.1,
-        condition: (data) => ['bob', 'pulse', 'spin', 'fade'].includes(data.type)
+        step: 0.1
     },
-    amplitude: {
-        type: 'number',
-        required: false,
-        label: 'Amplitude',
-        help: 'Movement distance in pixels',
-        default: 10,
-        min: 1,
-        max: 50,
-        condition: (data) => ['bob', 'pulse'].includes(data.type)
-    },
+
+    // Sprite settings
     fps: {
         type: 'number',
         required: false,
         label: 'FPS',
-        help: 'Frames per second',
+        help: 'Frames per second for sprite animation',
         default: 12,
         min: 1,
         max: 60,
-        condition: (data) => data.type === 'sprite'
+        condition: (data) => data.base === 'sprite'
+    },
+    spriteSheet: {
+        type: 'image',
+        required: false,
+        label: 'Sprite Sheet',
+        help: 'Single image containing all frames',
+        condition: (data) => data.base === 'sprite'
+    },
+    frameWidth: {
+        type: 'number',
+        required: false,
+        label: 'Frame Width',
+        help: 'Width of each frame in sprite sheet',
+        condition: (data) => data.base === 'sprite' && data.spriteSheet
+    },
+    frameHeight: {
+        type: 'number',
+        required: false,
+        label: 'Frame Height',
+        help: 'Height of each frame in sprite sheet',
+        condition: (data) => data.base === 'sprite' && data.spriteSheet
+    },
+    frameCount: {
+        type: 'number',
+        required: false,
+        label: 'Frame Count',
+        help: 'Number of frames in sprite sheet',
+        condition: (data) => data.base === 'sprite' && data.spriteSheet
     },
     frames: {
         type: 'array',
         required: false,
         label: 'Frame Images',
         help: 'Array of image filenames for sprite animation',
-        condition: (data) => data.type === 'sprite'
+        condition: (data) => data.base === 'sprite' && !data.spriteSheet
+    },
+
+    // Transform-specific settings
+    bobAmplitude: {
+        type: 'number',
+        required: false,
+        label: 'Bob Amplitude',
+        help: 'Vertical movement distance in pixels',
+        default: 10,
+        min: 1,
+        max: 50,
+        condition: (data) => data.transforms && data.transforms.includes('bob')
+    },
+    pulseAmplitude: {
+        type: 'number',
+        required: false,
+        label: 'Pulse Amplitude',
+        help: 'Scale change percentage',
+        default: 10,
+        min: 1,
+        max: 50,
+        condition: (data) => data.transforms && data.transforms.includes('pulse')
+    },
+    fadeMin: {
+        type: 'number',
+        required: false,
+        label: 'Fade Min Opacity',
+        help: 'Minimum opacity (0-1)',
+        default: 0.5,
+        min: 0,
+        max: 1,
+        step: 0.1,
+        condition: (data) => data.transforms && data.transforms.includes('fade')
+    },
+    fadeMax: {
+        type: 'number',
+        required: false,
+        label: 'Fade Max Opacity',
+        help: 'Maximum opacity (0-1)',
+        default: 1,
+        min: 0,
+        max: 1,
+        step: 0.1,
+        condition: (data) => data.transforms && data.transforms.includes('fade')
+    },
+
+    // Legacy support - old format with single 'type' field
+    type: {
+        type: 'select',
+        required: false,
+        label: 'Animation Type (Legacy)',
+        options: ANIMATION_TYPES,
+        help: 'Legacy single animation type - will be converted to new format'
+    },
+    amplitude: {
+        type: 'number',
+        required: false,
+        label: 'Amplitude (Legacy)',
+        help: 'Legacy amplitude setting',
+        default: 10,
+        min: 1,
+        max: 50,
+        condition: (data) => data.type && ['bob', 'pulse'].includes(data.type)
     }
 };
 
