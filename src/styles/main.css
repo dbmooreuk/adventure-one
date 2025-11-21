@@ -1713,6 +1713,9 @@ button.prop {
 .panel-text.show.persistent {
   animation: fadeUpStay 300ms ease-out forwards;
 }
+.panel-text.dismissing {
+  animation: fadeDownOut 300ms ease-in forwards;
+}
 .panel-text .panel-text-content {
   margin-bottom: 0;
 }
@@ -1749,6 +1752,17 @@ button.prop {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+/* Keyframe animation: fade down and out (for dismissing messages) */
+@keyframes fadeDownOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
   }
 }
 .intro-logo {

@@ -1112,7 +1112,18 @@ export class UIManager extends EventEmitter {
      */
     dismissMessage() {
         this.isSceneTextShowing = false
-        this.clearMessage()
+
+        // Add dismissing animation
+        if (this.elements.panelText) {
+            this.elements.panelText.classList.remove('show', 'persistent')
+            this.elements.panelText.classList.add('dismissing')
+
+            // Wait for animation to complete before clearing
+            setTimeout(() => {
+                this.clearMessage()
+            }, 300) // Match animation duration
+        }
+
         this.updateLookButtonImage(false)
     }
 
@@ -1121,7 +1132,7 @@ export class UIManager extends EventEmitter {
      */
     clearMessage() {
         if (this.elements.panelText) {
-            this.elements.panelText.classList.remove('show', 'persistent')
+            this.elements.panelText.classList.remove('show', 'persistent', 'dismissing')
         }
 
         // Clear content immediately
