@@ -68,15 +68,18 @@ export class PropertiesPanel {
             interactionSection.appendChild(this.createField('lookAt', 'Look At Description', item.lookAt || '', 'textarea'));
         }
 
-        if (item.type === 'item' || item.type === 'target') {
+        if (item.type === 'item') {
             interactionSection.appendChild(this.createField('pickUpMessage', 'Pick Up Message', item.pickUpMessage || '', 'textarea'));
             interactionSection.appendChild(this.createField('unlockedMessage', 'Unlocked Message', item.unlockedMessage || '', 'textarea'));
+            interactionSection.appendChild(this.createOutcomeField(item));
         }
 
         if (item.type === 'target') {
-            interactionSection.appendChild(this.createField('useWith', 'Use With Item', item.useWith || '', 'text'));
+            interactionSection.appendChild(this.createField('pickUpMessage', 'Pick Up Message', item.pickUpMessage || '', 'textarea'));
+            interactionSection.appendChild(this.createField('unlockedMessage', 'Unlocked Message', item.unlockedMessage || '', 'textarea'));
+            interactionSection.appendChild(this.createItemSelectField('useWith', 'Use With Item', item.useWith || ''));
             interactionSection.appendChild(this.createField('useMessage', 'Use Message', item.useMessage || '', 'textarea'));
-            interactionSection.appendChild(this.createField('useResult', 'Use Result Item', item.useResult || '', 'text'));
+            interactionSection.appendChild(this.createItemSelectField('useResult', 'Use Result Item', item.useResult || ''));
             interactionSection.appendChild(this.createOutcomeField(item));
             interactionSection.appendChild(this.createSceneSelectField('nextScene', 'Next Scene', item.nextScene || ''));
             interactionSection.appendChild(this.createField('points', 'Points', item.points || '', 'number'));
@@ -93,7 +96,7 @@ export class PropertiesPanel {
             quizSection.appendChild(this.createAnswersListField(item.answers || []));
             quizSection.appendChild(this.createField('correctMessage', 'Correct Message', item.correctMessage || '', 'textarea'));
             quizSection.appendChild(this.createField('incorrectMessage', 'Incorrect Message', item.incorrectMessage || '', 'textarea'));
-            quizSection.appendChild(this.createField('reward', 'Reward Item', item.reward || '', 'text'));
+            quizSection.appendChild(this.createItemSelectField('reward', 'Reward Item', item.reward || ''));
             quizSection.appendChild(this.createOutcomeField(item));
             quizSection.appendChild(this.createField('achievement', 'Achievement', item.achievement || '', 'text'));
             quizSection.appendChild(this.createField('points', 'Points', item.points || '', 'number'));
@@ -109,8 +112,8 @@ export class PropertiesPanel {
 
         // Combine Section
         const combineSection = this.createSection('Combine Properties');
-        combineSection.appendChild(this.createField('combineWith', 'Combine With', item.combineWith || '', 'text'));
-        combineSection.appendChild(this.createField('combineResult', 'Combine Result', item.combineResult || '', 'text'));
+        combineSection.appendChild(this.createItemSelectField('combineWith', 'Combine With', item.combineWith || ''));
+        combineSection.appendChild(this.createItemSelectField('combineResult', 'Combine Result', item.combineResult || ''));
         combineSection.appendChild(this.createField('combineMessage', 'Combine Message', item.combineMessage || '', 'textarea'));
         combineSection.appendChild(this.createField('combinePoints', 'Combine Points', item.combinePoints || '', 'number'));
         form.appendChild(combineSection);
@@ -799,6 +802,42 @@ export class PropertiesPanel {
                 const option = document.createElement('option');
                 option.value = scene.sceneName;
                 option.textContent = scene.sceneName;
+                select.appendChild(option);
+            });
+        }
+
+        select.value = value || '';
+        formGroup.appendChild(select);
+
+        return formGroup;
+    }
+
+    /**
+     * Create item select field
+     */
+    createItemSelectField(name, label, value) {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const labelEl = document.createElement('label');
+        labelEl.textContent = label;
+        formGroup.appendChild(labelEl);
+
+        const select = document.createElement('select');
+        select.name = name;
+
+        // Add empty option
+        const emptyOption = document.createElement('option');
+        emptyOption.value = '';
+        emptyOption.textContent = '-- Select Item --';
+        select.appendChild(emptyOption);
+
+        // Add item options
+        if (this.editor.data && this.editor.data.sceneItems) {
+            this.editor.data.sceneItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.name;
+                option.textContent = item.longName || item.name;
                 select.appendChild(option);
             });
         }
