@@ -255,7 +255,7 @@ export class IntroManager extends EventEmitter {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: #000;
+                background: #021018;
                 opacity: 0;
                 z-index: 10000;
                 display: flex;

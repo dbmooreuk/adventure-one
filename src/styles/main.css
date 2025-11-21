@@ -86,6 +86,7 @@ html {
 
 .scene-title {
   letter-spacing: 1px;
+  margin-bottom: 16px;
 }
 
 /* Utilities */
@@ -1678,7 +1679,7 @@ button.prop {
 .sceneItems {
   margin-top: 16px;
   margin-bottom: 16px;
-  background: rgba(6, 51, 64, 0.1);
+  background: rgba(65, 123, 123, 0.2);
   border-radius: 8px;
   padding: 16px;
 }
@@ -2614,7 +2615,7 @@ html {
 
 body {
   font-family: "Latin Modern Mono", "Courier New", Courier, monospace;
-  background: #000000;
+  background: #021018;
   overflow: hidden;
   margin: 0;
   padding: 0;

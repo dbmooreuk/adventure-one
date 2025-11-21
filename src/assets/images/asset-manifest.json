@@ -1,6 +1,6 @@
 {
-  "generated": "2025-11-20T09:21:35.967Z",
-  "count": 31,
+  "generated": "2025-11-21T22:04:32.744Z",
+  "count": 32,
   "assets": [
     {
       "name": "screen-splash.png",
@@ -150,6 +150,11 @@
     {
       "name": "monachus-logo-lg.png",
       "path": "ui/monachus-logo-lg.png",
+      "category": "ui"
+    },
+    {
+      "name": "monachus-logo-sm.png",
+      "path": "ui/monachus-logo-sm.png",
       "category": "ui"
     },
     {

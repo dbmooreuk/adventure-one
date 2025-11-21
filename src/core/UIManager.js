@@ -1066,10 +1066,10 @@ export class UIManager extends EventEmitter {
         // Prepend stage title and scene title if available
         if (currentScene) {
             if (currentScene.stage) {
-                text += `<h1 class="stage-title body-lg text-main-marine text-uppercase">${currentScene.stage}</h1>`
+                text += `<h1 class="stage-title body-md text-main-marine text-uppercase">${currentScene.stage}</h1>`
             }
             if (currentScene.title) {
-                text += `<h2 class="scene-title body-md text-light-marine text-uppercase">${currentScene.title}</h2>`
+                text += `<h2 class="scene-title body-lg text-main-marine">${currentScene.title}</h2>`
             }
         }
 
