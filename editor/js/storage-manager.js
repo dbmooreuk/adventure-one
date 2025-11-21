@@ -65,7 +65,8 @@ export class StorageManager {
                 name: name,
                 gameData: gameData,
                 lastModified: new Date().toISOString(),
-                created: id ? undefined : new Date().toISOString()
+                created: id ? undefined : new Date().toISOString(),
+                editorState: gameData.editorState || {} // Store editor-specific state (like locked items)
             };
 
             if (id) {
@@ -110,6 +111,12 @@ export class StorageManager {
                     console.log('[StorageManager] Loaded data:', request.result);
                     console.log('[StorageManager] Scenes in loaded data:', request.result.gameData?.scenes?.length || 0);
                     console.log('[StorageManager] Items in loaded data:', request.result.gameData?.sceneItems?.length || 0);
+
+                    // Restore editorState if it exists
+                    if (request.result.editorState) {
+                        request.result.gameData.editorState = request.result.editorState;
+                    }
+
                     resolve(request.result);
                 } else {
                     console.error('[StorageManager] Project not found:', id);

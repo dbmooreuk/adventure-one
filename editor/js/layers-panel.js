@@ -11,6 +11,9 @@ export class LayersPanel {
         this.touchDragging = false;
         this.currentDropTarget = null;
 
+        // Locked items state (stored in editorState, not in game schema)
+        this.lockedItems = new Set();
+
         // Bind touch handlers for document-level listeners
         this.handleTouchMove = this.handleTouchMove.bind(this);
         this.handleTouchEnd = this.handleTouchEnd.bind(this);
@@ -30,6 +33,7 @@ export class LayersPanel {
      */
     show(scene) {
         this.currentScene = scene;
+        this.loadLockedItemsState();
         this.render();
     }
 
@@ -84,15 +88,20 @@ export class LayersPanel {
     createLayerItem(item, index) {
         const li = document.createElement('div');
         li.className = 'layer-item';
-        li.draggable = true;
         li.dataset.itemName = item.name;
         li.dataset.zIndex = item.zIndex;
 
         const itemData = item.data;
         const typeClass = `type-${itemData?.type || 'item'}`;
+        const isLocked = this.lockedItems.has(item.name);
+
+        // Add locked class if item is locked
+        if (isLocked) {
+            li.classList.add('locked');
+        }
 
         li.innerHTML = `
-            <div class="layer-item-drag-handle">⋮⋮</div>
+            <div class="layer-item-drag-handle" draggable="true">⋮⋮</div>
             <div class="layer-item-content">
                 <div class="layer-item-name">${itemData?.longName || item.name}</div>
                 <div class="layer-item-meta">
@@ -100,21 +109,43 @@ export class LayersPanel {
                     <span class="layer-item-zindex">z: ${item.zIndex}</span>
                 </div>
             </div>
+            <button class="layer-item-lock-btn" title="${isLocked ? 'Unlock item' : 'Lock item'}">
+                ${isLocked ? '🔒' : '🔓'}
+            </button>
         `;
 
-        // Click to select item in composer
-        li.addEventListener('click', () => {
-            this.editor.sceneComposer.selectItemByName(item.name);
+        // Get the drag handle
+        const dragHandle = li.querySelector('.layer-item-drag-handle');
+        const lockBtn = li.querySelector('.layer-item-lock-btn');
+
+        // Click to select item in composer (but not on drag handle or lock button)
+        li.addEventListener('click', (e) => {
+            if (!e.target.closest('.layer-item-drag-handle') && !e.target.closest('.layer-item-lock-btn')) {
+                this.editor.sceneComposer.selectItemByName(item.name);
+            }
         });
 
-        // Drag and drop events (mouse / desktop)
-        li.addEventListener('dragstart', (e) => this.handleDragStart(e, item));
+        // Lock button click
+        lockBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleItemLock(item.name);
+        });
+
+        // Drag and drop events on the drag handle only (mouse / desktop)
+        dragHandle.addEventListener('dragstart', (e) => this.handleDragStart(e, item, li));
         li.addEventListener('dragover', (e) => this.handleDragOver(e));
         li.addEventListener('drop', (e) => this.handleDrop(e, item));
         li.addEventListener('dragend', () => this.handleDragEnd());
 
-        // Touch-based drag-and-drop (for tablets)
-        li.addEventListener('touchstart', (e) => this.handleTouchStart(e, item, li), { passive: false });
+        // Prevent dragging from other parts of the layer item
+        li.addEventListener('dragstart', (e) => {
+            if (!e.target.closest('.layer-item-drag-handle')) {
+                e.preventDefault();
+            }
+        });
+
+        // Touch-based drag-and-drop (for tablets) - only on drag handle
+        dragHandle.addEventListener('touchstart', (e) => this.handleTouchStart(e, item, li), { passive: false });
 
         return li;
     }
@@ -122,9 +153,10 @@ export class LayersPanel {
     /**
      * Handle drag start
      */
-    handleDragStart(e, item) {
+    handleDragStart(e, item, li) {
         this.draggedItem = item;
-        e.currentTarget.classList.add('dragging');
+        this.draggedElement = li;
+        li.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
     }
 
@@ -227,6 +259,82 @@ export class LayersPanel {
             item.classList.remove('dragging', 'drag-over');
         });
         this.draggedItem = null;
+        this.draggedElement = null;
+    }
+
+    /**
+     * Toggle lock state for an item
+     */
+    toggleItemLock(itemName) {
+        if (this.lockedItems.has(itemName)) {
+            this.lockedItems.delete(itemName);
+        } else {
+            this.lockedItems.add(itemName);
+        }
+
+        // Save locked state
+        this.saveLockedItemsState();
+
+        // Re-render layers panel
+        this.render();
+
+        // Update composer to reflect lock state
+        if (this.editor.sceneComposer) {
+            this.editor.sceneComposer.updateItemLockState(itemName, this.lockedItems.has(itemName));
+        }
+    }
+
+    /**
+     * Check if an item is locked
+     */
+    isItemLocked(itemName) {
+        return this.lockedItems.has(itemName);
+    }
+
+    /**
+     * Load locked items state from editor state
+     */
+    loadLockedItemsState() {
+        this.lockedItems.clear();
+
+        if (!this.editor.data.editorState) {
+            this.editor.data.editorState = {};
+        }
+
+        if (!this.editor.data.editorState.lockedItems) {
+            this.editor.data.editorState.lockedItems = {};
+        }
+
+        // Load locked items for current scene
+        if (this.currentScene) {
+            const sceneName = this.currentScene.sceneName;
+            const lockedForScene = this.editor.data.editorState.lockedItems[sceneName] || [];
+            lockedForScene.forEach(itemName => {
+                this.lockedItems.add(itemName);
+            });
+        }
+    }
+
+    /**
+     * Save locked items state to editor state
+     */
+    saveLockedItemsState() {
+        if (!this.editor.data.editorState) {
+            this.editor.data.editorState = {};
+        }
+
+        if (!this.editor.data.editorState.lockedItems) {
+            this.editor.data.editorState.lockedItems = {};
+        }
+
+        // Save locked items for current scene
+        if (this.currentScene) {
+            const sceneName = this.currentScene.sceneName;
+            this.editor.data.editorState.lockedItems[sceneName] = Array.from(this.lockedItems);
+        }
+
+        // Trigger auto-save
+        this.editor.saveCurrentWork();
     }
 
     /**

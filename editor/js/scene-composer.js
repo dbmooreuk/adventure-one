@@ -295,6 +295,11 @@ export class SceneComposer {
         itemEl.className = 'composer-item';
         itemEl.dataset.itemName = item.name;
 
+        // Add locked class if item is locked
+        if (this.editor.layersPanel && this.editor.layersPanel.isItemLocked(item.name)) {
+            itemEl.classList.add('locked');
+        }
+
         // Handle both position formats: [x, y] array or x/y properties
         const x = item.position ? item.position[0] : (item.x || 0);
         const y = item.position ? item.position[1] : (item.y || 0);
@@ -408,6 +413,11 @@ export class SceneComposer {
         // Don't allow resizing if hit areas are visible (editing mode)
         if (this.hitAreaVisible) {
             return;
+        }
+
+        // Check if item is locked
+        if (this.editor.layersPanel && this.editor.layersPanel.isItemLocked(item.name)) {
+            return; // Don't allow resizing locked items
         }
 
         this.resizing = true;
@@ -574,6 +584,11 @@ export class SceneComposer {
     startDrag(e, item, element) {
         e.preventDefault();
         e.stopPropagation();
+
+        // Check if item is locked
+        if (this.editor.layersPanel && this.editor.layersPanel.isItemLocked(item.name)) {
+            return; // Don't allow dragging locked items
+        }
 
         this.draggedItem = item;
         this.draggedElement = element;
@@ -1488,6 +1503,20 @@ export class SceneComposer {
         // Create new one if polygon exists
         if (item.hitPolygon && Array.isArray(item.hitPolygon) && item.hitPolygon.length > 0) {
             this.createPolygonVisualization(itemEl, item);
+        }
+    }
+
+    /**
+     * Update lock state for an item in the composer
+     */
+    updateItemLockState(itemName, isLocked) {
+        const itemEl = this.itemsLayer.querySelector(`[data-item-name="${itemName}"]`);
+        if (!itemEl) return;
+
+        if (isLocked) {
+            itemEl.classList.add('locked');
+        } else {
+            itemEl.classList.remove('locked');
         }
     }
 }

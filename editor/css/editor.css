@@ -1593,6 +1593,25 @@ body {
     box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.3);
 }
 
+.composer-item.locked {
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: rgba(255, 0, 0, 0.3);
+}
+
+.composer-item.locked:hover {
+    border-color: rgba(255, 0, 0, 0.5);
+}
+
+.composer-item.locked.selected {
+    border-color: rgba(255, 0, 0, 0.7);
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+}
+
+.composer-item.locked .composer-resize-handle {
+    display: none !important;
+}
+
 .composer-item.dragging {
     opacity: 0.7;
     cursor: grabbing;
@@ -2158,6 +2177,15 @@ body {
     box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
 }
 
+.layer-item.locked {
+    opacity: 0.7;
+    background: var(--editor-bg);
+}
+
+.layer-item.locked .layer-item-name {
+    color: var(--editor-text-dim);
+}
+
 .layer-item.dragging {
     opacity: 0.5;
 }
@@ -2172,10 +2200,31 @@ body {
     cursor: grab;
     font-size: 12px;
     user-select: none;
+    flex-shrink: 0;
 }
 
 .layer-item-drag-handle:active {
     cursor: grabbing;
+}
+
+.layer-item-lock-btn {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+    flex-shrink: 0;
+}
+
+.layer-item-lock-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.layer-item.locked .layer-item-lock-btn {
+    opacity: 1;
 }
 
 .layer-item-content {
